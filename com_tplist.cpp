@@ -29,8 +29,8 @@ QList<double> cOM_TPList::getCodeList(int onlyFlag)
     QList<double> output;
     foreach (OM_TP, OM_TPList)
     {
-        if (    ((onlyFlag == SVOnly ) && OM_TP.getIsBPM ()) // continue if foreach is BPM and we only accept SV
-              || ((onlyFlag == BPMOnly) && OM_TP.getIsKiai())) // continue if foreach is SV  and we only accept BPM
+        if (    ((onlyFlag == SV_ONLY ) && OM_TP.getIsBPM ()) // continue if foreach is BPM and we only accept SV
+              || ((onlyFlag == BPM_ONLY) && OM_TP.getIsKiai())) // continue if foreach is SV  and we only accept BPM
         {
             continue;
         }
@@ -46,8 +46,8 @@ QList<double> cOM_TPList::getValueList(int onlyFlag)
     QList<double> output;
     foreach (OM_TP, OM_TPList)
     {
-        if (    ((onlyFlag == SVOnly ) && (OM_TP.getIsBPM ())) // continue if foreach is BPM and we only accept SV
-              || ((onlyFlag == BPMOnly) && (OM_TP.getIsKiai()))) // continue if foreach is SV  and we only accept BPM
+        if (    ((onlyFlag == SV_ONLY ) && (OM_TP.getIsBPM ())) // continue if foreach is BPM and we only accept SV
+              || ((onlyFlag == BPM_ONLY) && (OM_TP.getIsKiai()))) // continue if foreach is SV  and we only accept BPM
         {
             continue;
         }
@@ -91,7 +91,7 @@ double cOM_TPList::getAverageSV()
     QList<double> SVList;
     double SVeach;
 
-    SVList = getValueList(SVOnly);
+    SVList = getValueList(SV_ONLY);
 
     foreach (SVeach, SVList) {
         output += SVeach;
@@ -107,7 +107,7 @@ double cOM_TPList::getAverageBPM()
     QList<double> BPMList;
     double BPMeach;
 
-    BPMList = getValueList(BPMOnly);
+    BPMList = getValueList(BPM_ONLY);
 
     foreach (BPMeach, BPMList) {
         output += BPMeach;

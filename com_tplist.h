@@ -12,8 +12,8 @@ public:
     cOM_TP & operator [](int i)       { return OM_TPList[i]; }
 
     QList<double> getOffsetList();
-    QList<double> getCodeList(int onlyFlag = SVBPMOnly);
-    QList<double> getValueList(int onlyFlag = SVOnly);
+    QList<double> getCodeList(int onlyFlag = SV_BPM_ONLY);
+    QList<double> getValueList(int onlyFlag = SV_ONLY);
 
     double getMinOffset();
     double getMaxOffset();
@@ -25,10 +25,9 @@ public:
     void append     (cOM_TP newOM_TP);
     void deleteIndex(unsigned  index);
 
-    const static int SVBPMOnly  = 0,
-                     SVOnly     = 1,
-                     BPMOnly    = 2;
-
+    const static int SV_BPM_ONLY  = 0,
+                     SV_ONLY      = 1,
+                     BPM_ONLY     = 2;
 
 protected:
     unsigned size;
