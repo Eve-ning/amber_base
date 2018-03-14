@@ -21,10 +21,8 @@ public:
     double getMaxOffset();
     double getLength   ();
 
-
     void append     (cOM_HO newOM_HO);
     void deleteIndex(unsigned  index);
-
 
 private:
 
