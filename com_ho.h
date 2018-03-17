@@ -1,8 +1,10 @@
 #ifndef COM_HO_H
 #define COM_HO_H
 
+
 #include <QtCore>
 
+class  cOM_HO
 {
 public:
     cOM_HO();
