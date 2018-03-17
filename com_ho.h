@@ -7,7 +7,7 @@ class cOM_HO
 {
 public:
     cOM_HO();
-    cOM_HO(QString HO);
+    cOM_HO(QString HO, int newKeys = 0);
 
     unsigned short  getXAxis        () const { return xAxis       ; }
     unsigned short  getYAxis        () const { return yAxis       ; }
@@ -59,7 +59,6 @@ protected:
     unsigned short  customSet   ;
     unsigned short  volume      ;
     QString         hitsoundFile;
-
 
     unsigned short  keys;
     unsigned short  column;

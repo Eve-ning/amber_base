@@ -17,7 +17,7 @@ cOM_HO::cOM_HO()
     keys            =   0;
 }
 
-cOM_HO::cOM_HO(QString HO)
+cOM_HO::cOM_HO(QString HO, int newKeys)
 {
 
     /* REFERENCE FOR .osu HO
@@ -33,56 +33,55 @@ cOM_HO::cOM_HO(QString HO)
     // splitColon                    [0]  [1][2][3][4][5]
     // REFERENCE  448,192,1799,5, 6, 2001:1: 1: 2: 70:audio.mp3
     */
-    try
-    {
-        QStringList HO_splitComma,
+
+    QStringList HO_splitComma,
                 HO_splitColon;
 
-        HO_splitComma = HO.split(",", QString::KeepEmptyParts);
-        HO_splitColon = HO_splitComma[HO_splitComma.size() - 1]
-                .split(":", QString::KeepEmptyParts);
+    keys = newKeys;
 
-        if (HO_splitColon.size() == 5 &&
-                HO_splitComma.size() == 6) // Means it is a NN
-        {
-            //Assignment to Values
-            xAxis           =   (HO_splitComma[0]).toInt()   ;
-            yAxis           =   (HO_splitComma[1]).toInt()   ;
-            offset          =   (HO_splitComma[2]).toDouble();
-            noteType        =   (HO_splitComma[3]).toInt()   ;
-            hitsoundType    =   (HO_splitComma[4]).toInt()   ;
-            sampleSet       =   (HO_splitColon[0]).toInt()   ;
-            addition        =   (HO_splitColon[1]).toInt()   ;
-            customSet       =   (HO_splitColon[2]).toInt()   ;
-            volume          =   (HO_splitColon[3]).toInt()   ;
-            hitsoundFile    =   (HO_splitColon[4])           ;
+    HO_splitComma = HO.split(",", QString::KeepEmptyParts);
+    HO_splitColon = HO_splitComma[HO_splitComma.size() - 1]
+            .split(":", QString::KeepEmptyParts);
 
-            //Default lnEnd Value
-            lnEnd           =   -1;
-        }
-        else if (HO_splitColon.size() == 6 &&
-                 HO_splitComma.size() == 6) // Means it is a LN
-        {
-            //Assignment to Values
-            xAxis           = (HO_splitComma[0]).toInt()   ;
-            yAxis           = (HO_splitComma[1]).toInt()   ;
-            offset          = (HO_splitComma[2]).toDouble();
-            noteType        = (HO_splitComma[3]).toInt()   ;
-            hitsoundType    = (HO_splitComma[4]).toInt()   ;
-            lnEnd           = (HO_splitColon[0]).toDouble();
-            sampleSet       = (HO_splitColon[1]).toInt()   ;
-            addition        = (HO_splitColon[2]).toInt()   ;
-            customSet       = (HO_splitColon[3]).toInt()   ;
-            volume          = (HO_splitColon[4]).toInt()   ;
-            hitsoundFile    = (HO_splitColon[5])           ;
-        } else {
-            // STATMSG("Failed to Convert QString.");
-            cOM_HO();
-        }
+    if (HO_splitColon.size() == 5 &&
+            HO_splitComma.size() == 6) // Means it is a NN
+    {
+        //Assignment to Values
+        xAxis           =   (HO_splitComma[0]).toInt()   ;
+        yAxis           =   (HO_splitComma[1]).toInt()   ;
+        offset          =   (HO_splitComma[2]).toDouble();
+        noteType        =   (HO_splitComma[3]).toInt()   ;
+        hitsoundType    =   (HO_splitComma[4]).toInt()   ;
+        sampleSet       =   (HO_splitColon[0]).toInt()   ;
+        addition        =   (HO_splitColon[1]).toInt()   ;
+        customSet       =   (HO_splitColon[2]).toInt()   ;
+        volume          =   (HO_splitColon[3]).toInt()   ;
+        hitsoundFile    =   (HO_splitColon[4])           ;
+
+        //Default lnEnd Value
+        lnEnd           =   -1;
     }
-    catch (...) {
+    else if (HO_splitColon.size() == 6 &&
+             HO_splitComma.size() == 6) // Means it is a LN
+    {
+        //Assignment to Values
+        xAxis           = (HO_splitComma[0]).toInt()   ;
+        yAxis           = (HO_splitComma[1]).toInt()   ;
+        offset          = (HO_splitComma[2]).toDouble();
+        noteType        = (HO_splitComma[3]).toInt()   ;
+        hitsoundType    = (HO_splitComma[4]).toInt()   ;
+        lnEnd           = (HO_splitColon[0]).toDouble();
+        sampleSet       = (HO_splitColon[1]).toInt()   ;
+        addition        = (HO_splitColon[2]).toInt()   ;
+        customSet       = (HO_splitColon[3]).toInt()   ;
+        volume          = (HO_splitColon[4]).toInt()   ;
+        hitsoundFile    = (HO_splitColon[5])           ;
+    } else {
+        // STATMSG("Failed to Convert QString.");
         cOM_HO();
     }
+
+
 }
 
 void cOM_HO::setXAxis       (unsigned short  newXAxis       ){ xAxis        = newXAxis       ; return; }
@@ -101,13 +100,12 @@ unsigned short cOM_HO::getColumn() const
 {
     unsigned short output;
 
-    if (keys == 0)
-    {
-        //STATMSG("Keys not Specified, cannot get column");
-        return 1;
+    if (keys == 0) {
+        qDebug() << "Keys is not set.";
+        return 0;
     }
 
-    output = round(((xAxis / 512 * keys * 2 + 1) / 2) - 1);
+    output = round((((double(xAxis) / 256.0) * double(keys) + 1.0) / 2.0) - 1.0);
     // This output starts from 0
 
     return output;
@@ -120,14 +118,14 @@ void cOM_HO::setKeys(unsigned short newKeys)
 
 void cOM_HO::setColumn(unsigned short newColumn)
 {
-    if (keys == 0)
-    {
-        //STATMSG("Keys not Specified, cannot set column");
+    if (keys == 0) {
+        qDebug() << "Keys is not set.";
         return;
     }
 
+
     // This function changes xAxis according to newColumn
-    xAxis = round(((newColumn + 1) * 2 - 1) / 2 * 512 / keys);
+    xAxis = round(((double(newColumn) + 1.0) * 2.0 - 1.0) * 256.0 / double(keys));
 }
 
 QString cOM_HO::toString()

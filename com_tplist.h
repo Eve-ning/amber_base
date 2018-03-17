@@ -18,6 +18,7 @@ public:
     double getMinOffset();
     double getMaxOffset();
     double getLength   ();
+    int    getSize     ();
 
     double getAverageSV ();
     double getAverageBPM();
@@ -30,7 +31,6 @@ public:
                      BPM_ONLY     = 2;
 
 protected:
-    unsigned size;
     QList<cOM_TP> OM_TPList;
 };
 

@@ -2,14 +2,12 @@
 
 cOM_TPList::cOM_TPList()
 {
-    OM_TPList = { cOM_TP() };
-    size = 0;
+    OM_TPList = {};
 }
 
 cOM_TPList::cOM_TPList(QList<cOM_TP> newOM_TPList)
 {
     OM_TPList = newOM_TPList;
-    size = sizeof(newOM_TPList);
 }
 
 QList<double> cOM_TPList::getOffsetList()
@@ -83,6 +81,11 @@ double cOM_TPList::getLength()
     output = *std::max_element(offsetList.begin(), offsetList.end())
            - *std::min_element(offsetList.begin(), offsetList.end());
     return output;
+}
+
+int cOM_TPList::getSize()
+{
+    return OM_TPList.count();
 }
 
 double cOM_TPList::getAverageSV()

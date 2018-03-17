@@ -19,13 +19,14 @@ SOURCES += main.cpp \
     com_tp.cpp \
     com_holist.cpp \
     com_tplist.cpp \
-    com_map.cpp \
-    com_mapsettings.cpp
+    com_mapset.cpp \
+    com_map.cpp
 
 HEADERS += \
     com_ho.h \
     com_tp.h \
     com_holist.h \
     com_tplist.h \
-    com_map.h \
-    com_mapsettings.h
+    com_mapset.h \
+    com_mapset.h \
+    com_map.h

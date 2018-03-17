@@ -13,6 +13,8 @@ public:
     cOM_HO   operator [](int i) const { return OM_HOList[i]; }
     cOM_HO & operator [](int i)       { return OM_HOList[i]; }
 
+    void setKeys(unsigned short newKeys);
+
     QList<double> getOffsetList();
     QList<double> getCodeList();
     QList<double> getColumnList();
@@ -20,14 +22,14 @@ public:
     double getMinOffset();
     double getMaxOffset();
     double getLength   ();
+    double getSize     ();
 
     void append     (cOM_HO newOM_HO);
     void deleteIndex(unsigned  index);
 
 private:
 
-    unsigned      size;
-    QList<cOM_HO> OM_HOList;
+    QList<cOM_HO>  OM_HOList;
 };
 
 #endif // COM_HOLIST_H

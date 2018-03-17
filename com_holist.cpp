@@ -2,14 +2,20 @@
 
 cOM_HOList::cOM_HOList()
 {
-    OM_HOList = { cOM_HO() };
-    size = 0;
+    OM_HOList = {};
 }
 
 cOM_HOList::cOM_HOList(QList<cOM_HO> newOM_HOList)
 {
     OM_HOList = newOM_HOList;
-    size = sizeof(newOM_HOList);
+}
+
+void cOM_HOList::setKeys(unsigned short newKeys){
+    cOM_HO OM_HO;
+    foreach (OM_HO, OM_HOList)
+    {
+        OM_HO.setKeys(newKeys);
+    }
 }
 
 QList<double> cOM_HOList::getOffsetList()
@@ -72,6 +78,11 @@ double cOM_HOList::getLength()
     output = *std::max_element(offsetList.begin(), offsetList.end())
            - *std::min_element(offsetList.begin(), offsetList.end());
     return output;
+}
+
+double cOM_HOList::getSize()
+{
+    return OM_HOList.count();
 }
 
 void cOM_HOList::append(cOM_HO newOM_HO)
