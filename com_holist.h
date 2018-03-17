@@ -1,9 +1,10 @@
 #ifndef COM_HOLIST_H
 #define COM_HOLIST_H
 
+
 #include "com_ho.h"
 
-class cOM_HOList
+class  cOM_HOList
 {
 public:
     cOM_HOList();
@@ -12,8 +13,6 @@ public:
 
     cOM_HO   operator [](int i) const { return OM_HOList[i]; }
     cOM_HO & operator [](int i)       { return OM_HOList[i]; }
-
-    void setKeys(unsigned short newKeys);
 
     QList<double> getOffsetList();
     QList<double> getCodeList();

@@ -1,9 +1,10 @@
 #ifndef COM_MAPSET_H
 #define COM_MAPSET_H
 
+
 #include "com_map.h"
 
-class cOM_MapSet
+class  cOM_MapSet
 {
 public:
     cOM_MapSet();

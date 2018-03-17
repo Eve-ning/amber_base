@@ -1,8 +1,11 @@
 #ifndef COM_TPLIST_H
 #define COM_TPLIST_H
+
+
 #include "com_tp.h"
 
-class cOM_TPList
+
+class  cOM_TPList
 {
 public:
     cOM_TPList();

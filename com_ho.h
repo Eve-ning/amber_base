@@ -3,7 +3,6 @@
 
 #include <QtCore>
 
-class cOM_HO
 {
 public:
     cOM_HO();

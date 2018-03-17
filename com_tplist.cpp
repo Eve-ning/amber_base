@@ -90,7 +90,7 @@ int cOM_TPList::getSize()
 
 double cOM_TPList::getAverageSV()
 {
-    double output;
+    double output = 0;
     QList<double> SVList;
     double SVeach;
 
@@ -106,7 +106,7 @@ double cOM_TPList::getAverageSV()
 
 double cOM_TPList::getAverageBPM()
 {
-    double output;
+    double output = 0;
     QList<double> BPMList;
     double BPMeach;
 

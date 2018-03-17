@@ -1,9 +1,10 @@
 #ifndef COM_TP_H
 #define COM_TP_H
 
+
 #include <QtCore>
 
-class cOM_TP
+class  cOM_TP
 {
 public:
     cOM_TP();

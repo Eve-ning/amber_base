@@ -1,10 +1,12 @@
 #ifndef cOM_Map_H
 #define cOM_Map_H
+
+
 #include "com_holist.h"
 #include "com_tplist.h"
 #include <QDebug>
 
-class cOM_Map
+class  cOM_Map
 {
 public:
 
@@ -14,6 +16,7 @@ public:
     void loadMap(QFileInfo newMapPath);
     void loadMap(QStringList newMapStringList);
 
+    // Runs a list of parameters on qDebug
     void getMapInfo();
 
     QString     getAudioFileName    (){ return audioFileName   ; }
@@ -140,41 +143,41 @@ private:
 
     QList<int> findMapSettings(QStringList &mapSList);
 
-    enum FIND {
-        E_AUDIOFILENAME  ,
-        E_AUDIOLEADIN    ,
-        E_PREVIEWTIME    ,
-        E_COUNTDOWN      ,
-        E_SAMPLESET      ,
-        E_STACKLENIENCY  ,
-        E_GAMEMODE       ,
-        E_LETTERBOX      ,
-        E_SPECIALSTYLE   ,
-        E_WIDESCREEN     ,
-        E_DISTANCESPACING,
-        E_BEATDIVISOR    ,
-        E_GRIDSIZE       ,
-        E_TIMELINEZOOM   ,
-        E_TITLE          ,
-        E_UNICODETITLE   ,
-        E_ARTIST         ,
-        E_UNICODEARTIST  ,
-        E_CREATOR        ,
-        E_DIFFICULTYNAME ,
-        E_SOURCE         ,
-        E_TAGS           ,
-        E_BEATMAPID      ,
-        E_BEATMAPSETID   ,
-        E_HP             ,
-        E_CS             ,
-        E_OD             ,
-        E_AR             ,
-        E_SLIDERMULT     ,
-        E_SLIDERTICK     ,
-        E_BGFILENAME     ,
-        E_OM_HOLIST      ,
-        E_OM_TPLIST
-    };
+//    enum FIND {
+//        E_AUDIOFILENAME  ,
+//        E_AUDIOLEADIN    ,
+//        E_PREVIEWTIME    ,
+//        E_COUNTDOWN      ,
+//        E_SAMPLESET      ,
+//        E_STACKLENIENCY  ,
+//        E_GAMEMODE       ,
+//        E_LETTERBOX      ,
+//        E_SPECIALSTYLE   ,
+//        E_WIDESCREEN     ,
+//        E_DISTANCESPACING,
+//        E_BEATDIVISOR    ,
+//        E_GRIDSIZE       ,
+//        E_TIMELINEZOOM   ,
+//        E_TITLE          ,
+//        E_UNICODETITLE   ,
+//        E_ARTIST         ,
+//        E_UNICODEARTIST  ,
+//        E_CREATOR        ,
+//        E_DIFFICULTYNAME ,
+//        E_SOURCE         ,
+//        E_TAGS           ,
+//        E_BEATMAPID      ,
+//        E_BEATMAPSETID   ,
+//        E_HP             ,
+//        E_CS             ,
+//        E_OD             ,
+//        E_AR             ,
+//        E_SLIDERMULT     ,
+//        E_SLIDERTICK     ,
+//        E_BGFILENAME     ,
+//        E_OM_HOLIST      ,
+//        E_OM_TPLIST
+//    };
 };
 
 #endif // cOM_Map_H

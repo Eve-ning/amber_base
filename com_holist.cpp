@@ -10,13 +10,7 @@ cOM_HOList::cOM_HOList(QList<cOM_HO> newOM_HOList)
     OM_HOList = newOM_HOList;
 }
 
-void cOM_HOList::setKeys(unsigned short newKeys){
-    cOM_HO OM_HO;
-    foreach (OM_HO, OM_HOList)
-    {
-        OM_HO.setKeys(newKeys);
-    }
-}
+
 
 QList<double> cOM_HOList::getOffsetList()
 {
