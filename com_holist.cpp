@@ -10,6 +10,24 @@ cOM_HOList::cOM_HOList(QList<cOM_HO> newOM_HOList)
     OM_HOList = newOM_HOList;
 }
 
+cOM_HO &cOM_HOList::operator [](int i) {
+    if (i < OM_HOList.count()){
+        return OM_HOList[i];
+    } else {
+        qDebug() << "cOM_HO Index Does not Exist, returning first index." << "\r\n";
+        return OM_HOList[0];
+    }
+}
+
+cOM_HO cOM_HOList::operator [](int i) const {
+    if (i < OM_HOList.count()){
+        return OM_HOList[i];
+    } else {
+        qDebug() << "cOM_HO Index Does not Exist, returning default." << "\r\n";
+        return cOM_HO();
+    }
+}
+
 
 
 QList<double> cOM_HOList::getOffsetList()

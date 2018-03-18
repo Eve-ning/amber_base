@@ -242,8 +242,8 @@ void cOM_Map::loadMap(QStringList newMapStringList)
         int startOM_TPIndex,
             endOM_TPIndex;
 
-        startOM_TPIndex = indexMapStringList[31] + 1;
-        endOM_TPIndex = indexMapStringList[32] - 1;
+        startOM_TPIndex = indexMapStringList[33] + 1;
+        endOM_TPIndex = indexMapStringList[34] - 1;
 
         qDebug() << "startOM_TPIndex: " << startOM_TPIndex;
         qDebug() << "endOM_TPIndex: "   << endOM_TPIndex;
@@ -260,7 +260,7 @@ void cOM_Map::loadMap(QStringList newMapStringList)
         int startOM_HOIndex,
             endOM_HOIndex;
 
-        startOM_HOIndex = indexMapStringList[32] + 1;
+        startOM_HOIndex = indexMapStringList[34] + 1;
         endOM_HOIndex = newMapStringList.length();
 
         qDebug() << "startOM_HOIndex: " << startOM_HOIndex;
@@ -273,6 +273,8 @@ void cOM_Map::loadMap(QStringList newMapStringList)
             }
         }
     }
+
+
 }
 
 void cOM_Map::getInfo()
@@ -470,6 +472,8 @@ QList<int> cOM_Map::findMapSettings(QStringList &mapSList)
                    FLAG_breakPList     ,
                    FLAG_OM_TPList      ,
                    FLAG_OM_HOList      };
+
+    qDebug() << "[---- RegEx Matching ----]";
 
     for (int tempS = 0; tempS < mapSList.length(); tempS ++)
     {

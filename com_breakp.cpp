@@ -22,3 +22,11 @@ cOM_BreakP::cOM_BreakP(QString newBreakP)
     startBreak = BreakPList[1].toDouble();
     endBreak   = BreakPList[2].toDouble();
 }
+
+void cOM_BreakP::getInfo()
+{
+    qDebug() << "\r\n"
+             << "[---- Break Info ----]" << "\r\n"
+             << "STARTBREAK : " << startBreak << "\r\n"
+             << "ENDBREAK   : " << endBreak   << "\r\n";
+}

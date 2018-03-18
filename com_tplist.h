@@ -11,8 +11,8 @@ public:
     cOM_TPList();
     cOM_TPList(QList<cOM_TP> newOM_TPList); // Initialize via
 
-    cOM_TP   operator [](int i) const { return OM_TPList[i]; }
-    cOM_TP & operator [](int i)       { return OM_TPList[i]; }
+    cOM_TP   operator [](int i) const;
+    cOM_TP & operator [](int i);
 
     QList<double> getOffsetList();
     QList<double> getCodeList(int onlyFlag = SV_BPM_ONLY);

@@ -10,6 +10,24 @@ cOM_TPList::cOM_TPList(QList<cOM_TP> newOM_TPList)
     OM_TPList = newOM_TPList;
 }
 
+cOM_TP &cOM_TPList::operator [](int i) {
+    if (i < OM_TPList.count()){
+        return OM_TPList[i];
+    } else {
+        qDebug() << "cOM_TP Index Does not Exist, returning first index." << "\r\n";
+        return OM_TPList[0];
+    }
+}
+
+cOM_TP cOM_TPList::operator [](int i) const {
+    if (i < OM_TPList.count()){
+        return OM_TPList[i];
+    } else {
+        qDebug() << "cOM_TP Index Does not Exist, returning default." << "\r\n";
+        return cOM_TP();
+    }
+}
+
 QList<double> cOM_TPList::getOffsetList()
 {
     cOM_TP OM_TP;

@@ -10,6 +10,23 @@ cOM_BreakPList::cOM_BreakPList(QList<cOM_BreakP> newOM_BreakPList)
     OM_BreakPList = newOM_BreakPList;
 }
 
+cOM_BreakP &cOM_BreakPList::operator [](int i) {
+    if (i < OM_BreakPList.count()){
+        return OM_BreakPList[i];
+    } else {
+        qDebug() << "cOM_BreakP Index Does not Exist, returning first index." << "\r\n";
+        return cOM_BreakP[0];
+    }
+}
+cOM_BreakP cOM_BreakPList::operator [](int i) const {
+    if (i < OM_BreakPList.count()){
+        return OM_BreakPList[i];
+    } else {
+        qDebug() << "cOM_BreakP Index Does not Exist, returning default." << "\r\n";
+        return cOM_BreakP();
+    }
+}
+
 QList<double> cOM_BreakPList::getStartList()
 {
     cOM_BreakP OM_BreakP;

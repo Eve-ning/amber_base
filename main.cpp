@@ -29,11 +29,11 @@ void calibrate(){
 
     map.getInfo();
 
-    for (int temp = 0; temp < 10; temp ++) {
+    for (int temp = 0; temp < 3; temp ++) {
 
-        map.getOM_HOList()[temp].getInfo();
-        map.getOM_TPList()[temp].getInfo();
-
+        map.getOM_HOList ()[temp].getInfo();
+        map.getOM_TPList ()[temp].getInfo();
+        map.getBreakPList()[temp].getInfo(); // Maps may not have breaks
 
     }
 

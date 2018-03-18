@@ -52,7 +52,7 @@ public:
     double         getSliderTick       (){ return sliderTick      ; }
     QString        getBGFileName       (){ return bgFileName      ; }
     QString        getVideoFileName    (){ return videoFileName   ; }
-    cOM_BreakPList getBreakPList       (){ return breakPList          ; }
+    cOM_BreakPList getBreakPList       (){ return breakPList      ; }
     cOM_HOList     getOM_HOList        (){ return OM_HOList       ; }
     cOM_TPList     getOM_TPList        (){ return OM_TPList       ; }
 

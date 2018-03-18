@@ -10,8 +10,8 @@ public:
     cOM_BreakPList();
     cOM_BreakPList(QList<cOM_BreakP> newOM_BreakPList);
 
-    cOM_BreakP   operator [](int i) const { return OM_BreakPList[i]; }
-    cOM_BreakP & operator [](int i)       { return OM_BreakPList[i]; }
+    cOM_BreakP   operator [](int i) const;
+    cOM_BreakP & operator [](int i);
 
     QList<double> getStartList();
     QList<double> getEndList();
