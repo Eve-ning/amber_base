@@ -84,6 +84,25 @@ cOM_HO::cOM_HO(QString HO, int newKeys)
 
 }
 
+void cOM_HO::getInfo()
+{
+    qDebug() << "\r\n"
+             << "[---- Hit Object Info ----]"      << "\r\n"
+             << "XAXIS        : " << xAxis         << "\r\n"
+             << "YAXIS        : " << yAxis         << "\r\n"
+             << "OFFSET       : " << offset        << "\r\n"
+             << "NOTETYPE     : " << noteType      << "\r\n"
+             << "HITSOUNDTYPE : " << hitsoundType  << "\r\n"
+             << "LNEND        : " << lnEnd         << "\r\n"
+             << "SAMPLESET    : " << sampleSet     << "\r\n"
+             << "ADDITION     : " << addition      << "\r\n"
+             << "CUSTOMSET    : " << customSet     << "\r\n"
+             << "VOLUME       : " << volume        << "\r\n"
+             << "HITSOUNDFILE : " << hitsoundFile  << "\r\n"
+             << "KEYS         : " << keys          << "\r\n"
+             << "COLUMN       : " << column        << "\r\n";
+}
+
 void cOM_HO::setXAxis       (unsigned short  newXAxis       ){ xAxis        = newXAxis       ; return; }
 void cOM_HO::setYAxis       (unsigned short  newYAxis       ){ yAxis        = newYAxis       ; return; }
 void cOM_HO::setOffset      (double          newOffset      ){ offset       = newOffset      ; return; }

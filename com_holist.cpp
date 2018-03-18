@@ -10,13 +10,25 @@ cOM_HOList::cOM_HOList(QList<cOM_HO> newOM_HOList)
     OM_HOList = newOM_HOList;
 }
 
-void cOM_HOList::setKeys(unsigned short newKeys){
-    cOM_HO OM_HO;
-    foreach (OM_HO, OM_HOList)
-    {
-        OM_HO.setKeys(newKeys);
+cOM_HO &cOM_HOList::operator [](int i) {
+    if (i < OM_HOList.count()){
+        return OM_HOList[i];
+    } else {
+        qDebug() << "cOM_HO Index Does not Exist, returning first index." << "\r\n";
+        return OM_HOList[0];
     }
 }
+
+cOM_HO cOM_HOList::operator [](int i) const {
+    if (i < OM_HOList.count()){
+        return OM_HOList[i];
+    } else {
+        qDebug() << "cOM_HO Index Does not Exist, returning default." << "\r\n";
+        return cOM_HO();
+    }
+}
+
+
 
 QList<double> cOM_HOList::getOffsetList()
 {
@@ -85,14 +97,4 @@ double cOM_HOList::getSize()
     return OM_HOList.count();
 }
 
-void cOM_HOList::append(cOM_HO newOM_HO)
-{
-    OM_HOList.append(newOM_HO);
-    return;
-}
-
-void cOM_HOList::deleteIndex(unsigned index)
-{
-    OM_HOList.removeAt(index);
-}
 

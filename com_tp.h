@@ -1,13 +1,16 @@
 #ifndef COM_TP_H
 #define COM_TP_H
 
+
 #include <QtCore>
 
-class cOM_TP
+class  cOM_TP
 {
 public:
     cOM_TP();
     cOM_TP(QString TP);
+
+    void getInfo();
 
     double          getOffset        () const { return offset        ; }
     double          getCode          () const { return code          ; }

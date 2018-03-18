@@ -1,13 +1,16 @@
 #ifndef COM_HO_H
 #define COM_HO_H
 
+
 #include <QtCore>
 
-class cOM_HO
+class  cOM_HO
 {
 public:
     cOM_HO();
     cOM_HO(QString HO, int newKeys = 0);
+
+    void getInfo();
 
     unsigned short  getXAxis        () const { return xAxis       ; }
     unsigned short  getYAxis        () const { return yAxis       ; }

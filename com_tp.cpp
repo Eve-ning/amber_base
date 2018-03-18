@@ -28,14 +28,28 @@ cOM_TP::cOM_TP(QString TP)
         sampleSet      = TP_splitComma[3].toInt();
         sampleSetIndex = TP_splitComma[4].toInt();
         volume         = TP_splitComma[5].toInt();
-        isBPM          = (TP_splitComma[6] == 1);
-        isKiai         = (TP_splitComma[7] == 1);
+        isBPM          = (TP_splitComma[6] == "1");
+        isKiai         = (TP_splitComma[7] == "1");
     }
     else
     {
         // STATMSG("Failed to Convert QString.");
         cOM_TP();
     }
+}
+
+void cOM_TP::getInfo()
+{
+    qDebug() << "\r\n"
+             << "[---- Timing Point Info ----]"       << "\r\n"
+             << "OFFSET         : " << offset         << "\r\n"
+             << "CODE           : " << code           << "\r\n"
+             << "METRONOME      : " << metronome      << "\r\n"
+             << "SAMPLESET      : " << sampleSet      << "\r\n"
+             << "SAMPLESETINDEX : " << sampleSetIndex << "\r\n"
+             << "VOLUME         : " << volume         << "\r\n"
+             << "ISBPM          : " << isBPM          << "\r\n"
+             << "ISKIAI         : " << isKiai         << "\r\n";
 }
 
 void cOM_TP::setOffset        (double newOffset                 ){ offset         = newOffset        ; return; }

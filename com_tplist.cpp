@@ -10,6 +10,24 @@ cOM_TPList::cOM_TPList(QList<cOM_TP> newOM_TPList)
     OM_TPList = newOM_TPList;
 }
 
+cOM_TP &cOM_TPList::operator [](int i) {
+    if (i < OM_TPList.count()){
+        return OM_TPList[i];
+    } else {
+        qDebug() << "cOM_TP Index Does not Exist, returning first index." << "\r\n";
+        return OM_TPList[0];
+    }
+}
+
+cOM_TP cOM_TPList::operator [](int i) const {
+    if (i < OM_TPList.count()){
+        return OM_TPList[i];
+    } else {
+        qDebug() << "cOM_TP Index Does not Exist, returning default." << "\r\n";
+        return cOM_TP();
+    }
+}
+
 QList<double> cOM_TPList::getOffsetList()
 {
     cOM_TP OM_TP;
@@ -90,7 +108,7 @@ int cOM_TPList::getSize()
 
 double cOM_TPList::getAverageSV()
 {
-    double output;
+    double output = 0;
     QList<double> SVList;
     double SVeach;
 
@@ -106,7 +124,7 @@ double cOM_TPList::getAverageSV()
 
 double cOM_TPList::getAverageBPM()
 {
-    double output;
+    double output = 0;
     QList<double> BPMList;
     double BPMeach;
 
@@ -120,14 +138,4 @@ double cOM_TPList::getAverageBPM()
     return output;
 }
 
-void cOM_TPList::append(cOM_TP newOM_TP)
-{
-    OM_TPList.append(newOM_TP);
-    return;
-}
-
-void cOM_TPList::deleteIndex(unsigned index)
-{
-    OM_TPList.removeAt(index);
-}
 
