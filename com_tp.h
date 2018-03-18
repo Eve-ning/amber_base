@@ -10,6 +10,8 @@ public:
     cOM_TP();
     cOM_TP(QString TP);
 
+    void getInfo();
+
     double          getOffset        () const { return offset        ; }
     double          getCode          () const { return code          ; }
     unsigned short  getMetronome     () const { return metronome     ; }

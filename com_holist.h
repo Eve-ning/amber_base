@@ -1,7 +1,6 @@
 #ifndef COM_HOLIST_H
 #define COM_HOLIST_H
 
-
 #include "com_ho.h"
 
 class  cOM_HOList
@@ -23,8 +22,8 @@ public:
     double getLength   ();
     double getSize     ();
 
-    void append     (cOM_HO newOM_HO);
-    void deleteIndex(unsigned  index);
+    void append     (cOM_HO newOM_HO) { OM_HOList.append(newOM_HO); }
+    void deleteIndex(unsigned  index) { OM_HOList.removeAt(index); }
 
 private:
 

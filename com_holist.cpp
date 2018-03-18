@@ -79,14 +79,4 @@ double cOM_HOList::getSize()
     return OM_HOList.count();
 }
 
-void cOM_HOList::append(cOM_HO newOM_HO)
-{
-    OM_HOList.append(newOM_HO);
-    return;
-}
-
-void cOM_HOList::deleteIndex(unsigned index)
-{
-    OM_HOList.removeAt(index);
-}
 

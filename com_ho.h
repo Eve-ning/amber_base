@@ -10,6 +10,8 @@ public:
     cOM_HO();
     cOM_HO(QString HO, int newKeys = 0);
 
+    void getInfo();
+
     unsigned short  getXAxis        () const { return xAxis       ; }
     unsigned short  getYAxis        () const { return yAxis       ; }
     double          getOffset       () const { return offset      ; }

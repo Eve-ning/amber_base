@@ -120,14 +120,4 @@ double cOM_TPList::getAverageBPM()
     return output;
 }
 
-void cOM_TPList::append(cOM_TP newOM_TP)
-{
-    OM_TPList.append(newOM_TP);
-    return;
-}
-
-void cOM_TPList::deleteIndex(unsigned index)
-{
-    OM_TPList.removeAt(index);
-}
 

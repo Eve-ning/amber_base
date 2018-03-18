@@ -26,8 +26,8 @@ public:
     double getAverageSV ();
     double getAverageBPM();
 
-    void append     (cOM_TP newOM_TP);
-    void deleteIndex(unsigned  index);
+    void append     (cOM_TP newOM_TP) { OM_TPList.append(newOM_TP); }
+    void deleteIndex(unsigned  index) { OM_TPList.removeAt(index); }
 
     const static int SV_BPM_ONLY  = 0,
                      SV_ONLY      = 1,
