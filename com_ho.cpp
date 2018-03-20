@@ -15,9 +15,18 @@ cOM_HO::cOM_HO()
     hitsoundFile    =   "";
 
     keys            =   0;
+    loadFail        =   false;
 }
 
-cOM_HO::cOM_HO(QString HO, int newKeys)
+cOM_HO::cOM_HO(double &newOffset, int &newColumn, int &newKeys)
+{
+    cOM_HO();
+    offset = newOffset;
+    setColumn(newColumn);
+    keys   = newKeys;
+}
+
+cOM_HO::cOM_HO(QString &HO, int newKeys)
 {
 
     /* REFERENCE FOR .osu HO
@@ -33,6 +42,8 @@ cOM_HO::cOM_HO(QString HO, int newKeys)
     // splitColon                    [0]  [1][2][3][4][5]
     // REFERENCE  448,192,1799,5, 6, 2001:1: 1: 2: 70:audio.mp3
     */
+
+    cOM_HO(); // Set Defaults
 
     QStringList HO_splitComma,
                 HO_splitColon;
@@ -78,7 +89,7 @@ cOM_HO::cOM_HO(QString HO, int newKeys)
         hitsoundFile    = (HO_splitColon[5])           ;
     } else {
         // STATMSG("Failed to Convert QString.");
-        cOM_HO();
+        loadFail = true;
     }
 
 
@@ -100,7 +111,7 @@ void cOM_HO::getInfo()
              << "VOLUME       : " << volume        << "\r\n"
              << "HITSOUNDFILE : " << hitsoundFile  << "\r\n"
              << "KEYS         : " << keys          << "\r\n"
-             << "COLUMN       : " << column        << "\r\n";
+             << "COLUMN       : " << getColumn()   << "\r\n";
 }
 
 void cOM_HO::setXAxis       (unsigned short  newXAxis       ){ xAxis        = newXAxis       ; return; }

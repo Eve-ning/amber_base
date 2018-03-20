@@ -30,6 +30,8 @@ public:
     void setIsBPM         (bool            newIsBPM         );
     void setIsKiai        (bool            newIsKiai        );
 
+    void limitValue();
+
     double getValue() const;
     void   setValue(double newValue) ;
 
@@ -44,6 +46,7 @@ protected:
     unsigned short  volume        ;
     bool            isBPM         ;
     bool            isKiai        ;
+    bool            loadFail      ;
 
 };
 
