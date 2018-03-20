@@ -10,12 +10,15 @@ cOM_TP::cOM_TP()
     volume         = 5      ;
     isBPM          = false  ;
     isKiai         = false  ;
+    loadFail       = false  ;
 }
 
 cOM_TP::cOM_TP(QString TP)
 {
     //            [0] [1]              [2][3][4][5][6][7]
     // REFERENCE: 638,231.660231660231,4, 1, 0, 5, 1, 0
+    cOM_TP(); // Set Defaults
+
     QStringList TP_splitComma;
 
     TP_splitComma = TP.split("," , QString::KeepEmptyParts);
@@ -34,7 +37,7 @@ cOM_TP::cOM_TP(QString TP)
     else
     {
         // STATMSG("Failed to Convert QString.");
-        cOM_TP();
+        loadFail = true;
     }
 }
 
@@ -52,14 +55,31 @@ void cOM_TP::getInfo()
              << "ISKIAI         : " << isKiai         << "\r\n";
 }
 
-void cOM_TP::setOffset        (double newOffset                 ){ offset         = newOffset        ; return; }
-void cOM_TP::setCode          (double newCode                   ){ code           = newCode          ; return; }
+void cOM_TP::setOffset        (double          newOffset        ){ offset         = newOffset        ; return; }
+void cOM_TP::setCode          (double          newCode          ){ code           = newCode          ; return; }
 void cOM_TP::setMetronome     (unsigned short  newMetronome     ){ metronome      = newMetronome     ; return; }
 void cOM_TP::setSampleSet     (unsigned short  newSampleSet     ){ sampleSet      = newSampleSet     ; return; }
 void cOM_TP::setSampleSetIndex(unsigned short  newSampleSetIndex){ sampleSetIndex = newSampleSetIndex; return; }
 void cOM_TP::setVolume        (unsigned short  newVolume        ){ volume         = newVolume        ; return; }
 void cOM_TP::setIsBPM         (bool            newIsBPM         ){ isBPM          = newIsBPM         ; return; }
 void cOM_TP::setIsKiai        (bool            newIsKiai        ){ isKiai         = newIsKiai        ; return; }
+
+void cOM_TP::limitValue()
+{
+    if (isBPM) {
+        // BOUND 0 ~ infinity
+        if (getValue() <= 0) {
+            setValue(0.000001);
+        }
+    } else { //isSV
+        // BOUND 0.1 ~ 10.0
+        if (getValue() < 0.1) {
+            setValue(0.1);
+        } else if (getValue() > 10.0) {
+            setValue(10.0);
+        }
+    }
+}
 
 double cOM_TP::getValue() const
 {

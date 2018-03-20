@@ -15,7 +15,7 @@ cOM_BreakP &cOM_BreakPList::operator [](int i) {
         return OM_BreakPList[i];
     } else {
         qDebug() << "cOM_BreakP Index Does not Exist, returning first index." << "\r\n";
-        return cOM_BreakP[0];
+        return OM_BreakPList[0];
     }
 }
 cOM_BreakP cOM_BreakPList::operator [](int i) const {

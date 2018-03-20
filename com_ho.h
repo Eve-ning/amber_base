@@ -8,7 +8,8 @@ class  cOM_HO
 {
 public:
     cOM_HO();
-    cOM_HO(QString HO, int newKeys = 0);
+    cOM_HO(QString &HO, int newKeys = 0);
+    cOM_HO(double &newOffset, int &newColumn, int &newKeys);
 
     void getInfo();
 
@@ -64,7 +65,8 @@ protected:
     QString         hitsoundFile;
 
     unsigned short  keys;
-    unsigned short  column;
+
+    bool            loadFail;
 
 };
 

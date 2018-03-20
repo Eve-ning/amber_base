@@ -3,6 +3,7 @@
 
 #include "com_breakp.h"
 #include <QList>
+#include <QDebug>
 
 class cOM_BreakPList
 {

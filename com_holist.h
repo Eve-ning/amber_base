@@ -8,7 +8,7 @@ class  cOM_HOList
 public:
     cOM_HOList();
     cOM_HOList(QList<cOM_HO> newOM_HOList); // Initialize via array of OM_HO
-    cOM_HOList(QString EHO);    // Initialize via EHO and convert all to OM_HO
+    cOM_HOList(QString &EHO, int keys = 7);    // Initialize via EHO and convert all to OM_HO
 
     cOM_HO   operator [](int i) const;
     cOM_HO & operator [](int i);
