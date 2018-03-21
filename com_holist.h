@@ -13,6 +13,8 @@ public:
     cOM_HO   operator [](int i) const;
     cOM_HO & operator [](int i);
 
+    static bool isEHO(QString EHO);
+
     QList<double> getOffsetList();
     QList<double> getCodeList();
     QList<double> getColumnList();

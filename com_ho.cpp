@@ -55,7 +55,7 @@ cOM_HO::cOM_HO(QString &HO, int newKeys)
             .split(":", QString::KeepEmptyParts);
 
     if (HO_splitColon.size() == 5 &&
-            HO_splitComma.size() == 6) // Means it is a NN
+        HO_splitComma.size() == 6) // Means it is a NN
     {
         //Assignment to Values
         xAxis           =   (HO_splitComma[0]).toInt()   ;
@@ -112,6 +112,57 @@ void cOM_HO::getInfo()
              << "HITSOUNDFILE : " << hitsoundFile  << "\r\n"
              << "KEYS         : " << keys          << "\r\n"
              << "COLUMN       : " << getColumn()   << "\r\n";
+}
+
+bool cOM_HO::isHO_NN(QString HO)
+{
+
+    // Reference: 109,192,14391,1,0,0:0:0:0:
+    bool isValid;
+
+    isValid = true;
+
+    if (HO.split(",").count() != 6 ||
+        HO.split(":").count() != 5)
+    {
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+bool cOM_HO::isHO_LN(QString HO)
+{
+
+    // Reference: 109,192,14391,1,0,0:0:0:0:
+    bool isValid;
+
+    isValid = true;
+
+    if (HO.split(",").count() != 6 ||
+        HO.split(":").count() != 6)
+    {
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+bool cOM_HO::isHO(QString HO)
+{
+
+    // Reference: 109,192,14391,1,0,0:0:0:0:
+    bool isValid;
+
+    isValid = true;
+
+    if (!isHO_NN(HO) &&
+        !isHO_LN(HO))
+    {
+        isValid = false;
+    }
+
+    return isValid;
 }
 
 void cOM_HO::setXAxis       (unsigned short  newXAxis       ){ xAxis        = newXAxis       ; return; }

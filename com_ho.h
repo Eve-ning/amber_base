@@ -13,6 +13,10 @@ public:
 
     void getInfo();
 
+    static bool isHO_NN(QString HO);
+    static bool isHO_LN(QString HO);
+    static bool isHO(QString HO);
+
     unsigned short  getXAxis        () const { return xAxis       ; }
     unsigned short  getYAxis        () const { return yAxis       ; }
     double          getOffset       () const { return offset      ; }
@@ -25,28 +29,28 @@ public:
     QString         getHitsoundFile () const { return hitsoundFile; }
     double          getLNEnd        () const { return lnEnd       ; }
 
-    void setXAxis       (unsigned short  newXAxis       );
-    void setYAxis       (unsigned short  newYAxis       );
-    void setOffset      (double          newOffset      );
-    void setNoteType    (unsigned short  newNoteType    );
-    void setHitsoundType(unsigned short  newHitsoundType);
-    void setSampleSet   (unsigned short  newSampleSet   );
-    void setAddition    (unsigned short  newAddition    );
-    void setCustomSet   (unsigned short  newCustomSet   );
-    void setVolume      (unsigned short  newVolume      );
-    void setHitsoundFile(QString         newHitsoundFile);
-    void setLNEnd       (double          newLNEnd       );
+    void setXAxis        (unsigned short  newXAxis       );
+    void setYAxis        (unsigned short  newYAxis       );
+    void setOffset       (double          newOffset      );
+    void setNoteType     (unsigned short  newNoteType    );
+    void setHitsoundType (unsigned short  newHitsoundType);
+    void setSampleSet    (unsigned short  newSampleSet   );
+    void setAddition     (unsigned short  newAddition    );
+    void setCustomSet    (unsigned short  newCustomSet   );
+    void setVolume       (unsigned short  newVolume      );
+    void setHitsoundFile (QString         newHitsoundFile);
+    void setLNEnd        (double          newLNEnd       );
 
     unsigned short getKeys   () const { return keys; }
     unsigned short getColumn () const;
+    unsigned short getLNLen(){ return lnEnd == -1 ? 0 : lnEnd - offset; }
+
+    bool getLoadFail(){ return loadFail; }
 
     void setKeys   (unsigned short newKeys);
     void setColumn (unsigned short newColumn);
 
     QString toString();
-
-    unsigned short getLNLen(){ return lnEnd == -1 ? 0 : lnEnd - offset; }
-
 
 protected:
 

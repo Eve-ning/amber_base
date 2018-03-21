@@ -22,6 +22,8 @@ cOM_HOList::cOM_HOList(QString &EHO, int keys)
     int openBracketIndex,
         closeBracketIndex;
 
+
+
     openBracketIndex = EHO.indexOf("(");
     closeBracketIndex = EHO.indexOf(")");
 
@@ -49,6 +51,41 @@ cOM_HO &cOM_HOList::operator [](int i) {
         qDebug() << "cOM_HO Index Does not Exist, returning first index." << "\r\n";
         return OM_HOList[0];
     }
+}
+
+bool cOM_HOList::isEHO(QString EHO)
+{
+    // Reference: 01:52:511 (112511|3) -
+
+    bool isValid = true;
+
+    short colonIndex,
+          openBrIndex,
+          pipeIndex,
+          closeBrIndex;
+
+    colonIndex   = EHO.indexOf(":");
+    openBrIndex  = EHO.indexOf("(");
+    pipeIndex    = EHO.indexOf("|");
+    closeBrIndex = EHO.indexOf(")");
+
+    if (colonIndex   < 0 ||
+        openBrIndex  < 0 ||
+        pipeIndex    < 0 ||
+        closeBrIndex < 0)  // If index is -1, means that the character does not exist.
+    {
+        isValid = false;
+    }
+
+    if ( colonIndex   > openBrIndex  ||
+         openBrIndex  > pipeIndex    ||
+         pipeIndex    > closeBrIndex ||
+         closeBrIndex < colonIndex) // As the indexes should be increasing, all of these conditions shouldn't be true
+    {
+        isValid = false;
+    }
+
+    return isValid;
 }
 
 cOM_HO cOM_HOList::operator [](int i) const {

@@ -55,6 +55,56 @@ void cOM_TP::getInfo()
              << "ISKIAI         : " << isKiai         << "\r\n";
 }
 
+bool cOM_TP::isTP_SV(QString TP)
+{
+    // Reference: 14724,-100,4,2,1,80,0,0
+
+    bool isValid;
+
+    isValid = true;
+
+    if (TP.split(",").count() != 8 ||
+        TP.split(",")[6] != "0")
+    {
+        isValid = false;
+    }
+
+    return isValid;
+}
+bool cOM_TP::isTP_BPM(QString TP)
+{
+    // Reference: 14724,-100,4,2,1,80,0,0
+
+    bool isValid;
+
+    isValid = true;
+
+    if (TP.split(",").count() != 8 ||
+        TP.split(",")[6] != "1")
+    {
+        isValid = false;
+    }
+
+    return isValid;
+}
+bool cOM_TP::isTP(QString TP)
+{
+    // Reference: 14724,-100,4,2,1,80,0,0
+
+    bool isValid;
+
+    isValid = true;
+
+    if (!isTP_SV(TP) &&
+        !isTP_BPM(TP))
+    {
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+
 void cOM_TP::setOffset        (double          newOffset        ){ offset         = newOffset        ; return; }
 void cOM_TP::setCode          (double          newCode          ){ code           = newCode          ; return; }
 void cOM_TP::setMetronome     (unsigned short  newMetronome     ){ metronome      = newMetronome     ; return; }

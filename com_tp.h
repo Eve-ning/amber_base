@@ -12,6 +12,11 @@ public:
 
     void getInfo();
 
+    static bool isTP_SV(QString TP);
+    static bool isTP_BPM(QString TP);
+    static bool isTP(QString TP);
+
+
     double          getOffset        () const { return offset        ; }
     double          getCode          () const { return code          ; }
     unsigned short  getMetronome     () const { return metronome     ; }
