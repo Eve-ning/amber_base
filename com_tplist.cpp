@@ -3,11 +3,66 @@
 cOM_TPList::cOM_TPList()
 {
     OM_TPList = {};
+    loadFail = false;
 }
 
-cOM_TPList::cOM_TPList(QList<cOM_TP> newOM_TPList)
+cOM_TPList::cOM_TPList(QList<cOM_TP> newOM_TPList) : cOM_TPList()
+{
+    loadTPList(newOM_TPList);
+}
+cOM_TPList::cOM_TPList(QTextBrowser *tb) : cOM_TPList()
+{
+    loadTPList(tb);
+}
+cOM_TPList::cOM_TPList(QLineEdit *line) : cOM_TPList()
+{
+    loadTPList(line);
+}
+
+void cOM_TPList::loadTPList(QList<cOM_TP> newOM_TPList)
 {
     OM_TPList = newOM_TPList;
+}
+void cOM_TPList::loadTPList(QTextBrowser *tb)
+{
+    QStringList tbTextSplit;
+    QString tbText,
+            temp;
+
+    bool boolTP;
+
+    tbText = tb->toPlainText();
+    tbTextSplit = tbText.split("\n", QString::SkipEmptyParts);
+
+    boolTP = cOM_TP::isTP(tbTextSplit[0]);
+
+    if (!boolTP)
+    {
+        loadFail = true;
+        return;
+    }
+
+    foreach (temp, tbTextSplit) {
+        OM_TPList.append(cOM_TP(temp));
+    }
+}
+void cOM_TPList::loadTPList(QLineEdit *line)
+{
+    QString lineText;
+
+    bool boolTP;
+
+    lineText = line->text();
+
+    boolTP = cOM_TP::isTP(lineText);
+
+    if (!boolTP)
+    {
+        loadFail = true;
+        return;
+    }
+
+    OM_TPList.append(lineText);
 }
 
 cOM_TP &cOM_TPList::operator [](int i) {
@@ -55,7 +110,6 @@ QList<double> cOM_TPList::getCodeList(int onlyFlag)
 
     return output;
 }
-
 QList<double> cOM_TPList::getValueList(int onlyFlag)
 {
     cOM_TP OM_TP;

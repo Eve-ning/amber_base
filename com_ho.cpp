@@ -18,17 +18,41 @@ cOM_HO::cOM_HO()
     loadFail        =   false;
 }
 
-cOM_HO::cOM_HO(double &newOffset, int &newColumn, int &newKeys)
+cOM_HO::cOM_HO(double &newOffset, int &newColumn, int &newKeys) : cOM_HO()
 {
-    cOM_HO();
+    loadHO(newOffset, newColumn, newKeys);
+}
+cOM_HO::cOM_HO(QLineEdit *line, int newKeys) : cOM_HO()
+{
+    loadHO(line, newKeys);
+}
+
+cOM_HO::cOM_HO(QString &HO, int newKeys) : cOM_HO()
+{
+    loadHO(HO, newKeys);
+}
+
+void cOM_HO::loadHO(double &newOffset, int &newColumn, int &newKeys)
+{
     offset = newOffset;
     setColumn(newColumn);
     keys   = newKeys;
 }
-
-cOM_HO::cOM_HO(QString &HO, int newKeys)
+void cOM_HO::loadHO(QLineEdit *line, int newKeys)
 {
+    QString newOM_HO;
+    newOM_HO = line->text();
 
+    if (isHO(newOM_HO))
+    {
+        loadFail = true;
+        return;
+    }
+
+    loadHO(newOM_HO, newKeys);
+}
+void cOM_HO::loadHO(QString &HO, int newKeys)
+{
     /* REFERENCE FOR .osu HO
     // NN
 
@@ -42,8 +66,6 @@ cOM_HO::cOM_HO(QString &HO, int newKeys)
     // splitColon                    [0]  [1][2][3][4][5]
     // REFERENCE  448,192,1799,5, 6, 2001:1: 1: 2: 70:audio.mp3
     */
-
-    cOM_HO(); // Set Defaults
 
     QStringList HO_splitComma,
                 HO_splitColon;
@@ -91,8 +113,6 @@ cOM_HO::cOM_HO(QString &HO, int newKeys)
         // STATMSG("Failed to Convert QString.");
         loadFail = true;
     }
-
-
 }
 
 void cOM_HO::getInfo()
@@ -130,7 +150,6 @@ bool cOM_HO::isHO_NN(QString HO)
 
     return isValid;
 }
-
 bool cOM_HO::isHO_LN(QString HO)
 {
 
@@ -147,7 +166,6 @@ bool cOM_HO::isHO_LN(QString HO)
 
     return isValid;
 }
-
 bool cOM_HO::isHO(QString HO)
 {
 

@@ -12,6 +12,8 @@ public:
     cOM_BreakP();
     cOM_BreakP(QString newBreakP);
 
+    void loadBreakP(QString newBreakP);
+
     void getInfo();
 
     double getStartBreak(){ return startBreak; }

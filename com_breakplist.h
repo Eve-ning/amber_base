@@ -11,6 +11,8 @@ public:
     cOM_BreakPList();
     cOM_BreakPList(QList<cOM_BreakP> newOM_BreakPList);
 
+    void loadBreakPList(QList<cOM_BreakP> newOM_BreakPList);
+
     cOM_BreakP   operator [](int i) const;
     cOM_BreakP & operator [](int i);
 

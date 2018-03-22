@@ -17,6 +17,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Autosave Files
+*.autosave
+
 # =========================
 # Operating System Files
 # =========================

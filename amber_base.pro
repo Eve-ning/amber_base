@@ -1,4 +1,4 @@
-QT -= gui
+QT       += core gui printsupport
 
 CONFIG += c++11 console
 CONFIG -= app_bundle

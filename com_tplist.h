@@ -3,13 +3,20 @@
 
 
 #include "com_tp.h"
-
+#include <QTextBrowser>
+#include <QLineEdit>
 
 class  cOM_TPList
 {
 public:
-    cOM_TPList();
-    cOM_TPList(QList<cOM_TP> newOM_TPList); // Initialize via
+    cOM_TPList()                          ;
+    cOM_TPList(QList<cOM_TP> newOM_TPList);
+    cOM_TPList(QTextBrowser *tb)          ;
+    cOM_TPList(QLineEdit *line)           ;
+
+    void loadTPList(QList<cOM_TP> newOM_TPList);
+    void loadTPList(QTextBrowser *tb);
+    void loadTPList(QLineEdit *line);
 
     cOM_TP   operator [](int i) const;
     cOM_TP & operator [](int i);
@@ -35,6 +42,7 @@ public:
 
 protected:
     QList<cOM_TP> OM_TPList;
+    bool          loadFail;
 };
 
 #endif // COM_TPLIST_H

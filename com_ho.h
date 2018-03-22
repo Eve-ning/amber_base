@@ -3,6 +3,7 @@
 
 
 #include <QtCore>
+#include <QLineEdit>
 
 class  cOM_HO
 {
@@ -10,6 +11,11 @@ public:
     cOM_HO();
     cOM_HO(QString &HO, int newKeys = 0);
     cOM_HO(double &newOffset, int &newColumn, int &newKeys);
+    cOM_HO(QLineEdit *line, int newKeys = 0);
+
+    void loadHO(QString &HO, int newKeys = 0);
+    void loadHO(double &newOffset, int &newColumn, int &newKeys);
+    void loadHO(QLineEdit *line, int newKeys = 0);
 
     void getInfo();
 

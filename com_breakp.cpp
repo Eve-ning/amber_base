@@ -6,7 +6,12 @@ cOM_BreakP::cOM_BreakP()
     endBreak   = 1;
 }
 
-cOM_BreakP::cOM_BreakP(QString newBreakP)
+cOM_BreakP::cOM_BreakP(QString newBreakP) : cOM_BreakP()
+{
+    loadBreakP(newBreakP);
+}
+
+void cOM_BreakP::loadBreakP(QString newBreakP)
 {
     QStringList BreakPList;
 

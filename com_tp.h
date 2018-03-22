@@ -3,19 +3,23 @@
 
 
 #include <QtCore>
+#include <QLineEdit>
 
 class  cOM_TP
 {
 public:
     cOM_TP();
     cOM_TP(QString TP);
+    cOM_TP(QLineEdit *line);
+
+    void loadTP(QString TP);
+    void loadTP(QLineEdit *line);
 
     void getInfo();
 
     static bool isTP_SV(QString TP);
     static bool isTP_BPM(QString TP);
     static bool isTP(QString TP);
-
 
     double          getOffset        () const { return offset        ; }
     double          getCode          () const { return code          ; }

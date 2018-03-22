@@ -13,11 +13,20 @@ cOM_TP::cOM_TP()
     loadFail       = false  ;
 }
 
-cOM_TP::cOM_TP(QString TP)
+cOM_TP::cOM_TP(QString TP) : cOM_TP()
+{
+    loadTP(TP);
+}
+cOM_TP::cOM_TP(QLineEdit *line) : cOM_TP()
+{
+    loadTP(line);
+}
+
+void cOM_TP::loadTP(QString TP)
 {
     //            [0] [1]              [2][3][4][5][6][7]
     // REFERENCE: 638,231.660231660231,4, 1, 0, 5, 1, 0
-    cOM_TP(); // Set Defaults
+    cOM_TP{}; // Set Defaults
 
     QStringList TP_splitComma;
 
@@ -38,6 +47,18 @@ cOM_TP::cOM_TP(QString TP)
     {
         // STATMSG("Failed to Convert QString.");
         loadFail = true;
+    }
+}
+void cOM_TP::loadTP(QLineEdit *line)
+{
+    QString lineText;
+
+    lineText = line->text();
+
+    if (isTP(lineText))
+    {
+        loadFail = true;
+        return;
     }
 }
 
@@ -103,7 +124,6 @@ bool cOM_TP::isTP(QString TP)
 
     return isValid;
 }
-
 
 void cOM_TP::setOffset        (double          newOffset        ){ offset         = newOffset        ; return; }
 void cOM_TP::setCode          (double          newCode          ){ code           = newCode          ; return; }

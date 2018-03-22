@@ -5,10 +5,17 @@ cOM_BreakPList::cOM_BreakPList()
     OM_BreakPList = {};
 }
 
-cOM_BreakPList::cOM_BreakPList(QList<cOM_BreakP> newOM_BreakPList)
+cOM_BreakPList::cOM_BreakPList(QList<cOM_BreakP> newOM_BreakPList) : cOM_BreakPList()
+{
+    loadBreakPList(newOM_BreakPList);
+}
+
+void cOM_BreakPList::loadBreakPList(QList<cOM_BreakP> newOM_BreakPList)
 {
     OM_BreakPList = newOM_BreakPList;
 }
+
+
 
 cOM_BreakP &cOM_BreakPList::operator [](int i) {
     if (i < OM_BreakPList.count()){
