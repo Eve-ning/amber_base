@@ -26,7 +26,6 @@ cOM_HO::cOM_HO(QLineEdit *line, int newKeys) : cOM_HO()
 {
     loadHO(line, newKeys);
 }
-
 cOM_HO::cOM_HO(QString &HO, int newKeys) : cOM_HO()
 {
     loadHO(HO, newKeys);
@@ -35,8 +34,8 @@ cOM_HO::cOM_HO(QString &HO, int newKeys) : cOM_HO()
 void cOM_HO::loadHO(double &newOffset, int &newColumn, int &newKeys)
 {
     offset = newOffset;
-    setColumn(newColumn);
     keys   = newKeys;
+    setColumn(newColumn);  
 }
 void cOM_HO::loadHO(QLineEdit *line, int newKeys)
 {
@@ -115,7 +114,7 @@ void cOM_HO::loadHO(QString &HO, int newKeys)
     }
 }
 
-void cOM_HO::getInfo()
+void cOM_HO::getInfo() const
 {
     qDebug() << "\r\n"
              << "[---- Hit Object Info ----]"      << "\r\n"
@@ -183,6 +182,31 @@ bool cOM_HO::isHO(QString HO)
     return isValid;
 }
 
+bool cOM_HO::isHO_NN(QStringList HOList)
+{
+    QString HOSplit;
+
+    HOSplit = HOList[0];
+
+    return isHO_NN(HOSplit);
+}
+bool cOM_HO::isHO_LN(QStringList HOList)
+{
+    QString HOSplit;
+
+    HOSplit = HOList[0];
+
+    return isHO_LN(HOSplit);
+}
+bool cOM_HO::isHO(QStringList HOList)
+{
+    QString HOSplit;
+
+    HOSplit = HOList[0];
+
+    return isHO(HOSplit);
+}
+
 void cOM_HO::setXAxis       (unsigned short  newXAxis       ){ xAxis        = newXAxis       ; return; }
 void cOM_HO::setYAxis       (unsigned short  newYAxis       ){ yAxis        = newYAxis       ; return; }
 void cOM_HO::setOffset      (double          newOffset      ){ offset       = newOffset      ; return; }
@@ -222,12 +246,11 @@ void cOM_HO::setColumn(unsigned short newColumn)
         return;
     }
 
-
     // This function changes xAxis according to newColumn
     xAxis = round(((double(newColumn) + 1.0) * 2.0 - 1.0) * 256.0 / double(keys));
 }
 
-QString cOM_HO::toString()
+QString cOM_HO::toString() const
 {
     return      QString::number(xAxis       ) + ","
             +   QString::number(yAxis       ) + ","

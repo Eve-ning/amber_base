@@ -1,31 +1,5 @@
 #include "cOM_Map.h"
 
-void cOM_Map::loadMap(QString newMapString)
-{
-    // Convert to StringList then pass to StringList Handler
-    loadMap(newMapString.split("\n",QString::KeepEmptyParts));
-}
-
-void cOM_Map::loadMap(QFileInfo newMapPath)
-{
-    // Convert to StringList then pass to StringList Handler
-    QStringList mapStringList;
-    QFile newMapFile;
-
-    newMapFile.setFileName(newMapPath.filePath());
-    if (newMapFile.open(QFile::ReadOnly)) {
-        QTextStream mapStream(&newMapFile);
-        while (!mapStream.atEnd()) {
-            mapStringList.append(mapStream.readLine());
-        }
-    } else {
-        qDebug() << "Map cannot be opened. \n"
-                 << "Map Path: "
-                 << newMapFile.fileName();
-    }
-
-    loadMap(mapStringList);
-}
 
 cOM_Map::cOM_Map()
 {
@@ -58,6 +32,31 @@ cOM_Map::cOM_Map()
     OM_TPList        = cOM_TPList()        ;
 }
 
+void cOM_Map::loadMap(QString newMapString)
+{
+    // Convert to StringList then pass to StringList Handler
+    loadMap(newMapString.split("\n",QString::KeepEmptyParts));
+}
+void cOM_Map::loadMap(QFileInfo newMapPath)
+{
+    // Convert to StringList then pass to StringList Handler
+    QStringList mapStringList;
+    QFile newMapFile;
+
+    newMapFile.setFileName(newMapPath.filePath());
+    if (newMapFile.open(QFile::ReadOnly)) {
+        QTextStream mapStream(&newMapFile);
+        while (!mapStream.atEnd()) {
+            mapStringList.append(mapStream.readLine());
+        }
+    } else {
+        qDebug() << "Map cannot be opened. \n"
+                 << "Map Path: "
+                 << newMapFile.fileName();
+    }
+
+    loadMap(mapStringList);
+}
 void cOM_Map::loadMap(QStringList newMapStringList)
 {
     QList<int> indexMapStringList;
@@ -277,7 +276,7 @@ void cOM_Map::loadMap(QStringList newMapStringList)
 
 }
 
-void cOM_Map::getInfo()
+void cOM_Map::getInfo() const
 {
     qDebug() << "\r\n"
              << "[---- Map Info ----]" << "\r\n"

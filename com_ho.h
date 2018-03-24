@@ -17,11 +17,19 @@ public:
     void loadHO(double &newOffset, int &newColumn, int &newKeys);
     void loadHO(QLineEdit *line, int newKeys = 0);
 
-    void getInfo();
+    void getInfo() const;
 
     static bool isHO_NN(QString HO);
     static bool isHO_LN(QString HO);
-    static bool isHO(QString HO);
+    static bool isHO   (QString HO);
+    static bool isHO_NN(QStringList HO);
+    static bool isHO_LN(QStringList HO);
+    static bool isHO   (QStringList HO);
+
+    bool operator <(cOM_HO *OM_HO) { return offset < OM_HO->getOffset(); }
+    bool operator >(cOM_HO *OM_HO) { return offset > OM_HO->getOffset(); }
+    bool operator <(cOM_HO  OM_HO) { return offset < OM_HO.getOffset(); }
+    bool operator >(cOM_HO  OM_HO) { return offset > OM_HO.getOffset(); }
 
     unsigned short  getXAxis        () const { return xAxis       ; }
     unsigned short  getYAxis        () const { return yAxis       ; }
@@ -56,7 +64,7 @@ public:
     void setKeys   (unsigned short newKeys);
     void setColumn (unsigned short newColumn);
 
-    QString toString();
+    QString toString() const;
 
 protected:
 

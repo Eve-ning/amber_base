@@ -10,7 +10,7 @@ cOM_HOList::cOM_HOList(QList<cOM_HO> newOM_HOList) : cOM_HOList()
 {
     loadHOList(newOM_HOList);
 }
-cOM_HOList::cOM_HOList(QString &EHO, int newKeys) : cOM_HOList()
+cOM_HOList::cOM_HOList(QString EHO, int newKeys) : cOM_HOList()
 {
     loadHOList(EHO, newKeys);
 }
@@ -27,14 +27,101 @@ void cOM_HOList::loadHOList(QList<cOM_HO> newOM_HOList)
 {
     OM_HOList = newOM_HOList;
 }
-void cOM_HOList::loadHOList(QString &EHO, int newKeys)
+void cOM_HOList::loadHOList(QTextBrowser *tb, int newKeys)
 {
-    if (!isEHO(EHO))
+    QStringList tbTextSplit;
+    QString     tbText;
+
+    bool boolEHO,
+         boolHO;
+
+    tbText = tb->toPlainText();
+    tbTextSplit = tbText.split("\n", QString::SkipEmptyParts);
+
+    boolEHO = isEHO(tbText);
+    boolHO  = cOM_HO::isHO(tbTextSplit);
+
+    if (boolEHO)
+    {
+        loadEHOList(tbText, newKeys); // EHO Handler
+    }
+    else if (boolHO)
+    {
+        loadHOList(tbTextSplit, newKeys); // HO Handler
+    }
+    else
     {
         loadFail = true;
         return;
     }
+}
+void cOM_HOList::loadHOList(QLineEdit *line, int newKeys)
+{
+    QString lineText;
 
+    lineText = line->text();
+
+    bool boolEHO,
+         boolHO;
+
+    boolEHO = isEHO(lineText);
+    boolHO  = cOM_HO::isHO(lineText);
+
+    if (boolEHO)
+    {
+        loadEHOList(lineText, newKeys); // EHO Handler
+    }
+    else if (boolHO)
+    {
+        loadHOList(lineText, newKeys); // HO Handler
+    }
+    else
+    {
+        loadFail = true;
+        return;
+    }
+}
+void cOM_HOList::loadHOList(QString &EHOorHO, int newKeys)
+{
+    bool boolEHO,
+         boolHO;
+
+    boolEHO = isEHO(EHOorHO);
+    boolHO  = cOM_HO::isHO(EHOorHO);
+
+    // IF NOT HO CALL EHO
+    if (boolEHO)
+    {
+        loadEHOList(EHOorHO, newKeys); // Pass to EHO Handler
+        return;
+    }
+    else if (boolHO)
+    {
+        // Convert to StringList and pass towards QStringList Handler
+        QStringList HOList;
+        HOList = EHOorHO.split("\n", QString::SkipEmptyParts);
+
+        loadHOList(HOList); // Pass to QStringList Handler
+    }
+    else
+    {
+        loadFail = true;
+        return;
+    }
+}
+void cOM_HOList::loadHOList(QStringList &HOList, int newKeys)
+{
+    QString HO;
+    foreach (HO, HOList) {
+        OM_HOList.append(cOM_HO(HO, newKeys));
+    }
+
+    return;
+}
+void cOM_HOList::loadEHOList(QString &EHO, int newKeys)
+{
+    // !! DO NOT CALL THIS DIRECTLY
+    // Load via loadHOList (QString, int)
     QString EHO_trim,
             EHO_eachSplitComma;
     QStringList EHO_splitComma;
@@ -46,7 +133,7 @@ void cOM_HOList::loadHOList(QString &EHO, int newKeys)
     openBracketIndex = EHO.indexOf("(");
     closeBracketIndex = EHO.indexOf(")");
 
-    EHO_trim = EHO.mid(EHO.indexOf(openBracketIndex + 1, closeBracketIndex - openBracketIndex - 1));
+    EHO_trim = EHO.mid(openBracketIndex + 1, closeBracketIndex - openBracketIndex - 1);
 
     EHO_splitComma = EHO_trim.split(",",QString::SkipEmptyParts);
 
@@ -62,66 +149,59 @@ void cOM_HOList::loadHOList(QString &EHO, int newKeys)
                                 newKeys));
     }
 }
-void cOM_HOList::loadHOList(QTextBrowser *tb, int newKeys)
+
+void cOM_HOList::setOffsetList(QList<double> &newOffsetList)
 {
-    QStringList tbTextSplit;
-    QString     tbText,
-                temp;
-
-    bool boolEHO,
-         boolHO;
-
-    tbText = tb->toPlainText();
-    tbTextSplit = tbText.split("\n", QString::SkipEmptyParts);
-
-    boolEHO = isEHO(tbText);
-    boolHO  = cOM_HO::isHO(tbTextSplit[0]);
-
-    if (!boolEHO && !boolHO)
+    if (OM_HOList.length() != newOffsetList.length())
     {
-        loadFail = true;
+        qDebug() << __FUNCTION__ << ": Length Mismatch";
         return;
     }
 
-    if (boolEHO)
+    for (int i = 0; i < newOffsetList.length(); i ++)
     {
-        // If detected as an EHO, we use the EHO constructor
-        cOM_HOList{tbText, newKeys};
+        OM_HOList[i].setOffset(newOffsetList[i]);
     }
-    else if (boolHO)
-    {
-        // If detected as a HO List we use the HO constructor
-        foreach (temp, tbTextSplit) {
-            OM_HOList.append(cOM_HO(temp, newKeys));
-        }
-    }
+
+    return;
 }
-void cOM_HOList::loadHOList(QLineEdit *line, int newKeys)
+void cOM_HOList::setXAxisList(QList<double> &newXAxisList)
 {
-    QString lineText;
-
-    lineText = line->text();
-
-    bool boolEHO,
-         boolHO;
-
-    boolEHO = isEHO(lineText);
-    boolHO  = cOM_HO::isHO(lineText);
-
-    if (!boolEHO && !boolHO)
+    if (OM_HOList.length() != newXAxisList.length())
     {
-        loadFail = true;
+        qDebug() << __FUNCTION__ << ": Length Mismatch";
         return;
     }
 
-    if (boolEHO)
+    for (int i = 0; i < newXAxisList.length(); i ++)
     {
-        // If detected as an EHO, we use the EHO constructor
-        cOM_HOList {lineText, newKeys};
+        OM_HOList[i].setXAxis(newXAxisList[i]);
     }
-    else if (boolHO)
+
+    return;
+}
+void cOM_HOList::setColumnList(QList<double> &newColumnList)
+{
+    if (OM_HOList.length() != newColumnList.length())
     {
-        OM_HOList.append(cOM_HO(lineText));
+        qDebug() << __FUNCTION__ << ": Length Mismatch";
+        return;
+    }
+
+    for (int i = 0; i < newColumnList.length(); i ++)
+    {
+        OM_HOList[i].setColumn(newColumnList[i]);
+    }
+
+    return;
+}
+
+void cOM_HOList::setKeys(unsigned short newKeys)
+{
+    cOM_HO temp;
+
+    foreach (temp, OM_HOList) {
+        temp.setKeys(newKeys);
     }
 }
 
@@ -131,6 +211,14 @@ cOM_HO &cOM_HOList::operator [](int i) {
     } else {
         qDebug() << "cOM_HO Index Does not Exist, returning first index." << "\r\n";
         return OM_HOList[0];
+    }
+}
+cOM_HO cOM_HOList::operator [](int i) const {
+    if (i < OM_HOList.count()){
+        return OM_HOList[i];
+    } else {
+        qDebug() << "cOM_HO Index Does not Exist, returning default." << "\r\n";
+        return cOM_HO();
     }
 }
 
@@ -169,16 +257,18 @@ bool cOM_HOList::isEHO(QString EHO)
     return isValid;
 }
 
-cOM_HO cOM_HOList::operator [](int i) const {
-    if (i < OM_HOList.count()){
-        return OM_HOList[i];
-    } else {
-        qDebug() << "cOM_HO Index Does not Exist, returning default." << "\r\n";
-        return cOM_HO();
+void cOM_HOList::sortOffset(bool isAscending)
+{
+    if (isAscending)
+    {
+        std::sort(OM_HOList.begin(), OM_HOList.end());
+    } else
+    {
+        std::sort(OM_HOList.rbegin(), OM_HOList.rend());
     }
 }
 
-QList<double> cOM_HOList::getOffsetList()
+QList<double> cOM_HOList::getOffsetList() const
 {
     cOM_HO OM_HO;
     QList<double> output;
@@ -189,7 +279,7 @@ QList<double> cOM_HOList::getOffsetList()
 
     return output;
 }
-QList<double> cOM_HOList::getCodeList()
+QList<double> cOM_HOList::getXAxisList() const
 {
     cOM_HO OM_HO;
     QList<double> output;
@@ -200,7 +290,7 @@ QList<double> cOM_HOList::getCodeList()
 
     return output;
 }
-QList<double> cOM_HOList::getColumnList()
+QList<double> cOM_HOList::getColumnList() const
 {
     cOM_HO OM_HO;
     QList<double> output;
@@ -212,7 +302,7 @@ QList<double> cOM_HOList::getColumnList()
     return output;
 }
 
-double cOM_HOList::getMinOffset()
+double cOM_HOList::getMinOffset() const
 {
     double output;
     QList<double> offsetList;
@@ -220,8 +310,7 @@ double cOM_HOList::getMinOffset()
     output = *std::min_element(offsetList.begin(), offsetList.end());
     return output;
 }
-
-double cOM_HOList::getMaxOffset()
+double cOM_HOList::getMaxOffset() const
 {
     double output;
     QList<double> offsetList;
@@ -229,8 +318,7 @@ double cOM_HOList::getMaxOffset()
     output = *std::max_element(offsetList.begin(), offsetList.end());
     return output;
 }
-
-double cOM_HOList::getLength()
+double cOM_HOList::getLength() const
 {
     double output;
     QList<double> offsetList;
@@ -239,8 +327,7 @@ double cOM_HOList::getLength()
            - *std::min_element(offsetList.begin(), offsetList.end());
     return output;
 }
-
-double cOM_HOList::getSize()
+double cOM_HOList::getSize() const
 {
     return OM_HOList.count();
 }

@@ -14,15 +14,15 @@ public:
 
     void loadBreakP(QString newBreakP);
 
-    void getInfo();
+    void getInfo() const;
 
-    double getStartBreak(){ return startBreak; }
-    double getEndBreak()  { return endBreak;   }
+    double getStartBreak() const { return startBreak; }
+    double getEndBreak()   const { return endBreak;   }
 
     void setStartBreak(double newStartBreak){ startBreak = newStartBreak; return; }
     void setEndBreak  (double newEndBreak  ){ endBreak   = newEndBreak  ; return; }
 
-    double getLength(){ return endBreak - startBreak; }
+    double getLength() const { return endBreak - startBreak; }
 
 protected:
     double startBreak,

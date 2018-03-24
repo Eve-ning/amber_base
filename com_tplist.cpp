@@ -18,6 +18,14 @@ cOM_TPList::cOM_TPList(QLineEdit *line) : cOM_TPList()
 {
     loadTPList(line);
 }
+cOM_TPList::cOM_TPList(QString str)
+{
+    loadTPList(str);
+}
+cOM_TPList::cOM_TPList(QStringList strList)
+{
+    loadTPList(strList);
+}
 
 void cOM_TPList::loadTPList(QList<cOM_TP> newOM_TPList)
 {
@@ -25,36 +33,24 @@ void cOM_TPList::loadTPList(QList<cOM_TP> newOM_TPList)
 }
 void cOM_TPList::loadTPList(QTextBrowser *tb)
 {
+    QString tbText;
     QStringList tbTextSplit;
-    QString tbText,
-            temp;
-
-    bool boolTP;
 
     tbText = tb->toPlainText();
     tbTextSplit = tbText.split("\n", QString::SkipEmptyParts);
-
-    boolTP = cOM_TP::isTP(tbTextSplit[0]);
-
-    if (!boolTP)
-    {
-        loadFail = true;
-        return;
-    }
-
-    foreach (temp, tbTextSplit) {
-        OM_TPList.append(cOM_TP(temp));
-    }
+    loadTPList(tbTextSplit);
 }
 void cOM_TPList::loadTPList(QLineEdit *line)
 {
     QString lineText;
-
-    bool boolTP;
-
     lineText = line->text();
 
-    boolTP = cOM_TP::isTP(lineText);
+    loadTPList(lineText);
+}
+void cOM_TPList::loadTPList(QString &str)
+{
+    bool boolTP;
+    boolTP = cOM_TP::isTP(str);
 
     if (!boolTP)
     {
@@ -62,7 +58,24 @@ void cOM_TPList::loadTPList(QLineEdit *line)
         return;
     }
 
-    OM_TPList.append(lineText);
+    OM_TPList.append(cOM_TP(str));
+}
+void cOM_TPList::loadTPList(QStringList &strList)
+{
+    bool boolTP;
+    QString     temp;
+
+    boolTP = cOM_TP::isTP(strList[0]);
+
+    if (!boolTP)
+    {
+        loadFail = true;
+        return;
+    }
+
+    foreach (temp, strList) {
+        OM_TPList.append(cOM_TP(temp));
+    }
 }
 
 cOM_TP &cOM_TPList::operator [](int i) {
@@ -73,7 +86,6 @@ cOM_TP &cOM_TPList::operator [](int i) {
         return OM_TPList[0];
     }
 }
-
 cOM_TP cOM_TPList::operator [](int i) const {
     if (i < OM_TPList.count()){
         return OM_TPList[i];
@@ -83,7 +95,162 @@ cOM_TP cOM_TPList::operator [](int i) const {
     }
 }
 
-QList<double> cOM_TPList::getOffsetList()
+void cOM_TPList::operator *=(const cOM_TPList rhsOM_TPList)
+{
+    QList<double> lhsValueList,
+                  rhsValueList,
+                  lhsOffsetList,
+                  rhsOffsetList;
+    int lhsTemp,
+        rhsTemp;
+
+    /* Visualization
+     *
+     * Input
+     * LHS | |1| |2|1| |
+     * RHS |2| |1| |2|1|
+     *
+     * Result
+     * LHS | |2| |2|2| |
+     *
+     */
+
+    lhsTemp = rhsTemp = 0;
+
+    lhsValueList = getValueList(SV_BPM_ONLY);
+    rhsValueList = rhsOM_TPList.getValueList(SV_BPM_ONLY);
+    lhsOffsetList = getOffsetList();
+    rhsOffsetList = rhsOM_TPList.getOffsetList();
+    rhsOffsetList.append(9999999); // Append to prevent out of index
+
+    /* CONDITION 1 <LHS FIRST>
+     * LHS |A| |
+     * RHS | |B|
+     */
+    while (lhsOffsetList[lhsTemp] < rhsOffsetList[rhsTemp])
+    {
+        lhsTemp++;
+    }
+
+    while (rhsTemp < rhsValueList.length())
+    {
+        /* CONDITION 2 <RHS FIRST / EQUAL>
+         * LHS | |A|
+         * RHS |B| |
+         *
+         * LHS |A| |
+         * RHS |B| |
+         */
+        while (lhsTemp < lhsValueList.length() &&
+               rhsTemp < rhsValueList.length() &&
+               lhsOffsetList[lhsTemp] >= rhsOffsetList[rhsTemp] &&
+               lhsOffsetList[lhsTemp] < rhsOffsetList[rhsTemp + 1])
+        {
+//            qDebug() << "lhsTemp            : " << lhsTemp << "\n"
+//                     << "rhsTemp            : " << rhsTemp << "\n"
+//                     << "lhsOffsetList      :" << lhsOffsetList[lhsTemp] << "\n"
+//                     << "rhsOffsetList      :" << rhsOffsetList[rhsTemp] << "\n"
+//                     << "lhsValueList <OLD> :" << lhsValueList[lhsTemp] << "\n"
+//                     << "rhsValueList <OLD> :" << rhsValueList[rhsTemp] << "\n";
+
+            lhsValueList[lhsTemp] *= rhsValueList[rhsTemp];
+
+//            qDebug() << "lhsValueList <NEW> :" << lhsValueList[lhsTemp] << "\n"
+//                     << "rhsValueList <NEW> :" << rhsValueList[rhsTemp] << "\n";
+
+            lhsTemp ++;
+        }
+        rhsTemp ++;
+    }
+    setValueList(lhsValueList);
+
+    return;
+}
+
+void cOM_TPList::operator +=(const cOM_TPList rhsOM_TPList)
+{
+    QList<double> lhsValueList,
+                  rhsValueList,
+                  lhsOffsetList,
+                  rhsOffsetList;
+    int lhsTemp,
+        rhsTemp;
+
+    /* Visualization
+     *
+     * Input
+     * LHS | |1| |2|1| |
+     * RHS |3| |1| |2|1|
+     *
+     * Result
+     * LHS | |4| |3|3| |
+     *
+     */
+
+    lhsTemp = rhsTemp = 0;
+
+    lhsValueList = getValueList(SV_BPM_ONLY);
+    rhsValueList = rhsOM_TPList.getValueList(SV_BPM_ONLY);
+    lhsOffsetList = getOffsetList();
+    rhsOffsetList = rhsOM_TPList.getOffsetList();
+    rhsOffsetList.append(9999999); // Append to prevent out of index
+
+    /* CONDITION 1 <LHS FIRST>
+     * LHS |A| |
+     * RHS | |B|
+     */
+    while (lhsOffsetList[lhsTemp] < rhsOffsetList[rhsTemp])
+    {
+        lhsTemp++;
+    }
+
+    while (rhsTemp < rhsValueList.length())
+    {
+        /* CONDITION 2 <RHS FIRST / EQUAL>
+         * LHS | |A|
+         * RHS |B| |
+         *
+         * LHS |A| |
+         * RHS |B| |
+         */
+        while (lhsTemp < lhsValueList.length() &&
+               rhsTemp < rhsValueList.length() &&
+               lhsOffsetList[lhsTemp] >= rhsOffsetList[rhsTemp] &&
+               lhsOffsetList[lhsTemp] < rhsOffsetList[rhsTemp + 1])
+        {
+//            qDebug() << "lhsTemp            : " << lhsTemp << "\n"
+//                     << "rhsTemp            : " << rhsTemp << "\n"
+//                     << "lhsOffsetList      :" << lhsOffsetList[lhsTemp] << "\n"
+//                     << "rhsOffsetList      :" << rhsOffsetList[rhsTemp] << "\n"
+//                     << "lhsValueList <OLD> :" << lhsValueList[lhsTemp] << "\n"
+//                     << "rhsValueList <OLD> :" << rhsValueList[rhsTemp] << "\n";
+
+            lhsValueList[lhsTemp] += rhsValueList[rhsTemp];
+
+//            qDebug() << "lhsValueList <NEW> :" << lhsValueList[lhsTemp] << "\n"
+//                     << "rhsValueList <NEW> :" << rhsValueList[rhsTemp] << "\n";
+
+            lhsTemp ++;
+        }
+        rhsTemp ++;
+    }
+    setValueList(lhsValueList);
+
+    return;
+}
+
+void cOM_TPList::sortOffset(bool isAscending)
+{
+    if (isAscending)
+    {
+        std::sort(OM_TPList.begin(), OM_TPList.end());
+    } else
+    {
+        std::sort(OM_TPList.rbegin(), OM_TPList.rend());
+    }
+}
+
+QList<double> cOM_TPList::getOffsetList() const
 {
     cOM_TP OM_TP;
     QList<double> output;
@@ -94,7 +261,7 @@ QList<double> cOM_TPList::getOffsetList()
 
     return output;
 }
-QList<double> cOM_TPList::getCodeList(int onlyFlag)
+QList<double> cOM_TPList::getCodeList(int onlyFlag) const
 {
     cOM_TP OM_TP;
     QList<double> output;
@@ -110,7 +277,7 @@ QList<double> cOM_TPList::getCodeList(int onlyFlag)
 
     return output;
 }
-QList<double> cOM_TPList::getValueList(int onlyFlag)
+QList<double> cOM_TPList::getValueList(int onlyFlag) const
 {
     cOM_TP OM_TP;
     QList<double> output;
@@ -127,7 +294,53 @@ QList<double> cOM_TPList::getValueList(int onlyFlag)
     return output;
 }
 
-double cOM_TPList::getMinOffset()
+void cOM_TPList::setOffsetList(QList<double> newOffsetList)
+{
+    if (OM_TPList.length() != newOffsetList.length())
+    {
+        qDebug() << __FUNCTION__ << ": Length Mismatch";
+        return;
+    }
+
+    for (int i = 0; i < newOffsetList.length(); i ++)
+    {
+        OM_TPList[i].setOffset(newOffsetList[i]);
+    }
+
+    return;
+}
+void cOM_TPList::setCodeList(QList<double> newCodeList)
+{
+    if (OM_TPList.length() != newCodeList.length())
+    {
+        qDebug() << __FUNCTION__ << ": Length Mismatch";
+        return;
+    }
+
+    for (int i = 0; i < newCodeList.length(); i ++)
+    {
+        OM_TPList[i].setCode(newCodeList[i]);
+    }
+
+    return;
+}
+void cOM_TPList::setValueList(QList<double> newValueList)
+{
+    if (OM_TPList.length() != newValueList.length())
+    {
+        qDebug() << __FUNCTION__ << ": Length Mismatch";
+        return;
+    }
+
+    for (int i = 0; i < newValueList.length(); i ++)
+    {
+        OM_TPList[i].setValue(newValueList[i]);
+    }
+
+    return;
+}
+
+double cOM_TPList::getMinOffset() const
 {
     double output;
     QList<double> offsetList;
@@ -135,8 +348,7 @@ double cOM_TPList::getMinOffset()
     output = *std::min_element(offsetList.begin(), offsetList.end());
     return output;
 }
-
-double cOM_TPList::getMaxOffset()
+double cOM_TPList::getMaxOffset() const
 {
     double output;
     QList<double> offsetList;
@@ -144,8 +356,7 @@ double cOM_TPList::getMaxOffset()
     output = *std::max_element(offsetList.begin(), offsetList.end());
     return output;
 }
-
-double cOM_TPList::getLength()
+double cOM_TPList::getLength() const
 {
     double output;
     QList<double> offsetList;
@@ -154,13 +365,11 @@ double cOM_TPList::getLength()
            - *std::min_element(offsetList.begin(), offsetList.end());
     return output;
 }
-
-int cOM_TPList::getSize()
+int    cOM_TPList::getSize() const
 {
     return OM_TPList.count();
 }
-
-double cOM_TPList::getAverageSV()
+double cOM_TPList::getAverageSV() const
 {
     double output = 0;
     QList<double> SVList;
@@ -175,8 +384,7 @@ double cOM_TPList::getAverageSV()
     output /= SVList.count();
     return output;
 }
-
-double cOM_TPList::getAverageBPM()
+double cOM_TPList::getAverageBPM() const
 {
     double output = 0;
     QList<double> BPMList;

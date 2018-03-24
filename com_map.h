@@ -18,43 +18,43 @@ public:
     void loadMap(QStringList newMapStringList);
 
     // Runs a list of parameters on qDebug
-    void getInfo();
+    void getInfo() const;
 
-    QString        getAudioFileName    (){ return audioFileName   ; }
-    int            getAudioLeadIn      (){ return audioLeadIn     ; }
-    int            getPreviewTime      (){ return previewTime     ; }
-    bool           getCountdown        (){ return countdown       ; }
-    int            getSampleSet        (){ return sampleSet       ; }
-    double         getStackLeniency    (){ return stackLeniency   ; }
-    int            getGameMode         (){ return gameMode        ; }
-    bool           getLetterbox        (){ return letterbox       ; }
-    bool           getSpecialStyle     (){ return specialStyle    ; }
-    bool           getWidescreen       (){ return widescreen      ; }
-    double         getDistanceSpacing  (){ return distanceSpacing ; }
-    int            getBeatDivisor      (){ return beatDivisor     ; }
-    int            getGridSize         (){ return gridSize        ; }
-    double         getTimelineZoom     (){ return timelineZoom    ; }
-    QString        getTitle            (){ return title           ; }
-    QString        getUnicodeTitle     (){ return unicodeTitle    ; }
-    QString        getArtist           (){ return artist          ; }
-    QString        getUnicodeArtist    (){ return unicodeArtist   ; }
-    QString        getCreator          (){ return creator         ; }
-    QString        getDifficultyName   (){ return difficultyName  ; }
-    QString        getSource           (){ return source          ; }
-    QStringList    getTags             (){ return tags            ; }
-    int            getBeatmapID        (){ return beatmapID       ; }
-    int            getBeatmapSetID     (){ return beatmapSetID    ; }
-    double         getHP               (){ return HP              ; }
-    double         getCS               (){ return CS              ; }
-    double         getOD               (){ return OD              ; }
-    double         getAR               (){ return AR              ; }
-    double         getSliderMult       (){ return sliderMult      ; }
-    double         getSliderTick       (){ return sliderTick      ; }
-    QString        getBGFileName       (){ return bgFileName      ; }
-    QString        getVideoFileName    (){ return videoFileName   ; }
-    cOM_BreakPList getBreakPList       (){ return breakPList      ; }
-    cOM_HOList     getOM_HOList        (){ return OM_HOList       ; }
-    cOM_TPList     getOM_TPList        (){ return OM_TPList       ; }
+    QString        getAudioFileName    () const { return audioFileName   ; }
+    int            getAudioLeadIn      () const { return audioLeadIn     ; }
+    int            getPreviewTime      () const { return previewTime     ; }
+    bool           getCountdown        () const { return countdown       ; }
+    int            getSampleSet        () const { return sampleSet       ; }
+    double         getStackLeniency    () const { return stackLeniency   ; }
+    int            getGameMode         () const { return gameMode        ; }
+    bool           getLetterbox        () const { return letterbox       ; }
+    bool           getSpecialStyle     () const { return specialStyle    ; }
+    bool           getWidescreen       () const { return widescreen      ; }
+    double         getDistanceSpacing  () const { return distanceSpacing ; }
+    int            getBeatDivisor      () const { return beatDivisor     ; }
+    int            getGridSize         () const { return gridSize        ; }
+    double         getTimelineZoom     () const { return timelineZoom    ; }
+    QString        getTitle            () const { return title           ; }
+    QString        getUnicodeTitle     () const { return unicodeTitle    ; }
+    QString        getArtist           () const { return artist          ; }
+    QString        getUnicodeArtist    () const { return unicodeArtist   ; }
+    QString        getCreator          () const { return creator         ; }
+    QString        getDifficultyName   () const { return difficultyName  ; }
+    QString        getSource           () const { return source          ; }
+    QStringList    getTags             () const { return tags            ; }
+    int            getBeatmapID        () const { return beatmapID       ; }
+    int            getBeatmapSetID     () const { return beatmapSetID    ; }
+    double         getHP               () const { return HP              ; }
+    double         getCS               () const { return CS              ; }
+    double         getOD               () const { return OD              ; }
+    double         getAR               () const { return AR              ; }
+    double         getSliderMult       () const { return sliderMult      ; }
+    double         getSliderTick       () const { return sliderTick      ; }
+    QString        getBGFileName       () const { return bgFileName      ; }
+    QString        getVideoFileName    () const { return videoFileName   ; }
+    cOM_BreakPList getBreakPList       () const { return breakPList      ; }
+    cOM_HOList     getOM_HOList        () const { return OM_HOList       ; }
+    cOM_TPList     getOM_TPList        () const { return OM_TPList       ; }
 
     void  setAudioFileName    (QString        newAudioFileName  ){ audioFileName   = newAudioFileName  ; }
     void  setAudioLeadIn      (int            newAudioLeadIn    ){ audioLeadIn     = newAudioLeadIn    ; }

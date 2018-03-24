@@ -16,14 +16,13 @@ public:
     cOM_BreakP   operator [](int i) const;
     cOM_BreakP & operator [](int i);
 
-    QList<double> getStartList();
-    QList<double> getEndList();
-    QList<double> getLengthList();
-    int getSize() { return OM_BreakPList.size(); }
+    QList<double> getStartList () const;
+    QList<double> getEndList   () const;
+    QList<double> getLengthList() const;
+    int getSize() const { return OM_BreakPList.size(); }
 
     void append(cOM_BreakP newOM_BreakP){ OM_BreakPList.append(newOM_BreakP); }
     void deleteIndex(int index)         { OM_BreakPList.removeAt(index); }
-
 
 protected:
     QList<cOM_BreakP> OM_BreakPList;

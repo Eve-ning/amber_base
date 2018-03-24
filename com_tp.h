@@ -17,9 +17,14 @@ public:
 
     void getInfo();
 
-    static bool isTP_SV(QString TP);
+    static bool isTP_SV(QString TP) ;
     static bool isTP_BPM(QString TP);
-    static bool isTP(QString TP);
+    static bool isTP(QString TP)    ;
+
+    bool operator <(cOM_TP *OM_TP) { return offset < OM_TP->getOffset(); }
+    bool operator >(cOM_TP *OM_TP) { return offset > OM_TP->getOffset(); }
+    bool operator <(cOM_TP  OM_TP) { return offset < OM_TP.getOffset(); }
+    bool operator >(cOM_TP  OM_TP) { return offset > OM_TP.getOffset(); }
 
     double          getOffset        () const { return offset        ; }
     double          getCode          () const { return code          ; }
@@ -41,10 +46,11 @@ public:
 
     void limitValue();
 
+    bool   getLoadFail () const { return loadFail; }
     double getValue() const;
     void   setValue(double newValue) ;
 
-    QString toString();
+    QString toString() const;
 
 protected:
     double          offset        ;

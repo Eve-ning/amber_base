@@ -15,8 +15,6 @@ void cOM_BreakPList::loadBreakPList(QList<cOM_BreakP> newOM_BreakPList)
     OM_BreakPList = newOM_BreakPList;
 }
 
-
-
 cOM_BreakP &cOM_BreakPList::operator [](int i) {
     if (i < OM_BreakPList.count()){
         return OM_BreakPList[i];
@@ -34,7 +32,7 @@ cOM_BreakP cOM_BreakPList::operator [](int i) const {
     }
 }
 
-QList<double> cOM_BreakPList::getStartList()
+QList<double> cOM_BreakPList::getStartList() const
 {
     cOM_BreakP OM_BreakP;
     QList<double> output;
@@ -44,7 +42,7 @@ QList<double> cOM_BreakPList::getStartList()
     }
     return output;
 }
-QList<double> cOM_BreakPList::getEndList()
+QList<double> cOM_BreakPList::getEndList() const
 {
     cOM_BreakP OM_BreakP;
     QList<double> output;
@@ -54,7 +52,7 @@ QList<double> cOM_BreakPList::getEndList()
     }
     return output;
 }
-QList<double> cOM_BreakPList::getLengthList()
+QList<double> cOM_BreakPList::getLengthList() const
 {
     cOM_BreakP OM_BreakP;
     QList<double> output;

@@ -178,7 +178,7 @@ void   cOM_TP::setValue(double newValue)
     return;
 }
 
-QString cOM_TP::toString()
+QString cOM_TP::toString() const
 {
     return      QString::number(offset        ) + ","
             +   QString::number(code          ) + ","

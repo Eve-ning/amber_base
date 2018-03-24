@@ -28,7 +28,7 @@ void cOM_BreakP::loadBreakP(QString newBreakP)
     endBreak   = BreakPList[2].toDouble();
 }
 
-void cOM_BreakP::getInfo()
+void cOM_BreakP::getInfo() const
 {
     qDebug() << "\r\n"
              << "[---- Break Info ----]" << "\r\n"
