@@ -17,18 +17,18 @@ public:
     void loadTP(QLineEdit *line);
 
     // SETTERS
-    void setOffset        (double          newOffset        );
-    void setCode          (double          newCode          );
-    void setMetronome     (unsigned short  newMetronome     );
-    void setSampleSet     (unsigned short  newSampleSet     );
-    void setSampleSetIndex(unsigned short  newSameplSetIndex);
-    void setVolume        (unsigned short  newVolume        );
-    void setIsBPM         (bool            newIsBPM         );
-    void setIsKiai        (bool            newIsKiai        );
-    void setValue(double newValue) ;
+    void setOffset        (double          newOffset        ){ offset         = newOffset        ; return; }
+    void setCode          (double          newCode          ){ code           = newCode          ; return; }
+    void setMetronome     (unsigned short  newMetronome     ){ metronome      = newMetronome     ; return; }
+    void setSampleSet     (unsigned short  newSampleSet     ){ sampleSet      = newSampleSet     ; return; }
+    void setSampleSetIndex(unsigned short  newSampleSetIndex){ sampleSetIndex = newSampleSetIndex; return; }
+    void setVolume        (unsigned short  newVolume        ){ volume         = newVolume        ; return; }
+    void setIsBPM         (bool            newIsBPM         ){ isBPM          = newIsBPM         ; return; }
+    void setIsKiai        (bool            newIsKiai        ){ isKiai         = newIsKiai        ; return; }
+    void setValue         (double newValue) ;
 
     // GETTERS
-    void            getInfo          ();
+    void            getInfo          () const;
     double          getOffset        () const { return offset        ; }
     double          getCode          () const { return code          ; }
     unsigned short  getMetronome     () const { return metronome     ; }

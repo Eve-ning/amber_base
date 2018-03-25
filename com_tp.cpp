@@ -1,5 +1,6 @@
 #include "com_tp.h"
 
+// CONSTRUCTORS
 cOM_TP::cOM_TP()
 {
     offset         = 0      ;
@@ -12,7 +13,6 @@ cOM_TP::cOM_TP()
     isKiai         = false  ;
     loadFail       = false  ;
 }
-
 cOM_TP::cOM_TP(QString TP) : cOM_TP()
 {
     loadTP(TP);
@@ -22,6 +22,7 @@ cOM_TP::cOM_TP(QLineEdit *line) : cOM_TP()
     loadTP(line);
 }
 
+// LOADERS
 void cOM_TP::loadTP(QString TP)
 {
     //            [0] [1]              [2][3][4][5][6][7]
@@ -62,7 +63,23 @@ void cOM_TP::loadTP(QLineEdit *line)
     }
 }
 
-void cOM_TP::getInfo()
+// SETTERS
+void cOM_TP::setValue(double newValue)
+{
+    // This will indirectly set code instead
+    if (isBPM)
+    {
+        code = 60000 / newValue;
+    }
+    else
+    {
+        code = -100 / newValue;
+    }
+    return;
+}
+
+// GETTERS
+void    cOM_TP::getInfo () const
 {
     qDebug() << "\r\n"
              << "[---- Timing Point Info ----]"       << "\r\n"
@@ -75,8 +92,35 @@ void cOM_TP::getInfo()
              << "ISBPM          : " << isBPM          << "\r\n"
              << "ISKIAI         : " << isKiai         << "\r\n";
 }
+double  cOM_TP::getValue() const
+{
+    double output;
+    if (isBPM)
+    {
+        output = 60000 / code;
+    }
+    else
+    {
+        output = -100 / code;
+    }
+    return output;
+}
+QString cOM_TP::toString() const
+{
+    return      QString::number(offset        ) + ","
+            +   QString::number(code          ) + ","
+            +   QString::number(metronome     ) + ","
+            +   QString::number(sampleSet     ) + ","
+            +   QString::number(sampleSetIndex) + ","
+            +   QString::number(volume        ) + ","
+            +   (isBPM  ? "1" : "0")                  + ","
+            +   (isKiai ? "1" : "0") ;
+}
 
-bool cOM_TP::isTP_SV(QString TP)
+// OPERS
+
+// MISC
+bool cOM_TP::isTP_SV (QString TP)
 {
     // Reference: 14724,-100,4,2,1,80,0,0
 
@@ -108,7 +152,7 @@ bool cOM_TP::isTP_BPM(QString TP)
 
     return isValid;
 }
-bool cOM_TP::isTP(QString TP)
+bool cOM_TP::isTP    (QString TP)
 {
     // Reference: 14724,-100,4,2,1,80,0,0
 
@@ -124,15 +168,6 @@ bool cOM_TP::isTP(QString TP)
 
     return isValid;
 }
-
-void cOM_TP::setOffset        (double          newOffset        ){ offset         = newOffset        ; return; }
-void cOM_TP::setCode          (double          newCode          ){ code           = newCode          ; return; }
-void cOM_TP::setMetronome     (unsigned short  newMetronome     ){ metronome      = newMetronome     ; return; }
-void cOM_TP::setSampleSet     (unsigned short  newSampleSet     ){ sampleSet      = newSampleSet     ; return; }
-void cOM_TP::setSampleSetIndex(unsigned short  newSampleSetIndex){ sampleSetIndex = newSampleSetIndex; return; }
-void cOM_TP::setVolume        (unsigned short  newVolume        ){ volume         = newVolume        ; return; }
-void cOM_TP::setIsBPM         (bool            newIsBPM         ){ isBPM          = newIsBPM         ; return; }
-void cOM_TP::setIsKiai        (bool            newIsKiai        ){ isKiai         = newIsKiai        ; return; }
 
 void cOM_TP::limitValue()
 {
@@ -151,41 +186,4 @@ void cOM_TP::limitValue()
     }
 }
 
-double cOM_TP::getValue() const
-{
-    double output;
-    if (isBPM)
-    {
-        output = 60000 / code;
-    }
-    else
-    {
-        output = -100 / code;
-    }
-    return output;
-}
-void   cOM_TP::setValue(double newValue)
-{
-    // This will indirectly set code instead
-    if (isBPM)
-    {
-        code = 60000 / newValue;
-    }
-    else
-    {
-        code = -100 / newValue;
-    }
-    return;
-}
 
-QString cOM_TP::toString() const
-{
-    return      QString::number(offset        ) + ","
-            +   QString::number(code          ) + ","
-            +   QString::number(metronome     ) + ","
-            +   QString::number(sampleSet     ) + ","
-            +   QString::number(sampleSetIndex) + ","
-            +   QString::number(volume        ) + ","
-            +   (isBPM  ? "1" : "0")                  + ","
-            +   (isKiai ? "1" : "0") ;
-}

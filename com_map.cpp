@@ -1,6 +1,6 @@
 #include "cOM_Map.h"
 
-
+// CONSTRUCTORS
 cOM_Map::cOM_Map()
 {
     // Load Default Map
@@ -32,6 +32,7 @@ cOM_Map::cOM_Map()
     OM_TPList        = cOM_TPList()        ;
 }
 
+// LOADERS
 void cOM_Map::loadMap(QString newMapString)
 {
     // Convert to StringList then pass to StringList Handler
@@ -276,6 +277,9 @@ void cOM_Map::loadMap(QStringList newMapStringList)
 
 }
 
+// SETTERS
+
+// GETTERS
 void cOM_Map::getInfo() const
 {
     qDebug() << "\r\n"
@@ -317,6 +321,9 @@ void cOM_Map::getInfo() const
              << "OM_HOLIST  <SIZE>: " << OM_HOList.getSize()  << "\r\n";
 }
 
+// OPERS
+
+// MISC
 QList<int> cOM_Map::findMapSettings(QStringList &mapSList)
 {
     QList<QRegExp> settingsRegList;
@@ -498,3 +505,5 @@ QList<int> cOM_Map::findMapSettings(QStringList &mapSList)
 
     return output;
 }
+
+

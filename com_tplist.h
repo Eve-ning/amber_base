@@ -34,13 +34,14 @@ public:
     QList<double> getCodeList   (int onlyFlag = SV_ONLY) const;
     QList<double> getValueList  (int onlyFlag = SV_ONLY) const;
 
-    double getMinOffset() const;
-    double getMaxOffset() const;
-    double getLength   () const;
-    int    getSize     () const;
-    double getAverageSV () const;
-    double getAverageBPM() const;
-    bool   getLoadFail () const { return loadFail; }
+    double getMinOffset  () const;
+    double getMaxOffset  () const;
+    double getLength     () const;
+    int    getSize       () const;
+    double getAverageSV  () const;
+    double getAverageBPM () const;
+    bool   getLoadFail   () const { return loadFail; }
+    QStringList toString () const;
 
     // OPERS
     cOM_TP   operator [](int i) const;

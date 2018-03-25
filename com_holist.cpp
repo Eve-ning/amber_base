@@ -1,11 +1,11 @@
 #include "com_holist.h"
 
+// CONSTRUCTORS
 cOM_HOList::cOM_HOList()
 {
     OM_HOList = {};
     loadFail  = false;
 }
-
 cOM_HOList::cOM_HOList(QList<cOM_HO> newOM_HOList) : cOM_HOList()
 {
     loadHOList(newOM_HOList);
@@ -23,6 +23,7 @@ cOM_HOList::cOM_HOList(QLineEdit *line, int newKeys) : cOM_HOList()
     loadHOList(line, newKeys);
 }
 
+// LOADERS
 void cOM_HOList::loadHOList(QList<cOM_HO> newOM_HOList)
 {
     OM_HOList = newOM_HOList;
@@ -150,6 +151,7 @@ void cOM_HOList::loadEHOList(QString &EHO, int newKeys)
     }
 }
 
+// SETTERS
 void cOM_HOList::setOffsetList(QList<double> &newOffsetList)
 {
     if (OM_HOList.length() != newOffsetList.length())
@@ -195,7 +197,6 @@ void cOM_HOList::setColumnList(QList<double> &newColumnList)
 
     return;
 }
-
 void cOM_HOList::setKeys(unsigned short newKeys)
 {
     cOM_HO temp;
@@ -205,6 +206,82 @@ void cOM_HOList::setKeys(unsigned short newKeys)
     }
 }
 
+// GETTERS
+QList<double> cOM_HOList::getOffsetList() const
+{
+    cOM_HO OM_HO;
+    QList<double> output;
+    foreach (OM_HO, OM_HOList)
+    {
+        output.append(OM_HO.getOffset());
+    }
+
+    return output;
+}
+QList<double> cOM_HOList::getXAxisList() const
+{
+    cOM_HO OM_HO;
+    QList<double> output;
+    foreach (OM_HO, OM_HOList)
+    {
+        output.append(OM_HO.getXAxis());
+    }
+
+    return output;
+}
+QList<double> cOM_HOList::getColumnList() const
+{
+    cOM_HO OM_HO;
+    QList<double> output;
+    foreach (OM_HO, OM_HOList)
+    {
+        output.append(OM_HO.getColumn());
+    }
+
+    return output;
+}
+double cOM_HOList::getMinOffset() const
+{
+    double output;
+    QList<double> offsetList;
+    offsetList = getOffsetList();
+    output = *std::min_element(offsetList.begin(), offsetList.end());
+    return output;
+}
+double cOM_HOList::getMaxOffset() const
+{
+    double output;
+    QList<double> offsetList;
+    offsetList = getOffsetList();
+    output = *std::max_element(offsetList.begin(), offsetList.end());
+    return output;
+}
+double cOM_HOList::getLength() const
+{
+    double output;
+    QList<double> offsetList;
+    offsetList = getOffsetList();
+    output = *std::max_element(offsetList.begin(), offsetList.end())
+           - *std::min_element(offsetList.begin(), offsetList.end());
+    return output;
+}
+double cOM_HOList::getSize() const
+{
+    return OM_HOList.count();
+}
+QString cOM_HOList::toString() const
+{
+    cOM_HO temp;
+    QStringList output;
+
+    foreach (temp, OM_HOList) {
+        output.append(temp.toString());
+    }
+
+    return output;
+}
+
+// OPERS
 cOM_HO &cOM_HOList::operator [](int i) {
     if (i < OM_HOList.count()){
         return OM_HOList[i];
@@ -222,6 +299,7 @@ cOM_HO cOM_HOList::operator [](int i) const {
     }
 }
 
+// MISC
 bool cOM_HOList::isEHO(QString EHO)
 {
     // Reference: 01:52:511 (112511|3) -
@@ -268,68 +346,8 @@ void cOM_HOList::sortOffset(bool isAscending)
     }
 }
 
-QList<double> cOM_HOList::getOffsetList() const
-{
-    cOM_HO OM_HO;
-    QList<double> output;
-    foreach (OM_HO, OM_HOList)
-    {
-        output.append(OM_HO.getOffset());
-    }
 
-    return output;
-}
-QList<double> cOM_HOList::getXAxisList() const
-{
-    cOM_HO OM_HO;
-    QList<double> output;
-    foreach (OM_HO, OM_HOList)
-    {
-        output.append(OM_HO.getXAxis());
-    }
 
-    return output;
-}
-QList<double> cOM_HOList::getColumnList() const
-{
-    cOM_HO OM_HO;
-    QList<double> output;
-    foreach (OM_HO, OM_HOList)
-    {
-        output.append(OM_HO.getColumn());
-    }
 
-    return output;
-}
-
-double cOM_HOList::getMinOffset() const
-{
-    double output;
-    QList<double> offsetList;
-    offsetList = getOffsetList();
-    output = *std::min_element(offsetList.begin(), offsetList.end());
-    return output;
-}
-double cOM_HOList::getMaxOffset() const
-{
-    double output;
-    QList<double> offsetList;
-    offsetList = getOffsetList();
-    output = *std::max_element(offsetList.begin(), offsetList.end());
-    return output;
-}
-double cOM_HOList::getLength() const
-{
-    double output;
-    QList<double> offsetList;
-    offsetList = getOffsetList();
-    output = *std::max_element(offsetList.begin(), offsetList.end())
-           - *std::min_element(offsetList.begin(), offsetList.end());
-    return output;
-}
-double cOM_HOList::getSize() const
-{
-    return OM_HOList.count();
-}
 
 

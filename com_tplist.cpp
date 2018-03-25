@@ -229,6 +229,16 @@ double cOM_TPList::getAverageBPM() const
     output /= BPMList.count();
     return output;
 }
+QStringList cOM_TPList::toString() const
+{
+    cOM_TP temp;
+    QStringList output;
+    foreach (temp, OM_TPList) {
+        output.append(temp.toString());
+    }
+
+    return output;
+}
 
 // OPERS
 cOM_TP &cOM_TPList::operator [](int i) {
