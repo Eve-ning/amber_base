@@ -9,6 +9,7 @@
 class  cOM_TPList
 {
 public:
+    // CONSTRUCTORS
     cOM_TPList()                          ;
     cOM_TPList(QList<cOM_TP> newOM_TPList);
     cOM_TPList(QTextBrowser *tb)          ;
@@ -16,38 +17,42 @@ public:
     cOM_TPList(QString str)               ;
     cOM_TPList(QStringList strList)       ;
 
+    // LOADERS
     void loadTPList(QList<cOM_TP> newOM_TPList);
     void loadTPList(QTextBrowser *tb);
     void loadTPList(QLineEdit *line);
     void loadTPList(QString &str);
     void loadTPList(QStringList &str);
 
+    // SETTERS
+    void setOffsetList(QList<double> newOffsetList);
+    void setCodeList  (QList<double> newCodeList);
+    void setValueList (QList<double> newValueList);
+
+    // GETTERS
+    QList<double> getOffsetList ()                       const;
+    QList<double> getCodeList   (int onlyFlag = SV_ONLY) const;
+    QList<double> getValueList  (int onlyFlag = SV_ONLY) const;
+
+    double getMinOffset() const;
+    double getMaxOffset() const;
+    double getLength   () const;
+    int    getSize     () const;
+    double getAverageSV () const;
+    double getAverageBPM() const;
+    bool   getLoadFail () const { return loadFail; }
+
+    // OPERS
     cOM_TP   operator [](int i) const;
     cOM_TP & operator [](int i);
 
     void operator *=(const cOM_TPList rhsOM_TPList);
     void operator +=(const cOM_TPList rhsOM_TPList);
 
+    // SORTING
     void sortOffset (bool isAscending = true);
 
-    QList<double> getOffsetList ()                       const;
-    QList<double> getCodeList   (int onlyFlag = SV_ONLY) const;
-    QList<double> getValueList  (int onlyFlag = SV_ONLY) const;
-
-    void setOffsetList(QList<double> newOffsetList);
-    void setCodeList  (QList<double> newCodeList);
-    void setValueList (QList<double> newValueList);
-
-    double getMinOffset() const;
-    double getMaxOffset() const;
-    double getLength   () const;
-    int    getSize     () const;
-
-    double getAverageSV () const;
-    double getAverageBPM() const;
-
-    bool   getLoadFail () const { return loadFail; }
-
+    // MISC
     void append     (cOM_TP newOM_TP) { OM_TPList.append(newOM_TP); }
     void deleteIndex(unsigned  index) { OM_TPList.removeAt(index); }
 

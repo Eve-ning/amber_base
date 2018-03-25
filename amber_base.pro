@@ -34,3 +34,6 @@ HEADERS += \
     com_map.h \
     com_breakp.h \
     com_breakplist.h
+
+DISTFILES += \
+    documentation.txt

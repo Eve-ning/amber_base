@@ -1,16 +1,17 @@
 #include "com_BreakP.h"
 
+// CONSTRUCTORS
 cOM_BreakP::cOM_BreakP()
 {
     startBreak = 0;
     endBreak   = 1;
 }
-
 cOM_BreakP::cOM_BreakP(QString newBreakP) : cOM_BreakP()
 {
     loadBreakP(newBreakP);
 }
 
+// LOADERS
 void cOM_BreakP::loadBreakP(QString newBreakP)
 {
     QStringList BreakPList;
@@ -28,6 +29,9 @@ void cOM_BreakP::loadBreakP(QString newBreakP)
     endBreak   = BreakPList[2].toDouble();
 }
 
+// SETTERS
+
+// GETTERS
 void cOM_BreakP::getInfo() const
 {
     qDebug() << "\r\n"
@@ -35,3 +39,14 @@ void cOM_BreakP::getInfo() const
              << "STARTBREAK : " << startBreak << "\r\n"
              << "ENDBREAK   : " << endBreak   << "\r\n";
 }
+
+// OPERS
+
+// SORTING
+
+// MISC
+
+
+
+
+

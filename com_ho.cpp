@@ -1,5 +1,6 @@
 #include "com_ho.h"
 
+// CONSTRUCTORS
 cOM_HO::cOM_HO()
 {
     xAxis           =   256;
@@ -17,7 +18,6 @@ cOM_HO::cOM_HO()
     keys            =   0;
     loadFail        =   false;
 }
-
 cOM_HO::cOM_HO(double &newOffset, int &newColumn, int &newKeys) : cOM_HO()
 {
     loadHO(newOffset, newColumn, newKeys);
@@ -31,11 +31,12 @@ cOM_HO::cOM_HO(QString &HO, int newKeys) : cOM_HO()
     loadHO(HO, newKeys);
 }
 
+// LOADERS
 void cOM_HO::loadHO(double &newOffset, int &newColumn, int &newKeys)
 {
     offset = newOffset;
     keys   = newKeys;
-    setColumn(newColumn);  
+    setColumn(newColumn);
 }
 void cOM_HO::loadHO(QLineEdit *line, int newKeys)
 {
@@ -114,6 +115,19 @@ void cOM_HO::loadHO(QString &HO, int newKeys)
     }
 }
 
+// SETTERS
+void cOM_HO::setColumn(unsigned short newColumn)
+{
+    if (keys == 0) {
+        qDebug() << "Keys is not set.";
+        return;
+    }
+
+    // This function changes xAxis according to newColumn
+    xAxis = round(((double(newColumn) + 1.0) * 2.0 - 1.0) * 256.0 / double(keys));
+}
+
+// GETTERS
 void cOM_HO::getInfo() const
 {
     qDebug() << "\r\n"
@@ -132,7 +146,38 @@ void cOM_HO::getInfo() const
              << "KEYS         : " << keys          << "\r\n"
              << "COLUMN       : " << getColumn()   << "\r\n";
 }
+unsigned short cOM_HO::getColumn() const
+{
+    unsigned short output;
 
+    if (keys == 0) {
+        qDebug() << "Keys is not set.";
+        return 0;
+    }
+
+    output = round((((double(xAxis) / 256.0) * double(keys) + 1.0) / 2.0) - 1.0);
+    // This output starts from 0
+
+    return output;
+}
+QString cOM_HO::toString() const
+{
+    return      QString::number(xAxis       ) + ","
+            +   QString::number(yAxis       ) + ","
+            +   QString::number(offset      ) + ","
+            +   QString::number(noteType    ) + ","
+            +   QString::number(hitsoundType) + ","
+            +   (lnEnd == -1 ? "" : (QString::number(lnEnd) + ":"))
+            +   QString::number(sampleSet   ) + ":"
+            +   QString::number(addition    ) + ":"
+            +   QString::number(customSet   ) + ":"
+            +   QString::number(volume      ) + ":"
+            +   hitsoundFile;
+}
+
+// OPERS
+
+// MISC
 bool cOM_HO::isHO_NN(QString HO)
 {
 
@@ -181,7 +226,6 @@ bool cOM_HO::isHO(QString HO)
 
     return isValid;
 }
-
 bool cOM_HO::isHO_NN(QStringList HOList)
 {
     QString HOSplit;
@@ -207,60 +251,8 @@ bool cOM_HO::isHO(QStringList HOList)
     return isHO(HOSplit);
 }
 
-void cOM_HO::setXAxis       (unsigned short  newXAxis       ){ xAxis        = newXAxis       ; return; }
-void cOM_HO::setYAxis       (unsigned short  newYAxis       ){ yAxis        = newYAxis       ; return; }
-void cOM_HO::setOffset      (double          newOffset      ){ offset       = newOffset      ; return; }
-void cOM_HO::setNoteType    (unsigned short  newNoteType    ){ noteType     = newNoteType    ; return; }
-void cOM_HO::setHitsoundType(unsigned short  newHitsoundType){ hitsoundType = newHitsoundType; return; }
-void cOM_HO::setSampleSet   (unsigned short  newSampleSet   ){ sampleSet    = newSampleSet   ; return; }
-void cOM_HO::setAddition    (unsigned short  newAddition    ){ addition     = newAddition    ; return; }
-void cOM_HO::setCustomSet   (unsigned short  newCustomSet   ){ customSet    = newCustomSet   ; return; }
-void cOM_HO::setVolume      (unsigned short  newVolume      ){ volume       = newVolume      ; return; }
-void cOM_HO::setHitsoundFile(QString         newHitsoundFile){ hitsoundFile = newHitsoundFile; return; }
-void cOM_HO::setLNEnd       (double          newLNEnd       ){ lnEnd        = newLNEnd       ; return; }
 
-unsigned short cOM_HO::getColumn() const
-{
-    unsigned short output;
 
-    if (keys == 0) {
-        qDebug() << "Keys is not set.";
-        return 0;
-    }
 
-    output = round((((double(xAxis) / 256.0) * double(keys) + 1.0) / 2.0) - 1.0);
-    // This output starts from 0
 
-    return output;
-}
 
-void cOM_HO::setKeys(unsigned short newKeys)
-{
-    keys = newKeys;
-}
-
-void cOM_HO::setColumn(unsigned short newColumn)
-{
-    if (keys == 0) {
-        qDebug() << "Keys is not set.";
-        return;
-    }
-
-    // This function changes xAxis according to newColumn
-    xAxis = round(((double(newColumn) + 1.0) * 2.0 - 1.0) * 256.0 / double(keys));
-}
-
-QString cOM_HO::toString() const
-{
-    return      QString::number(xAxis       ) + ","
-            +   QString::number(yAxis       ) + ","
-            +   QString::number(offset      ) + ","
-            +   QString::number(noteType    ) + ","
-            +   QString::number(hitsoundType) + ","
-            +   (lnEnd == -1 ? "" : (QString::number(lnEnd) + ":"))
-            +   QString::number(sampleSet   ) + ":"
-            +   QString::number(addition    ) + ":"
-            +   QString::number(customSet   ) + ":"
-            +   QString::number(volume      ) + ":"
-            +   hitsoundFile;
-}

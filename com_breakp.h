@@ -9,20 +9,29 @@
 class cOM_BreakP
 {
 public:
+    // CONSTRUCTORS
     cOM_BreakP();
     cOM_BreakP(QString newBreakP);
 
+    // LOADERS
     void loadBreakP(QString newBreakP);
 
-    void getInfo() const;
-
-    double getStartBreak() const { return startBreak; }
-    double getEndBreak()   const { return endBreak;   }
-
+    // SETTERS
     void setStartBreak(double newStartBreak){ startBreak = newStartBreak; return; }
     void setEndBreak  (double newEndBreak  ){ endBreak   = newEndBreak  ; return; }
 
-    double getLength() const { return endBreak - startBreak; }
+    // GETTERS
+    void   getInfo() const;
+    double getStartBreak() const { return startBreak; }
+    double getEndBreak  () const { return endBreak;   }
+    double getLength    () const { return endBreak - startBreak; }
+
+    // OPERS
+
+    // SORTING
+
+    // MISC
+
 
 protected:
     double startBreak,

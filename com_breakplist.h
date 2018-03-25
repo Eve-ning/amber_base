@@ -8,19 +8,29 @@
 class cOM_BreakPList
 {
 public:
+
+    // CONSTRUCTORS
     cOM_BreakPList();
     cOM_BreakPList(QList<cOM_BreakP> newOM_BreakPList);
 
+    // LOADERS
     void loadBreakPList(QList<cOM_BreakP> newOM_BreakPList);
 
-    cOM_BreakP   operator [](int i) const;
-    cOM_BreakP & operator [](int i);
+    // SETTERS
 
+    // GETTERS
     QList<double> getStartList () const;
     QList<double> getEndList   () const;
     QList<double> getLengthList() const;
-    int getSize() const { return OM_BreakPList.size(); }
+    int           getSize      () const { return OM_BreakPList.size(); }
 
+    // OPERS
+    cOM_BreakP   operator [](int i) const;
+    cOM_BreakP & operator [](int i);
+
+    // SORTING
+
+    // MISC
     void append(cOM_BreakP newOM_BreakP){ OM_BreakPList.append(newOM_BreakP); }
     void deleteIndex(int index)         { OM_BreakPList.removeAt(index); }
 

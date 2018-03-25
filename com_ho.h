@@ -1,36 +1,41 @@
 #ifndef COM_HO_H
 #define COM_HO_H
 
-
 #include <QtCore>
 #include <QLineEdit>
 
 class  cOM_HO
 {
 public:
+
+    // CONSTRUCTORS
     cOM_HO();
     cOM_HO(QString &HO, int newKeys = 0);
     cOM_HO(double &newOffset, int &newColumn, int &newKeys);
     cOM_HO(QLineEdit *line, int newKeys = 0);
 
+    // LOADERS
     void loadHO(QString &HO, int newKeys = 0);
     void loadHO(double &newOffset, int &newColumn, int &newKeys);
     void loadHO(QLineEdit *line, int newKeys = 0);
 
-    void getInfo() const;
+    // SETTERS
+    void setXAxis        (unsigned short  newXAxis       ){ xAxis        = newXAxis       ; return; }
+    void setYAxis        (unsigned short  newYAxis       ){ yAxis        = newYAxis       ; return; }
+    void setOffset       (double          newOffset      ){ offset       = newOffset      ; return; }
+    void setNoteType     (unsigned short  newNoteType    ){ noteType     = newNoteType    ; return; }
+    void setHitsoundType (unsigned short  newHitsoundType){ hitsoundType = newHitsoundType; return; }
+    void setSampleSet    (unsigned short  newSampleSet   ){ sampleSet    = newSampleSet   ; return; }
+    void setAddition     (unsigned short  newAddition    ){ addition     = newAddition    ; return; }
+    void setCustomSet    (unsigned short  newCustomSet   ){ customSet    = newCustomSet   ; return; }
+    void setVolume       (unsigned short  newVolume      ){ volume       = newVolume      ; return; }
+    void setHitsoundFile (QString         newHitsoundFile){ hitsoundFile = newHitsoundFile; return; }
+    void setLNEnd        (double          newLNEnd       ){ lnEnd        = newLNEnd       ; return; }
+    void setKeys         (unsigned short  newKeys        ){ keys         = newKeys        ; return; }
+    void setColumn       (unsigned short  newColumn);
 
-    static bool isHO_NN(QString HO);
-    static bool isHO_LN(QString HO);
-    static bool isHO   (QString HO);
-    static bool isHO_NN(QStringList HO);
-    static bool isHO_LN(QStringList HO);
-    static bool isHO   (QStringList HO);
-
-    bool operator <(cOM_HO *OM_HO) { return offset < OM_HO->getOffset(); }
-    bool operator >(cOM_HO *OM_HO) { return offset > OM_HO->getOffset(); }
-    bool operator <(cOM_HO  OM_HO) { return offset < OM_HO.getOffset(); }
-    bool operator >(cOM_HO  OM_HO) { return offset > OM_HO.getOffset(); }
-
+    // GETTERS
+    void            getInfo         () const;
     unsigned short  getXAxis        () const { return xAxis       ; }
     unsigned short  getYAxis        () const { return yAxis       ; }
     double          getOffset       () const { return offset      ; }
@@ -42,34 +47,31 @@ public:
     unsigned short  getVolume       () const { return volume      ; }
     QString         getHitsoundFile () const { return hitsoundFile; }
     double          getLNEnd        () const { return lnEnd       ; }
+    unsigned short  getKeys         () const { return keys; }
+    unsigned short  getLNLen        () const { return lnEnd == -1 ? 0 : lnEnd - offset; }
+    bool            getLoadFail     () const { return loadFail; }
+    unsigned short  getColumn       () const;
+    QString         toString        () const;
 
-    void setXAxis        (unsigned short  newXAxis       );
-    void setYAxis        (unsigned short  newYAxis       );
-    void setOffset       (double          newOffset      );
-    void setNoteType     (unsigned short  newNoteType    );
-    void setHitsoundType (unsigned short  newHitsoundType);
-    void setSampleSet    (unsigned short  newSampleSet   );
-    void setAddition     (unsigned short  newAddition    );
-    void setCustomSet    (unsigned short  newCustomSet   );
-    void setVolume       (unsigned short  newVolume      );
-    void setHitsoundFile (QString         newHitsoundFile);
-    void setLNEnd        (double          newLNEnd       );
+    // OPERS
+    bool operator <(cOM_HO *OM_HO) { return offset < OM_HO->getOffset(); }
+    bool operator >(cOM_HO *OM_HO) { return offset > OM_HO->getOffset(); }
+    bool operator <(cOM_HO  OM_HO) { return offset < OM_HO.getOffset(); }
+    bool operator >(cOM_HO  OM_HO) { return offset > OM_HO.getOffset(); }
 
-    unsigned short getKeys   () const { return keys; }
-    unsigned short getColumn () const;
-    unsigned short getLNLen(){ return lnEnd == -1 ? 0 : lnEnd - offset; }
-
-    bool getLoadFail(){ return loadFail; }
-
-    void setKeys   (unsigned short newKeys);
-    void setColumn (unsigned short newColumn);
-
-    QString toString() const;
+    // MISC
+    static bool isHO_NN(QString HO);
+    static bool isHO_LN(QString HO);
+    static bool isHO   (QString HO);
+    static bool isHO_NN(QStringList HO);
+    static bool isHO_LN(QStringList HO);
+    static bool isHO   (QStringList HO);
 
 protected:
 
     //320,   192,   381333, 1,        0,            0:         0:        0:         0:      hitsound.wav
     //xAxis, yAxis, offset, noteType, hitsoundType, sampleSet: addition: customSet: volume: hitsoundFile
+
     unsigned short  xAxis       ;
     unsigned short  yAxis       ;
     double          offset      ;
