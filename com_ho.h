@@ -11,7 +11,7 @@ public:
     // CONSTRUCTORS
     cOM_HO();
     cOM_HO(QString &HO, int newKeys = 0);
-    cOM_HO(double &newOffset, int &newColumn, int &newKeys);
+    cOM_HO(double &newOffset, int &newColumn, int newKeys = 0);
     cOM_HO(QLineEdit *line, int newKeys = 0);
 
     // LOADERS

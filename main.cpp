@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include "com_map.h"
+#include "com_math.h"
 
 void calibrate();
 
@@ -16,9 +17,8 @@ int main(int argc, char *argv[])
 void calibrate(){
 
     bool mapDebugBool     = false,
-         TPMultDebugBool  = false,
-         TPAddDebugBool   = false,
-         sortDebugBool    = true;
+         TPDebugBool      = true,
+         sortDebugBool    = false;
 
     // Map Debug
     if (mapDebugBool){
@@ -39,9 +39,13 @@ void calibrate(){
             map.getBreakPList()[temp].getInfo(); // Maps may not have breaks
         }
     }
-    if (TPMultDebugBool){
+    if (TPDebugBool){
 
-        cOM_TPList TPList_A,
+        cOM_TPList TPList_A_add,
+                   TPList_A_minus,
+                   TPList_A_multiply,
+                   TPList_A_divide,
+
                    TPList_B;
 
 
@@ -53,7 +57,10 @@ void calibrate(){
          * B |   |2.0|   |5.0|4.0|2.0|   |   |0.4|
          */
 
-        TPList_A = QStringList({
+        TPList_A_add      =
+        TPList_A_minus    =
+        TPList_A_multiply =
+        TPList_A_divide   = QStringList({
             "10000,-200,4,2,1,80,0,0" , // [1]
             "30000,-100,4,2,1,80,0,0" , // [3]
             "40000,-50,4,2,1,80,0,0"  , // [4]
@@ -69,48 +76,26 @@ void calibrate(){
             "90000,-250,4,2,1,80,0,0"   // [9]
                    });
 
-        TPList_A *= TPList_B;
+        TPList_A_add     .add     (TPList_B);
+        TPList_A_minus   .minus   (TPList_B);
+        TPList_A_multiply.multiply(TPList_B);
+        TPList_A_divide  .divide  (TPList_B);
 
-        qDebug() << "[--- *= OPER ---]";
-        qDebug() << "         " << TPList_A.getValueList();
+        qDebug() << "[--- ADD ---]";
+        qDebug() << "          " << TPList_A_add.getValueList();
+        qDebug() << "Expected : (0.5, 3, 7, 2.1, 2.5)";
+
+        qDebug() << "[--- MINUS ---]";
+        qDebug() << "          " << TPList_A_minus.getValueList();
+        qDebug() << "Expected : (0.5, -1, -3, -1.9, -1.5)";
+
+        qDebug() << "[--- MULTIPLY ---]";
+        qDebug() << "          " << TPList_A_multiply.getValueList();
         qDebug() << "Expected : (0.5, 2, 10, 0.2, 1)";
 
-    }
-    if (TPAddDebugBool){
-
-        cOM_TPList TPList_A,
-                   TPList_B;
-
-
-        /* Visualization
-         *
-         * Each bar represents 10000ms
-         *    [1] [2] [3] [4] [5] [6] [7] [8] [9]
-         * A |0.5|   |1.0|2.0|   |   |0.1|0.5|   |
-         * B |   |2.0|   |5.0|4.0|2.0|   |   |0.4|
-         */
-
-        TPList_A = QStringList({
-            "10000,-200,4,2,1,80,0,0" , // [1]
-            "30000,-100,4,2,1,80,0,0" , // [3]
-            "40000,-50,4,2,1,80,0,0"  , // [4]
-            "70000,-1000,4,2,1,80,0,0", // [7]
-            "80000,-200,4,2,1,80,0,0"   // [8]
-                   });
-
-        TPList_B = QStringList({
-            "20000,-50,4,2,1,80,0,0"  , // [2]
-            "40000,-20,4,2,1,80,0,0"  , // [4]
-            "50000,-25,4,2,1,80,0,0"  , // [5]
-            "60000,-50,4,2,1,80,0,0"  , // [6]
-            "90000,-250,4,2,1,80,0,0"   // [9]
-                   });
-
-        TPList_A += TPList_B;
-
-        qDebug() << "[--- += OPER ---]";
-        qDebug() << "         " << TPList_A.getValueList();
-        qDebug() << "Expected: (0.5, 3, 7, 2.1, 2.5)";
+        qDebug() << "[--- DIVIDE ---]";
+        qDebug() << "          " << TPList_A_divide.getValueList();
+        qDebug() << "Expected : (0.5, 0.5, 0.4, 0.05, 0.25)";
 
     }
     if (sortDebugBool){
@@ -122,6 +107,8 @@ void calibrate(){
         HOList.sortOffset(false);
         qDebug() << "Descending : " << HOList.getOffsetList() << HOList.getColumnList();
     }
+
+
 
 
 }

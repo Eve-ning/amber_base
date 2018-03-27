@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     com_mapset.cpp \
     com_map.cpp \
     com_breakp.cpp \
-    com_breakplist.cpp
+    com_breakplist.cpp \
+    com_math.cpp
 
 HEADERS += \
     com_ho.h \
@@ -33,7 +34,8 @@ HEADERS += \
     com_mapset.h \
     com_map.h \
     com_breakp.h \
-    com_breakplist.h
+    com_breakplist.h \
+    com_math.h
 
 DISTFILES += \
     documentation.txt

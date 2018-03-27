@@ -39,6 +39,7 @@ public:
     double        getLength    () const;
     double        getSize      () const;
     bool          getLoadFail  () const { return loadFail; }
+    QStringList   toString     () const;
 
     // OPERS
     cOM_HO   operator [](int i) const;

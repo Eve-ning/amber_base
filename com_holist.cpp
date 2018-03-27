@@ -269,7 +269,7 @@ double cOM_HOList::getSize() const
 {
     return OM_HOList.count();
 }
-QString cOM_HOList::toString() const
+QStringList cOM_HOList::toString() const
 {
     cOM_HO temp;
     QStringList output;

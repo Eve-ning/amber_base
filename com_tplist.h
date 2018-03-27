@@ -30,9 +30,11 @@ public:
     void setValueList (QList<double> newValueList);
 
     // GETTERS
-    QList<double> getOffsetList ()                       const;
-    QList<double> getCodeList   (int onlyFlag = SV_ONLY) const;
-    QList<double> getValueList  (int onlyFlag = SV_ONLY) const;
+    QList<double> getOffsetList    (int onlyFlag = SV_BPM_ONLY) const;
+    QList<double> getCodeList      (int onlyFlag = SV_ONLY) const;
+    QList<double> getValueList     (int onlyFlag = SV_ONLY) const;
+    QList<double> getLengthList    (int onlyFlag = SV_BPM_ONLY) const;
+    QList<double> getDistanceList  (int onlyFlag = SV_BPM_ONLY) const;
 
     double getMinOffset  () const;
     double getMaxOffset  () const;
@@ -40,6 +42,7 @@ public:
     int    getSize       () const;
     double getAverageSV  () const;
     double getAverageBPM () const;
+    double getDistance   (int onlyFlag = SV_BPM_ONLY) const;
     bool   getLoadFail   () const { return loadFail; }
     QStringList toString () const;
 
@@ -47,8 +50,10 @@ public:
     cOM_TP   operator [](int i) const;
     cOM_TP & operator [](int i);
 
-    void operator *=(const cOM_TPList rhsOM_TPList);
-    void operator +=(const cOM_TPList rhsOM_TPList);
+    void multiply(const cOM_TPList rhsOM_TPList, bool limitFlag = false);
+    void divide  (const cOM_TPList rhsOM_TPList, bool limitFlag = false);
+    void add     (const cOM_TPList rhsOM_TPList, bool limitFlag = false);
+    void minus   (const cOM_TPList rhsOM_TPList, bool limitFlag = false);
 
     // SORTING
     void sortOffset (bool isAscending = true);
@@ -56,6 +61,11 @@ public:
     // MISC
     void append     (cOM_TP newOM_TP) { OM_TPList.append(newOM_TP); }
     void deleteIndex(unsigned  index) { OM_TPList.removeAt(index); }
+    bool isUniform  ();
+    bool isEmpty    ();
+    void limitValues();
+
+    void adjustToAverage (double averageSV, int adjustIndex); // Adjusts a TP so that the average is met
 
     const static int SV_BPM_ONLY  = 0,
                      SV_ONLY      = 1,

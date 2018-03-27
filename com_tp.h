@@ -11,10 +11,12 @@ public:
     cOM_TP();
     cOM_TP(QString TP);
     cOM_TP(QLineEdit *line);
+    cOM_TP(double &newOffset, double &newValue);
 
     // LOADERS
     void loadTP(QString TP);
     void loadTP(QLineEdit *line);
+    void loadTP(double newOffset, double newValue);
 
     // SETTERS
     void setOffset        (double          newOffset        ){ offset         = newOffset        ; return; }
@@ -47,14 +49,17 @@ public:
     bool operator <(cOM_TP  OM_TP) { return offset < OM_TP.getOffset(); }
     bool operator >(cOM_TP  OM_TP) { return offset > OM_TP.getOffset(); }
 
+    void multiply(const cOM_TP rhsOM_TP, bool limitFlag = false);
+    void divide  (const cOM_TP rhsOM_TP, bool limitFlag = false);
+    void add     (const cOM_TP rhsOM_TP, bool limitFlag = false);
+    void minus   (const cOM_TP rhsOM_TP, bool limitFlag = false);
+
     // MISC
-    void limitValue();
+    void limitValues();
 
     static bool isTP_SV(QString TP) ;
     static bool isTP_BPM(QString TP);
     static bool isTP(QString TP)    ;
-
-
 
 protected:
     double          offset        ;

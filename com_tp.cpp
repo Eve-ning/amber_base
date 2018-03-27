@@ -21,6 +21,10 @@ cOM_TP::cOM_TP(QLineEdit *line) : cOM_TP()
 {
     loadTP(line);
 }
+cOM_TP::cOM_TP(double &newOffset, double &newValue) : cOM_TP()
+{
+    loadTP(newOffset, newValue);
+}
 
 // LOADERS
 void cOM_TP::loadTP(QString TP)
@@ -61,6 +65,11 @@ void cOM_TP::loadTP(QLineEdit *line)
         loadFail = true;
         return;
     }
+}
+void cOM_TP::loadTP(double newOffset, double newValue)
+{
+    offset = newOffset;
+    setValue(newValue);
 }
 
 // SETTERS
@@ -118,6 +127,38 @@ QString cOM_TP::toString() const
 }
 
 // OPERS
+void cOM_TP::multiply(const cOM_TP rhsOM_TP, bool limitFlag)
+{
+    setValue(getValue() * rhsOM_TP.getValue());
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+void cOM_TP::divide(const cOM_TP rhsOM_TP, bool limitFlag)
+{
+    setValue(getValue() / rhsOM_TP.getValue());
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+void cOM_TP::add(const cOM_TP rhsOM_TP, bool limitFlag)
+{
+    setValue(getValue() + rhsOM_TP.getValue());
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+void cOM_TP::minus(const cOM_TP rhsOM_TP, bool limitFlag)
+{
+    setValue(getValue() - rhsOM_TP.getValue());
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
 
 // MISC
 bool cOM_TP::isTP_SV (QString TP)
@@ -169,7 +210,7 @@ bool cOM_TP::isTP    (QString TP)
     return isValid;
 }
 
-void cOM_TP::limitValue()
+void cOM_TP::limitValues()
 {
     if (isBPM) {
         // BOUND 0 ~ infinity

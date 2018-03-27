@@ -18,7 +18,7 @@ cOM_HO::cOM_HO()
     keys            =   0;
     loadFail        =   false;
 }
-cOM_HO::cOM_HO(double &newOffset, int &newColumn, int &newKeys) : cOM_HO()
+cOM_HO::cOM_HO(double &newOffset, int &newColumn, int newKeys) : cOM_HO()
 {
     loadHO(newOffset, newColumn, newKeys);
 }
