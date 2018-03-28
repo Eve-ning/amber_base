@@ -52,7 +52,7 @@ public:
     void multiply(const cOM_TP rhsOM_TP, bool limitFlag = false);
     void divide  (const cOM_TP rhsOM_TP, bool limitFlag = false);
     void add     (const cOM_TP rhsOM_TP, bool limitFlag = false);
-    void minus   (const cOM_TP rhsOM_TP, bool limitFlag = false);
+    void subtract(const cOM_TP rhsOM_TP, bool limitFlag = false);
 
     // MISC
     void limitValues();

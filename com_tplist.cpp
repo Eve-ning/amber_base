@@ -231,6 +231,19 @@ double cOM_TPList::getLength() const
            - *std::min_element(offsetList.begin(), offsetList.end());
     return output;
 }
+double cOM_TPList::getLength(int index)
+{
+    sortOffset(true);
+
+    if (index >= getSize() - 1)
+    {
+        qDebug() << __FUNCTION__ << "Index is out of bounds, cannot get length" << "\n"
+                 << "Returning 0;";
+        return 0;
+    }
+
+    return OM_TPList[index + 1].getOffset() - OM_TPList[index].getOffset();
+}
 int    cOM_TPList::getSize() const
 {
     return OM_TPList.count();
@@ -265,7 +278,6 @@ double cOM_TPList::getAverageBPM() const
     output /= BPMList.count();
     return output;
 }
-
 double cOM_TPList::getDistance(int onlyFlag) const
 {
     QList<double> lengthList,
@@ -281,6 +293,16 @@ double cOM_TPList::getDistance(int onlyFlag) const
     }
 
     return distance;
+}
+double cOM_TPList::getDistance(int index, int onlyFlag)
+{
+    double length,
+           value;
+
+    length = getLength(index);
+    value  = OM_TPList[index].getValue();
+
+    return length * value;
 }
 QStringList cOM_TPList::toString() const
 {
@@ -536,7 +558,7 @@ void cOM_TPList::add(const cOM_TPList rhsOM_TPList, bool limitFlag)
     }
     return;
 }
-void cOM_TPList::minus(const cOM_TPList rhsOM_TPList, bool limitFlag)
+void cOM_TPList::subtract(const cOM_TPList rhsOM_TPList, bool limitFlag)
 {
     QList<double> lhsValueList,
                   rhsValueList,
@@ -646,12 +668,10 @@ bool cOM_TPList::isUniform()
 
     return output;
 }
-
 bool cOM_TPList::isEmpty()
 {
     return getSize() == 0;
 }
-
 void cOM_TPList::limitValues()
 {
     cOM_TP temp;
@@ -667,6 +687,8 @@ void cOM_TPList::adjustToAverage(double averageSV, int adjustIndex)
     // This function changes a single TP (via adjustIndex) to achieve the specified averageSV
     // This function cannot adjust TP at the end as it doesn't contribute to the average SV
 
+    // If adjusting the TP cannot achieve the specified average SV then it'll fail
+
     if (adjustIndex > OM_TPList.length())
     {
         qDebug() << "Adjust Index cannot be longer than OM_TPList Length.";
@@ -677,22 +699,26 @@ void cOM_TPList::adjustToAverage(double averageSV, int adjustIndex)
         return;
     }
 
-    cOM_TP adjustTP,
-           adjustTPnext;
-
     double adjustLength,
            adjustNewValue,
-           adjustOldDistance,
-           adjustNewDistance,
-           otherDistance; // otherDistance as in the distance covered by other TP(s)
+           netDistance; // otherDistance as in the distance covered by other TP(s)
                           // I can't find a better wording for this
-    QList<double> other; // wip
 
-    adjustTP     = OM_TPList[adjustIndex];
-    adjustTPnext = OM_TPList[adjustIndex + 1];
+    // We calculate the distance that needs to be added/subtracted
+    netDistance = ( getLength() * averageSV ) - getDistance()
+                                              - getDistance(adjustIndex); // We subtract off the index that we need to adjust
 
-    adjustLength      = adjustTPnext.getOffset() - adjustTP.getOffset();
-    adjustOldDistance = adjustTP.getValue();
+    // adjustNewDistance - adjustOldDistance = netDistance
+    adjustLength      = getLength(adjustIndex);
+    adjustNewValue    = netDistance / adjustLength;
+
+    if (adjustNewValue > 10.0 || adjustNewValue < 0.1)
+    {
+        qDebug() << __FUNCTION__ << "New Value exceeds limit";
+    }
+
+    OM_TPList[adjustIndex].setValue(adjustNewValue);
+    OM_TPList[adjustIndex].limitValues();
 
 }
 

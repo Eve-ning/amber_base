@@ -151,7 +151,7 @@ void cOM_TP::add(const cOM_TP rhsOM_TP, bool limitFlag)
         limitValues();
     }
 }
-void cOM_TP::minus(const cOM_TP rhsOM_TP, bool limitFlag)
+void cOM_TP::subtract(const cOM_TP rhsOM_TP, bool limitFlag)
 {
     setValue(getValue() - rhsOM_TP.getValue());
     if (limitFlag)

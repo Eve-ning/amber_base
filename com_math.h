@@ -6,6 +6,7 @@ class cOM_Math
 {
 public:
     cOM_Math();
+
 };
 
 #endif // COM_MATH_H

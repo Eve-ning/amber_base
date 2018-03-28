@@ -39,10 +39,12 @@ public:
     double getMinOffset  () const;
     double getMaxOffset  () const;
     double getLength     () const;
+    double getLength     (int index);
     int    getSize       () const;
     double getAverageSV  () const;
     double getAverageBPM () const;
     double getDistance   (int onlyFlag = SV_BPM_ONLY) const;
+    double getDistance   (int index, int onlyFlag = SV_BPM_ONLY);
     bool   getLoadFail   () const { return loadFail; }
     QStringList toString () const;
 
@@ -53,10 +55,10 @@ public:
     void multiply(const cOM_TPList rhsOM_TPList, bool limitFlag = false);
     void divide  (const cOM_TPList rhsOM_TPList, bool limitFlag = false);
     void add     (const cOM_TPList rhsOM_TPList, bool limitFlag = false);
-    void minus   (const cOM_TPList rhsOM_TPList, bool limitFlag = false);
+    void subtract(const cOM_TPList rhsOM_TPList, bool limitFlag = false);
 
     // SORTING
-    void sortOffset (bool isAscending = true);
+    void sortOffset (const bool isAscending = true);
 
     // MISC
     void append     (cOM_TP newOM_TP) { OM_TPList.append(newOM_TP); }

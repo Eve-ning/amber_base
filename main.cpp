@@ -42,13 +42,11 @@ void calibrate(){
     if (TPDebugBool){
 
         cOM_TPList TPList_A_add,
-                   TPList_A_minus,
+                   TPList_A_subtract,
                    TPList_A_multiply,
                    TPList_A_divide,
 
                    TPList_B;
-
-
         /* Visualization
          *
          * Each bar represents 10000ms
@@ -58,7 +56,7 @@ void calibrate(){
          */
 
         TPList_A_add      =
-        TPList_A_minus    =
+        TPList_A_subtract =
         TPList_A_multiply =
         TPList_A_divide   = QStringList({
             "10000,-200,4,2,1,80,0,0" , // [1]
@@ -77,7 +75,7 @@ void calibrate(){
                    });
 
         TPList_A_add     .add     (TPList_B);
-        TPList_A_minus   .minus   (TPList_B);
+        TPList_A_subtract.subtract(TPList_B);
         TPList_A_multiply.multiply(TPList_B);
         TPList_A_divide  .divide  (TPList_B);
 
@@ -85,8 +83,8 @@ void calibrate(){
         qDebug() << "          " << TPList_A_add.getValueList();
         qDebug() << "Expected : (0.5, 3, 7, 2.1, 2.5)";
 
-        qDebug() << "[--- MINUS ---]";
-        qDebug() << "          " << TPList_A_minus.getValueList();
+        qDebug() << "[--- subtract ---]";
+        qDebug() << "          " << TPList_A_subtract.getValueList();
         qDebug() << "Expected : (0.5, -1, -3, -1.9, -1.5)";
 
         qDebug() << "[--- MULTIPLY ---]";
