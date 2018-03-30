@@ -9,6 +9,14 @@
 class  cOM_TPList
 {
 public:
+
+    enum class typeFlag
+    {
+        SV_BPM_ONLY  = 0,
+        SV_ONLY      = 1,
+        BPM_ONLY     = 2
+    };
+
     // CONSTRUCTORS
     cOM_TPList()                          ;
     cOM_TPList(QList<cOM_TP> newOM_TPList);
@@ -30,21 +38,23 @@ public:
     void setValueList (QList<double> newValueList);
 
     // GETTERS
-    QList<double> getOffsetList    (int onlyFlag = SV_BPM_ONLY) const;
-    QList<double> getCodeList      (int onlyFlag = SV_ONLY) const;
-    QList<double> getValueList     (int onlyFlag = SV_ONLY) const;
-    QList<double> getLengthList    (int onlyFlag = SV_BPM_ONLY) const;
-    QList<double> getDistanceList  (int onlyFlag = SV_BPM_ONLY) const;
+    QList<double> getOffsetList    (typeFlag onlyFlag = typeFlag::SV_BPM_ONLY) const;
+    QList<double> getCodeList      (typeFlag onlyFlag = typeFlag::SV_ONLY) const;
+    QList<double> getValueList     (typeFlag onlyFlag = typeFlag::SV_ONLY) const;
+    QList<double> getLengthList    (typeFlag onlyFlag = typeFlag::SV_BPM_ONLY) const;
+    QList<double> getDistanceList  (typeFlag onlyFlag = typeFlag::SV_BPM_ONLY) const;
+
+
+    cOM_TPList splitByType (typeFlag onlyFlag = typeFlag::SV_BPM_ONLY) const;
 
     double getMinOffset  () const;
     double getMaxOffset  () const;
     double getLength     () const;
     double getLength     (int index);
-    int    getSize       () const;
-    double getAverageSV  () const;
-    double getAverageBPM () const;
-    double getDistance   (int onlyFlag = SV_BPM_ONLY) const;
-    double getDistance   (int index, int onlyFlag = SV_BPM_ONLY);
+    int    getSize       (typeFlag onlyFlag = typeFlag::SV_BPM_ONLY) const;
+    double getAverage    (typeFlag onlyFlag = typeFlag::SV_ONLY) const;
+    double getDistance   (typeFlag onlyFlag = typeFlag::SV_ONLY) const;
+    double getDistance   (int index);
     bool   getLoadFail   () const { return loadFail; }
     QStringList toString () const;
 
@@ -63,15 +73,15 @@ public:
     // MISC
     void append     (cOM_TP newOM_TP) { OM_TPList.append(newOM_TP); }
     void deleteIndex(unsigned  index) { OM_TPList.removeAt(index); }
-    bool isUniform  ();
+    typeFlag isUniform  ();
     bool isEmpty    ();
     void limitValues();
 
+    QList<int> indexList(typeFlag onlyFlag = typeFlag::SV_ONLY);
+
     void adjustToAverage (double averageSV, int adjustIndex); // Adjusts a TP so that the average is met
 
-    const static int SV_BPM_ONLY  = 0,
-                     SV_ONLY      = 1,
-                     BPM_ONLY     = 2;
+
 
 protected:
     QList<cOM_TP> OM_TPList;

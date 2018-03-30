@@ -210,6 +210,7 @@ bool cOM_TP::isTP    (QString TP)
     return isValid;
 }
 
+
 void cOM_TP::limitValues()
 {
     if (isBPM) {
