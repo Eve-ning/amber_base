@@ -1,5 +1,5 @@
-#ifndef COM_TPLIST_H
-#define COM_TPLIST_H
+#ifndef cOM_TPLIST_H
+#define cOM_TPLIST_H
 
 #include <cstdlib>
 #include "com_tp.h"
@@ -10,9 +10,6 @@
 class  cOM_TPList
 {
 public:
-
-
-
     // CONSTRUCTORS
     cOM_TPList()                          ;
     cOM_TPList(QList<cOM_TP> newOM_TPList);
@@ -36,22 +33,22 @@ public:
     void setValueList (QList<double> newValueList);
 
     // GETTERS
-    QList<double> getOffsetList    (cOM_TP::typeFlag onlyFlag = cOM_TP::typeFlag::SV_BPM_ONLY) const;
-    QList<double> getCodeList      (cOM_TP::typeFlag onlyFlag = cOM_TP::typeFlag::SV_ONLY) const;
-    QList<double> getValueList     (cOM_TP::typeFlag onlyFlag = cOM_TP::typeFlag::SV_ONLY) const;
-    QList<double> getLengthList    (cOM_TP::typeFlag onlyFlag = cOM_TP::typeFlag::SV_BPM_ONLY) const;
-    QList<double> getDistanceList  (cOM_TP::typeFlag onlyFlag = cOM_TP::typeFlag::SV_BPM_ONLY) const;
-    QList<double> getUnqOffsetList (cOM_TP::typeFlag onlyFlag = cOM_TP::typeFlag::SV_BPM_ONLY) const;
+    QList<double> getOffsetList    (cOM_Common::TPTypeFlag onlyFlag = cOM_Common::TPTypeFlag::SV_BPM_ONLY) const;
+    QList<double> getCodeList      (cOM_Common::TPTypeFlag onlyFlag = cOM_Common::TPTypeFlag::SV_ONLY) const;
+    QList<double> getValueList     (cOM_Common::TPTypeFlag onlyFlag = cOM_Common::TPTypeFlag::SV_ONLY) const;
+    QList<double> getLengthList    (cOM_Common::TPTypeFlag onlyFlag = cOM_Common::TPTypeFlag::SV_BPM_ONLY) const;
+    QList<double> getDistanceList  (cOM_Common::TPTypeFlag onlyFlag = cOM_Common::TPTypeFlag::SV_BPM_ONLY) const;
+    QList<double> getUnqOffsetList (cOM_Common::TPTypeFlag onlyFlag = cOM_Common::TPTypeFlag::SV_BPM_ONLY) const;
 
-    cOM_TPList splitByType (cOM_TP::typeFlag onlyFlag = cOM_TP::typeFlag::SV_BPM_ONLY) const;
+    cOM_TPList splitByType (cOM_Common::TPTypeFlag onlyFlag = cOM_Common::TPTypeFlag::SV_BPM_ONLY) const;
 
     double getMinOffset  () const;
     double getMaxOffset  () const;
     double getLength     () const;
     double getLength     (int index);
-    int    getSize       (cOM_TP::typeFlag onlyFlag = cOM_TP::typeFlag::SV_BPM_ONLY) const;
-    double getAverage    (cOM_TP::typeFlag onlyFlag = cOM_TP::typeFlag::SV_ONLY) const;
-    double getDistance   (cOM_TP::typeFlag onlyFlag = cOM_TP::typeFlag::SV_ONLY) const;
+    int    getSize       (cOM_Common::TPTypeFlag onlyFlag = cOM_Common::TPTypeFlag::SV_BPM_ONLY) const;
+    double getAverage    (cOM_Common::TPTypeFlag onlyFlag = cOM_Common::TPTypeFlag::SV_ONLY) const;
+    double getDistance   (cOM_Common::TPTypeFlag onlyFlag = cOM_Common::TPTypeFlag::SV_ONLY) const;
     double getDistance   (int index);
     bool   getLoadFail   () const { return loadFail; }
     QStringList toString () const;
@@ -76,9 +73,9 @@ public:
     void adjustToAverage (double averageSV, int adjustIndex); // Adjusts a TP so that the average is met
     void makeUnique ();
 
-    cOM_TP::typeFlag isUniform  ();
+    cOM_Common::TPTypeFlag isUniform  ();
 
-    QList<int> indexList(cOM_TP::typeFlag onlyFlag = cOM_TP::typeFlag::SV_ONLY);
+    QList<int> indexList(cOM_Common::TPTypeFlag onlyFlag = cOM_Common::TPTypeFlag::SV_ONLY);
 
 
 
@@ -89,4 +86,4 @@ protected:
     bool          loadFail;
 };
 
-#endif // COM_TPLIST_H
+#endif // cOM_TPLIST_H

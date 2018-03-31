@@ -1,10 +1,8 @@
-#ifndef COM_BreakP_H
-#define COM_BreakP_H
+#ifndef COM_BREAKP_H
+#define COM_BREAKP_H
 #include <QString>
 #include <QStringList>
-
 #include <QDebug>
-
 
 class cOM_BreakP
 {
@@ -39,4 +37,4 @@ protected:
 
 };
 
-#endif // COM_BreakP_H
+#endif // COM_BREAKP_H

@@ -43,7 +43,7 @@ void cOM_HO::loadHO(QLineEdit *line, int newKeys)
     QString newOM_HO;
     newOM_HO = line->text();
 
-    if (isHO(newOM_HO))
+    if (cOM_Common::isHO(newOM_HO) == cOM_Common::HOTypeFlag::INVALID)
     {
         loadFail = true;
         return;
@@ -118,7 +118,8 @@ void cOM_HO::loadHO(QString &HO, int newKeys)
 // SETTERS
 void cOM_HO::setColumn(unsigned short newColumn)
 {
-    if (keys == 0) {
+    if (keys == 0)
+    {
         qDebug() << "Keys is not set.";
         return;
     }
@@ -150,7 +151,8 @@ unsigned short cOM_HO::getColumn() const
 {
     unsigned short output;
 
-    if (keys == 0) {
+    if (keys == 0)
+    {
         qDebug() << "Keys is not set.";
         return 0;
     }
@@ -178,80 +180,6 @@ QString cOM_HO::toString() const
 // OPERS
 
 // MISC
-bool cOM_HO::isHO_NN(QString HO)
-{
-
-    // Reference: 109,192,14391,1,0,0:0:0:0:
-    bool isValid;
-
-    isValid = true;
-
-    if (HO.split(",").count() != 6 ||
-        HO.split(":").count() != 5)
-    {
-        isValid = false;
-    }
-
-    return isValid;
-}
-bool cOM_HO::isHO_LN(QString HO)
-{
-
-    // Reference: 109,192,14391,1,0,0:0:0:0:
-    bool isValid;
-
-    isValid = true;
-
-    if (HO.split(",").count() != 6 ||
-        HO.split(":").count() != 6)
-    {
-        isValid = false;
-    }
-
-    return isValid;
-}
-bool cOM_HO::isHO(QString HO)
-{
-
-    // Reference: 109,192,14391,1,0,0:0:0:0:
-    bool isValid;
-
-    isValid = true;
-
-    if (!isHO_NN(HO) &&
-        !isHO_LN(HO))
-    {
-        isValid = false;
-    }
-
-    return isValid;
-}
-bool cOM_HO::isHO_NN(QStringList HOList)
-{
-    QString HOSplit;
-
-    HOSplit = HOList[0];
-
-    return isHO_NN(HOSplit);
-}
-bool cOM_HO::isHO_LN(QStringList HOList)
-{
-    QString HOSplit;
-
-    HOSplit = HOList[0];
-
-    return isHO_LN(HOSplit);
-}
-bool cOM_HO::isHO(QStringList HOList)
-{
-    QString HOSplit;
-
-    HOSplit = HOList[0];
-
-    return isHO(HOSplit);
-}
-
-
 
 
 

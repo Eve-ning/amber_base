@@ -1,4 +1,4 @@
-#include "cOM_Map.h"
+#include "com_map.h"
 
 // CONSTRUCTORS
 cOM_Map::cOM_Map()

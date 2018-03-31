@@ -1,5 +1,5 @@
-#ifndef COM_HOLIST_H
-#define COM_HOLIST_H
+#ifndef cOM_HOLIST_H
+#define cOM_HOLIST_H
 
 #include "com_ho.h"
 #include <QTextBrowser>
@@ -51,7 +51,7 @@ public:
     cOM_HO & operator [](int i);
 
     // MISC
-    static bool isEHO(QString EHO);
+
 
     void makeUnique ();
     void append     (cOM_HO newOM_HO) { OM_HOList.append(newOM_HO); }
@@ -67,4 +67,4 @@ private:
 
 };
 
-#endif // COM_HOLIST_H
+#endif // cOM_HOLIST_H

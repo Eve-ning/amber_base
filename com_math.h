@@ -1,5 +1,5 @@
-#ifndef COM_MATH_H
-#define COM_MATH_H
+#ifndef cMATH_H
+#define cMATH_H
 #include <QtCore>
 
 class cOM_Math
@@ -9,4 +9,4 @@ public:
 
 };
 
-#endif // COM_MATH_H
+#endif // cMATH_H

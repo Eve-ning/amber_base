@@ -1,7 +1,7 @@
-#ifndef COM_BREAKPLIST_H
-#define COM_BREAKPLIST_H
+#ifndef cOM_BreakPLIST_H
+#define cOM_BreakPLIST_H
 
-#include "com_breakp.h"
+#include "cOM_BreakP.h"
 #include <QList>
 #include <QDebug>
 
@@ -38,4 +38,4 @@ protected:
     QList<cOM_BreakP> OM_BreakPList;
 };
 
-#endif // COM_BREAKPLIST_H
+#endif // cOM_BreakPLIST_H

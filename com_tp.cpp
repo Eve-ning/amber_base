@@ -60,7 +60,7 @@ void cOM_TP::loadTP(QLineEdit *line)
 
     lineText = line->text();
 
-    if (isTP(lineText) == typeFlag::INVALID)
+    if (cOM_Common::isTP(lineText) == cOM_Common::TPTypeFlag::INVALID)
     {
         loadFail = true;
         return;
@@ -181,55 +181,5 @@ void cOM_TP::limitValues()
     }
 }
 
-cOM_TP::typeFlag cOM_TP::isTP(QString TP)
-{
-    QStringList TPSplit;
-
-    TPSplit = TP.split("\n", QString::SkipEmptyParts);
-
-    return isTP(TPSplit);
-}
-
-cOM_TP::typeFlag cOM_TP::isTP(QStringList TP)
-{
-    int parameterCount;
-    bool isBPM;
-    QString temp;
-
-    typeFlag TPType;
-
-    parameterCount = TP[0].split(",").count();
-
-    if (parameterCount != 8)
-    {
-        qDebug() << __FUNCTION__ << "Invalid Input: " << temp;
-        return typeFlag::INVALID;
-    }
-
-    isBPM          = temp.split(",")[6] == "1";
-    TPType = isBPM ? typeFlag::BPM_ONLY : typeFlag::SV_ONLY;
-
-    // ---
-
-    foreach (temp, TP) {
-
-        parameterCount = temp.split(",").count();
-
-        if (parameterCount != 8)
-        {
-            qDebug() << __FUNCTION__ << "Invalid Input: " << temp;
-            return typeFlag::INVALID;
-        }
-
-        isBPM          = temp.split(",")[6] == "1";
-
-        if (TPType != (isBPM ? typeFlag::BPM_ONLY : typeFlag::SV_ONLY))
-        {
-            return typeFlag::SV_BPM_ONLY;
-        }
-    }
-
-    return TPType;
-}
 
 

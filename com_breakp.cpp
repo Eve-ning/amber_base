@@ -1,4 +1,4 @@
-#include "com_BreakP.h"
+#include "com_breakp.h"
 
 // CONSTRUCTORS
 cOM_BreakP::cOM_BreakP()

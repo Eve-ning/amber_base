@@ -19,7 +19,8 @@ void calibrate(){
     bool mapDebugBool     = false,
          TPDebugBool      = false,
          sortDebugBool    = false,
-         unqDebugBool     = true;
+         unqDebugBool     = false,
+         omTypeDebugBool  = true;
 
     // Map Debug
     if (mapDebugBool){
@@ -172,4 +173,65 @@ void calibrate(){
         qDebug() << "<OFFSET> Unique   : " << temp.getOffsetList();
         qDebug() << "<COLUMN> Unique   : " << temp.getColumnList();
     }
+    if (omTypeDebugBool)
+    {
+        QString EHO,
+                HO,
+                TP,
+                MLT,
+                INV;
+
+        EHO = "00:03:543 (3543|1,3622|2,3701|3,3780|2,3859|1,3938|0,4016|1,4095|2) - ";
+
+        HO  = "64,192,22185,1,0,0:0:0:0:\n"
+              "192,192,22259,1,0,0:0:0:0:";
+
+        TP  = "810,294.840294840295,4,1,0,5,1,0\n"
+              "815,294.840294840295,4,1,0,5,1,0";
+
+        MLT = "52138,144,4,1,0,45,1,0\n"
+              "52138,144,4,1,0,45,1,0\n"
+              "192,192,22259,1,0,0:0:0:0:";
+
+        INV = "810,294.840294840295,4,1,0,5,1,0\n"
+              "pancake,peanuts,and,beets\n"
+              "192,192,22259,1,0,0:0:0:0:";
+
+        qDebug() << "[--- EHO ---]";
+        qDebug() << "EHO: " << (cOM_Common::isOM_Type(EHO) == cOM_Common::inputTypeFlag::EHO_ONLY)      << " | "
+                 << "HO : " << (cOM_Common::isOM_Type(EHO) == cOM_Common::inputTypeFlag::HO_ONLY)       << " | "
+                 << "TP : " << (cOM_Common::isOM_Type(EHO) == cOM_Common::inputTypeFlag::TP_ONLY)       << " | "
+                 << "MLT: " << (cOM_Common::isOM_Type(EHO) == cOM_Common::inputTypeFlag::MULTIPLETYPES) << " | "
+                 << "IVL: " << (cOM_Common::isOM_Type(EHO) == cOM_Common::inputTypeFlag::INVALID)       << "\n";
+
+        qDebug() << "[--- HO ---]";
+        qDebug() << "EHO: " << (cOM_Common::isOM_Type(HO) == cOM_Common::inputTypeFlag::EHO_ONLY)      << " | "
+                 << "HO : " << (cOM_Common::isOM_Type(HO) == cOM_Common::inputTypeFlag::HO_ONLY)       << " | "
+                 << "TP : " << (cOM_Common::isOM_Type(HO) == cOM_Common::inputTypeFlag::TP_ONLY)       << " | "
+                 << "MLT: " << (cOM_Common::isOM_Type(HO) == cOM_Common::inputTypeFlag::MULTIPLETYPES) << " | "
+                 << "IVL: " << (cOM_Common::isOM_Type(HO) == cOM_Common::inputTypeFlag::INVALID)       << "\n";
+
+        qDebug() << "[--- TP ---]";
+        qDebug() << "EHO: " << (cOM_Common::isOM_Type(TP) == cOM_Common::inputTypeFlag::EHO_ONLY)      << " | "
+                 << "HO : " << (cOM_Common::isOM_Type(TP) == cOM_Common::inputTypeFlag::HO_ONLY)       << " | "
+                 << "TP : " << (cOM_Common::isOM_Type(TP) == cOM_Common::inputTypeFlag::TP_ONLY)       << " | "
+                 << "MLT: " << (cOM_Common::isOM_Type(TP) == cOM_Common::inputTypeFlag::MULTIPLETYPES) << " | "
+                 << "IVL: " << (cOM_Common::isOM_Type(TP) == cOM_Common::inputTypeFlag::INVALID)       << "\n";
+
+        qDebug() << "[--- MLT ---]";
+        qDebug() << "EHO: " << (cOM_Common::isOM_Type(MLT) == cOM_Common::inputTypeFlag::EHO_ONLY)      << " | "
+                 << "HO : " << (cOM_Common::isOM_Type(MLT) == cOM_Common::inputTypeFlag::HO_ONLY)       << " | "
+                 << "TP : " << (cOM_Common::isOM_Type(MLT) == cOM_Common::inputTypeFlag::TP_ONLY)       << " | "
+                 << "MLT: " << (cOM_Common::isOM_Type(MLT) == cOM_Common::inputTypeFlag::MULTIPLETYPES) << " | "
+                 << "IVL: " << (cOM_Common::isOM_Type(MLT) == cOM_Common::inputTypeFlag::INVALID)       << "\n";
+
+        qDebug() << "[--- INV ---]";
+        qDebug() << "EHO: " << (cOM_Common::isOM_Type(INV) == cOM_Common::inputTypeFlag::EHO_ONLY)      << " | "
+                 << "HO : " << (cOM_Common::isOM_Type(INV) == cOM_Common::inputTypeFlag::HO_ONLY)       << " | "
+                 << "TP : " << (cOM_Common::isOM_Type(INV) == cOM_Common::inputTypeFlag::TP_ONLY)       << " | "
+                 << "MLT: " << (cOM_Common::isOM_Type(INV) == cOM_Common::inputTypeFlag::MULTIPLETYPES) << " | "
+                 << "IVL: " << (cOM_Common::isOM_Type(INV) == cOM_Common::inputTypeFlag::INVALID)       << "\n";
+    }
+
+
 }

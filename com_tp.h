@@ -1,20 +1,12 @@
 #ifndef COM_TP_H
 #define COM_TP_H
 
-#include <QtCore>
 #include <QLineEdit>
+#include "com_common.h"
 
 class  cOM_TP
 {
 public:
-
-    enum class typeFlag
-    {
-        SV_BPM_ONLY  = 0,
-        SV_ONLY      = 1,
-        BPM_ONLY     = 2,
-        INVALID      = 3
-    };
 
     // CONSTRUCTORS
     cOM_TP();
@@ -66,8 +58,7 @@ public:
     // MISC
     void limitValues();
 
-    static typeFlag isTP(QString TP);
-    static typeFlag isTP(QStringList TP);
+
 
 protected:
     double          offset        ;

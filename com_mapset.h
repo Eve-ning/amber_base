@@ -1,6 +1,5 @@
-#ifndef COM_MAPSET_H
-#define COM_MAPSET_H
-
+#ifndef cMAPSET_H
+#define cMAPSET_H
 
 #include "com_map.h"
 
@@ -13,4 +12,4 @@ private:
     QList<cOM_Map> OM_MapList;
 };
 
-#endif // COM_MAPSET_H
+#endif // cMAPSET_H

@@ -61,8 +61,8 @@ void cOM_HOList::loadHOList(QString &EHOorHO, int newKeys)
     bool boolEHO,
          boolHO;
 
-    boolEHO = isEHO(EHOorHO);
-    boolHO  = cOM_HO::isHO(EHOorHO);
+    boolEHO = cOM_Common::isOM_Type(EHOorHO) == cOM_Common::inputTypeFlag::EHO_ONLY;
+    boolHO  = cOM_Common::isOM_Type(EHOorHO) == cOM_Common::inputTypeFlag::HO_ONLY;
 
     // IF NOT HO CALL EHO
     if (boolEHO)
@@ -304,55 +304,20 @@ cOM_HO cOM_HOList::operator [](int i) const {
 }
 
 // MISC
-bool cOM_HOList::isEHO(QString EHO)
-{
-    // Reference: 01:52:511 (112511|3) -
-
-    bool isValid = true;
-
-    short colonIndex,
-          openBrIndex,
-          pipeIndex,
-          closeBrIndex;
-
-    colonIndex   = EHO.indexOf(":");
-    openBrIndex  = EHO.indexOf("(");
-    pipeIndex    = EHO.indexOf("|");
-    closeBrIndex = EHO.indexOf(")");
-
-    if (colonIndex   < 0 ||
-        openBrIndex  < 0 ||
-        pipeIndex    < 0 ||
-        closeBrIndex < 0)  // If index is -1, means that the character does not exist.
-    {
-        isValid = false;
-    }
-
-    if ( colonIndex   > openBrIndex  ||
-         openBrIndex  > pipeIndex    ||
-         pipeIndex    > closeBrIndex ||
-         closeBrIndex < colonIndex) // As the indexes should be increasing, all of these conditions shouldn't be true
-    {
-        isValid = false;
-    }
-
-    return isValid;
-}
 
 void cOM_HOList::makeUnique()
 {
     QList<double> offsetList,
                   newOffsetList;
     QList<cOM_HO> newOM_HOList;
-    double temp;
 
     offsetList = getOffsetList();
 
-    foreach (temp, offsetList) {
-        if (!newOffsetList.contains(temp))
+    for (int temp = 0; temp < offsetList.length(); temp++) {
+        if (!newOffsetList.contains(offsetList[temp]))
         {
-            newOffsetList.append(temp);
-            newOM_HOList.append(cOM_HO(temp, OM_HOList[temp].getColumn(), OM_HOList[temp].getKeys()));
+            newOffsetList.append(offsetList[temp]);
+            newOM_HOList.append(cOM_HO(offsetList[temp], OM_HOList[temp].getColumn(), OM_HOList[temp].getKeys()));
         }
     }
 

@@ -1,8 +1,9 @@
 #ifndef COM_HO_H
 #define COM_HO_H
 
-#include <QtCore>
+
 #include <QLineEdit>
+#include "com_common.h"
 
 class  cOM_HO
 {
@@ -60,12 +61,8 @@ public:
     bool operator >(cOM_HO  OM_HO) { return offset > OM_HO.getOffset(); }
 
     // MISC
-    static bool isHO_NN(QString HO);
-    static bool isHO_LN(QString HO);
-    static bool isHO   (QString HO);
-    static bool isHO_NN(QStringList HO);
-    static bool isHO_LN(QStringList HO);
-    static bool isHO   (QStringList HO);
+
+
 
 protected:
 

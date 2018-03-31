@@ -1,5 +1,5 @@
-#ifndef cOM_Map_H
-#define cOM_Map_H
+#ifndef COM_MAP_H
+#define COM_MAP_H
 
 
 #include "com_holist.h"
@@ -191,4 +191,4 @@ private:
 //    };
 };
 
-#endif // cOM_Map_H
+#endif // COM_MAP_H
