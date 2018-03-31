@@ -18,6 +18,10 @@ cOM_TPList::cOM_TPList(QLineEdit *line) : cOM_TPList()
 {
     loadTPList(line);
 }
+cOM_TPList::cOM_TPList(QPlainTextEdit *pte)
+{
+    loadTPList(pte);
+}
 cOM_TPList::cOM_TPList(QString str)
 {
     loadTPList(str);
@@ -48,10 +52,20 @@ void cOM_TPList::loadTPList(QLineEdit *line)
 
     loadTPList(lineText);
 }
+
+void cOM_TPList::loadTPList(QPlainTextEdit *pte)
+{
+    QString pteText;
+    pteText = pte->toPlainText();
+
+    loadTPList(pteText);
+}
 void cOM_TPList::loadTPList(QString &str)
 {
+    QStringList strSplit;
+
     bool boolTP;
-    boolTP = cOM_TP::isTP(str);
+    boolTP = (int(cOM_TP::isTP(str)) != int(cOM_TP::typeFlag::INVALID));
 
     if (!boolTP)
     {
@@ -59,14 +73,16 @@ void cOM_TPList::loadTPList(QString &str)
         return;
     }
 
-    OM_TPList.append(cOM_TP(str));
+    strSplit = str.split("\n", QString::SkipEmptyParts);
+
+    loadTPList(strSplit);
 }
 void cOM_TPList::loadTPList(QStringList &strList)
 {
     bool boolTP;
     QString     temp;
 
-    boolTP = cOM_TP::isTP(strList[0]);
+    boolTP = (int(cOM_TP::isTP(strList)) != int(cOM_TP::typeFlag::INVALID));
 
     if (!boolTP)
     {
@@ -127,14 +143,14 @@ void cOM_TPList::setValueList(QList<double> newValueList)
 }
 
 // GETTERS
-QList<double> cOM_TPList::getOffsetList(typeFlag onlyFlag) const
+QList<double> cOM_TPList::getOffsetList(cOM_TP::typeFlag onlyFlag) const
 {
     cOM_TP OM_TP;
     QList<double> output;
     foreach (OM_TP, OM_TPList)
     {
-        if (    ((onlyFlag == typeFlag::SV_ONLY ) && OM_TP.getIsBPM ()) // continue if foreach is BPM and we only accept SV
-             || ((onlyFlag == typeFlag::BPM_ONLY) && OM_TP.getIsKiai())) // continue if foreach is SV  and we only accept BPM
+        if (    ((onlyFlag == cOM_TP::typeFlag::SV_ONLY ) && OM_TP.getIsBPM ()) // continue if foreach is BPM and we only accept SV
+             || ((onlyFlag == cOM_TP::typeFlag::BPM_ONLY) && OM_TP.getIsKiai())) // continue if foreach is SV  and we only accept BPM
         {
             continue;
         }
@@ -143,14 +159,14 @@ QList<double> cOM_TPList::getOffsetList(typeFlag onlyFlag) const
 
     return output;
 }
-QList<double> cOM_TPList::getCodeList(typeFlag onlyFlag) const
+QList<double> cOM_TPList::getCodeList(cOM_TP::typeFlag onlyFlag) const
 {
     cOM_TP OM_TP;
     QList<double> output;
     foreach (OM_TP, OM_TPList)
     {
-        if (    ((onlyFlag == typeFlag::SV_ONLY ) && OM_TP.getIsBPM ()) // continue if foreach is BPM and we only accept SV
-             || ((onlyFlag == typeFlag::BPM_ONLY) && OM_TP.getIsKiai())) // continue if foreach is SV  and we only accept BPM
+        if (    ((onlyFlag == cOM_TP::typeFlag::SV_ONLY ) && OM_TP.getIsBPM ()) // continue if foreach is BPM and we only accept SV
+             || ((onlyFlag == cOM_TP::typeFlag::BPM_ONLY) && OM_TP.getIsKiai())) // continue if foreach is SV  and we only accept BPM
         {
             continue;
         }
@@ -159,14 +175,14 @@ QList<double> cOM_TPList::getCodeList(typeFlag onlyFlag) const
 
     return output;
 }
-QList<double> cOM_TPList::getValueList(typeFlag onlyFlag) const
+QList<double> cOM_TPList::getValueList(cOM_TP::typeFlag onlyFlag) const
 {
     cOM_TP OM_TP;
     QList<double> output;
     foreach (OM_TP, OM_TPList)
     {
-        if (    ((onlyFlag == typeFlag::SV_ONLY ) && (OM_TP.getIsBPM ())) // continue if foreach is BPM and we only accept SV
-             || ((onlyFlag == typeFlag::BPM_ONLY) && (OM_TP.getIsKiai()))) // continue if foreach is SV  and we only accept BPM
+        if (    ((onlyFlag == cOM_TP::typeFlag::SV_ONLY ) && (OM_TP.getIsBPM ())) // continue if foreach is BPM and we only accept SV
+             || ((onlyFlag == cOM_TP::typeFlag::BPM_ONLY) && (OM_TP.getIsKiai()))) // continue if foreach is SV  and we only accept BPM
         {
             continue;
         }
@@ -175,9 +191,9 @@ QList<double> cOM_TPList::getValueList(typeFlag onlyFlag) const
 
     return output;
 }
-QList<double> cOM_TPList::getLengthList(typeFlag onlyFlag) const
+QList<double> cOM_TPList::getLengthList(cOM_TP::typeFlag onlyFlag) const
 {
-    // Note: If typeFlag is specified, length calculation will skip some timingPoints
+    // Note: If cOM_TP::typeFlag is specified, length calculation will skip some timingPoints
     QList<double> output,
                   offsetList;
 
@@ -190,7 +206,7 @@ QList<double> cOM_TPList::getLengthList(typeFlag onlyFlag) const
 
     return output;
 }
-QList<double> cOM_TPList::getDistanceList(typeFlag onlyFlag) const
+QList<double> cOM_TPList::getDistanceList(cOM_TP::typeFlag onlyFlag) const
 {
     QList<double> lengthList,
                   valueList,
@@ -207,18 +223,38 @@ QList<double> cOM_TPList::getDistanceList(typeFlag onlyFlag) const
     return distanceList;
 }
 
-cOM_TPList cOM_TPList::splitByType(cOM_TPList::typeFlag onlyFlag) const
+QList<double> cOM_TPList::getUnqOffsetList(cOM_TP::typeFlag onlyFlag) const
 {
-    if (onlyFlag == typeFlag::SV_BPM_ONLY)
+    QList<double> offsetList,
+                  unqOffsetList;
+
+    double offset;
+
+    offsetList = getOffsetList(onlyFlag);
+
+    foreach (offset, offsetList)
     {
-        qDebug() << __FUNCTION__ << "does not support typeFlag::SV_BPM_ONLY";
+        if (!unqOffsetList.contains(offset))
+        {
+            unqOffsetList.append(offset);
+        }
+    }
+
+    return unqOffsetList;
+}
+
+cOM_TPList cOM_TPList::splitByType(cOM_TP::typeFlag onlyFlag) const
+{
+    if (onlyFlag == cOM_TP::typeFlag::SV_BPM_ONLY)
+    {
+        qDebug() << __FUNCTION__ << "does not support cOM_TP::typeFlag::SV_BPM_ONLY";
         return cOM_TPList();
     }
 
     cOM_TPList output;
 
     switch (onlyFlag) {
-    case typeFlag::SV_ONLY:
+    case cOM_TP::typeFlag::SV_ONLY:
         for (int temp = 0; temp < OM_TPList.length(); temp++)
         {
             if (!OM_TPList[temp].getIsBPM())
@@ -228,7 +264,7 @@ cOM_TPList cOM_TPList::splitByType(cOM_TPList::typeFlag onlyFlag) const
         }
         break;
 
-    case typeFlag::BPM_ONLY:
+    case cOM_TP::typeFlag::BPM_ONLY:
         for (int temp = 0; temp < OM_TPList.length(); temp++)
         {
             if (OM_TPList[temp].getIsBPM())
@@ -285,16 +321,16 @@ double cOM_TPList::getLength(int index)
 
     return OM_TPList[index + 1].getOffset() - OM_TPList[index].getOffset();
 }
-int    cOM_TPList::getSize(typeFlag onlyFlag) const
+int    cOM_TPList::getSize(cOM_TP::typeFlag onlyFlag) const
 {
     cOM_TP temp;
     int counter = 0;
     switch (onlyFlag) {
-    case typeFlag::SV_BPM_ONLY:
+    case cOM_TP::typeFlag::SV_BPM_ONLY:
         return OM_TPList.count();
         break;
 
-    case typeFlag::SV_ONLY:
+    case cOM_TP::typeFlag::SV_ONLY:
         foreach (temp, OM_TPList) {
             if (!temp.getIsBPM())
             {
@@ -304,7 +340,7 @@ int    cOM_TPList::getSize(typeFlag onlyFlag) const
         return counter;
         break;
 
-    case typeFlag::BPM_ONLY:
+    case cOM_TP::typeFlag::BPM_ONLY:
         foreach (temp, OM_TPList) {
             if (temp.getIsBPM())
             {
@@ -321,11 +357,11 @@ int    cOM_TPList::getSize(typeFlag onlyFlag) const
 
     return counter;
 }
-double cOM_TPList::getAverage(typeFlag onlyFlag) const
+double cOM_TPList::getAverage(cOM_TP::typeFlag onlyFlag) const
 {
-    if (onlyFlag == typeFlag::SV_BPM_ONLY)
+    if (onlyFlag == cOM_TP::typeFlag::SV_BPM_ONLY)
     {
-        qDebug() << __FUNCTION__ << "does not support typeFlag::SV_BPM_ONLY";
+        qDebug() << __FUNCTION__ << "does not support cOM_TP::typeFlag::SV_BPM_ONLY";
         return 0;
     }
 
@@ -342,11 +378,11 @@ double cOM_TPList::getAverage(typeFlag onlyFlag) const
     output /= TPList.count();
     return output;
 }
-double cOM_TPList::getDistance(typeFlag onlyFlag) const
+double cOM_TPList::getDistance(cOM_TP::typeFlag onlyFlag) const
 {
-    if (onlyFlag == typeFlag::SV_BPM_ONLY)
+    if (onlyFlag == cOM_TP::typeFlag::SV_BPM_ONLY)
     {
-        qDebug() << __FUNCTION__ << "does not support typeFlag::SV_BPM_ONLY";
+        qDebug() << __FUNCTION__ << "does not support cOM_TP::typeFlag::SV_BPM_ONLY";
         return 0;
     }
 
@@ -425,8 +461,8 @@ void cOM_TPList::multiply(const cOM_TPList rhsOM_TPList, bool limitFlag)
 
     lhsTemp = rhsTemp = 0;
 
-    lhsValueList = getValueList(typeFlag::SV_BPM_ONLY);
-    rhsValueList = rhsOM_TPList.getValueList(typeFlag::SV_BPM_ONLY);
+    lhsValueList = getValueList(cOM_TP::typeFlag::SV_BPM_ONLY);
+    rhsValueList = rhsOM_TPList.getValueList(cOM_TP::typeFlag::SV_BPM_ONLY);
     lhsOffsetList = getOffsetList();
     rhsOffsetList = rhsOM_TPList.getOffsetList();
     rhsOffsetList.append(9999999); // Append to prevent out of index
@@ -500,8 +536,8 @@ void cOM_TPList::divide(const cOM_TPList rhsOM_TPList, bool limitFlag)
 
     lhsTemp = rhsTemp = 0;
 
-    lhsValueList = getValueList(typeFlag::SV_BPM_ONLY);
-    rhsValueList = rhsOM_TPList.getValueList(typeFlag::SV_BPM_ONLY);
+    lhsValueList = getValueList(cOM_TP::typeFlag::SV_BPM_ONLY);
+    rhsValueList = rhsOM_TPList.getValueList(cOM_TP::typeFlag::SV_BPM_ONLY);
     lhsOffsetList = getOffsetList();
     rhsOffsetList = rhsOM_TPList.getOffsetList();
     rhsOffsetList.append(9999999); // Append to prevent out of index
@@ -575,8 +611,8 @@ void cOM_TPList::add(const cOM_TPList rhsOM_TPList, bool limitFlag)
 
     lhsTemp = rhsTemp = 0;
 
-    lhsValueList = getValueList(typeFlag::SV_BPM_ONLY);
-    rhsValueList = rhsOM_TPList.getValueList(typeFlag::SV_BPM_ONLY);
+    lhsValueList = getValueList(cOM_TP::typeFlag::SV_BPM_ONLY);
+    rhsValueList = rhsOM_TPList.getValueList(cOM_TP::typeFlag::SV_BPM_ONLY);
     lhsOffsetList = getOffsetList();
     rhsOffsetList = rhsOM_TPList.getOffsetList();
     rhsOffsetList.append(9999999); // Append to prevent out of index
@@ -650,8 +686,8 @@ void cOM_TPList::subtract(const cOM_TPList rhsOM_TPList, bool limitFlag)
 
     lhsTemp = rhsTemp = 0;
 
-    lhsValueList = getValueList(typeFlag::SV_BPM_ONLY);
-    rhsValueList = rhsOM_TPList.getValueList(typeFlag::SV_BPM_ONLY);
+    lhsValueList = getValueList(cOM_TP::typeFlag::SV_BPM_ONLY);
+    rhsValueList = rhsOM_TPList.getValueList(cOM_TP::typeFlag::SV_BPM_ONLY);
     lhsOffsetList = getOffsetList();
     rhsOffsetList = rhsOM_TPList.getOffsetList();
     rhsOffsetList.append(9999999); // Append to prevent out of index
@@ -716,7 +752,7 @@ void cOM_TPList::sortOffset(bool isAscending)
     }
 }
 
-cOM_TPList::typeFlag cOM_TPList::isUniform()
+cOM_TP::typeFlag cOM_TPList::isUniform()
 {
     if (isEmpty()){
         qDebug() << "OM_TPList is Empty";
@@ -724,13 +760,13 @@ cOM_TPList::typeFlag cOM_TPList::isUniform()
 
     cOM_TP temp;
 
-    typeFlag output = OM_TPList[0].getIsBPM() ? typeFlag::BPM_ONLY : typeFlag::SV_ONLY;
+    cOM_TP::typeFlag output = OM_TPList[0].getIsBPM() ? cOM_TP::typeFlag::BPM_ONLY : cOM_TP::typeFlag::SV_ONLY;
 
     foreach (temp, OM_TPList)
     {
-        if (output != (temp.getIsBPM() ? typeFlag::BPM_ONLY : typeFlag::SV_ONLY))
+        if (output != (temp.getIsBPM() ? cOM_TP::typeFlag::BPM_ONLY : cOM_TP::typeFlag::SV_ONLY))
         {
-            return typeFlag::SV_BPM_ONLY; // If it isn't uniform then return this
+            return cOM_TP::typeFlag::SV_BPM_ONLY; // If it isn't uniform then return this
         }
     }
 
@@ -748,12 +784,11 @@ void cOM_TPList::limitValues()
         temp.limitValues();
     }
 }
-
-QList<int> cOM_TPList::indexList(typeFlag onlyFlag)
+QList<int> cOM_TPList::indexList(cOM_TP::typeFlag onlyFlag)
 {
-    if (onlyFlag == typeFlag::SV_BPM_ONLY)
+    if (onlyFlag == cOM_TP::typeFlag::SV_BPM_ONLY)
     {
-        qDebug() << __FUNCTION__ << "does not support typeFlag::SV_BPM_ONLY";
+        qDebug() << __FUNCTION__ << "does not support cOM_TP::typeFlag::SV_BPM_ONLY";
     }
 
     QList<int> indexList;
@@ -761,13 +796,13 @@ QList<int> cOM_TPList::indexList(typeFlag onlyFlag)
     for (int counter = 0; counter < OM_TPList.length(); counter ++)
     {
         switch (onlyFlag) {
-        case typeFlag::SV_ONLY:
+        case cOM_TP::typeFlag::SV_ONLY:
             if (!OM_TPList[counter].getIsBPM())
             {
                 indexList.append(counter);
             }
             break;
-        case typeFlag::BPM_ONLY:
+        case cOM_TP::typeFlag::BPM_ONLY:
             if (OM_TPList[counter].getIsBPM())
             {
                 indexList.append(counter);
@@ -782,10 +817,9 @@ QList<int> cOM_TPList::indexList(typeFlag onlyFlag)
 
     return indexList;
 }
-
 void cOM_TPList::adjustToAverage(double averageSV, int adjustIndex)
 {
-    if (isUniform() == typeFlag::SV_BPM_ONLY)
+    if (isUniform() == cOM_TP::typeFlag::SV_BPM_ONLY)
     {
         qDebug() << __FUNCTION__ << "only works with uniform lists.";
     }
@@ -827,14 +861,14 @@ void cOM_TPList::adjustToAverage(double averageSV, int adjustIndex)
     newAdjustValue = OM_TPList[adjustIndex].getValue() + (netDistance / oldAdjustLength);
 
     switch (isUniform()) {
-    case typeFlag::SV_ONLY:
+    case cOM_TP::typeFlag::SV_ONLY:
         if (newAdjustValue > 10.0 || newAdjustValue < 0.1)
         {
             qDebug() << __FUNCTION__ << "New Value exceeds limit";
         }
         break;
 
-    case typeFlag::BPM_ONLY:
+    case cOM_TP::typeFlag::BPM_ONLY:
         if (newAdjustValue < 0)
         {
             qDebug() << __FUNCTION__ << "New Value exceeds limit";
@@ -849,6 +883,26 @@ void cOM_TPList::adjustToAverage(double averageSV, int adjustIndex)
     OM_TPList[adjustIndex].setValue(newAdjustValue);
     OM_TPList[adjustIndex].limitValues();
 
+}
+
+void cOM_TPList::makeUnique()
+{
+    QList<double> offsetList,
+                  newOffsetList;
+    QList<cOM_TP> newOM_TPList;
+    double temp;
+
+    offsetList = getOffsetList();
+
+    foreach (temp, offsetList) {
+        if (!newOffsetList.contains(temp))
+        {
+            newOffsetList.append(temp);
+            newOM_TPList.append(cOM_TP(temp, OM_TPList[temp].getValue()));
+        }
+    }
+
+    loadTPList(newOM_TPList);
 }
 
 

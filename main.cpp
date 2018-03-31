@@ -17,8 +17,9 @@ int main(int argc, char *argv[])
 void calibrate(){
 
     bool mapDebugBool     = false,
-         TPDebugBool      = true,
-         sortDebugBool    = false;
+         TPDebugBool      = false,
+         sortDebugBool    = false,
+         unqDebugBool     = true;
 
     // Map Debug
     if (mapDebugBool){
@@ -159,8 +160,16 @@ void calibrate(){
         HOList.sortOffset(false);
         qDebug() << "Descending : " << HOList.getOffsetList() << HOList.getColumnList();
     }
+    if (unqDebugBool){
 
+        cOM_HOList temp("00:00:000 (0|2,0|0,0|1,165|4,341|2,341|1,518|4) - ", 7);
 
+        qDebug() << "<OFFSET> Original : " << temp.getOffsetList();
+        qDebug() << "<COLUMN> Original : " << temp.getColumnList();
 
+        temp.makeUnique();
 
+        qDebug() << "<OFFSET> Unique   : " << temp.getOffsetList();
+        qDebug() << "<COLUMN> Unique   : " << temp.getColumnList();
+    }
 }

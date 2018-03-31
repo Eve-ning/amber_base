@@ -7,11 +7,20 @@
 class  cOM_TP
 {
 public:
+
+    enum class typeFlag
+    {
+        SV_BPM_ONLY  = 0,
+        SV_ONLY      = 1,
+        BPM_ONLY     = 2,
+        INVALID      = 3
+    };
+
     // CONSTRUCTORS
     cOM_TP();
     cOM_TP(QString TP);
     cOM_TP(QLineEdit *line);
-    cOM_TP(double &newOffset, double &newValue);
+    cOM_TP(double newOffset, double newValue);
 
     // LOADERS
     void loadTP(QString TP);
@@ -57,9 +66,8 @@ public:
     // MISC
     void limitValues();
 
-    static bool isTP_SV(QString TP) ;
-    static bool isTP_BPM(QString TP);
-    static bool isTP(QString TP)    ;
+    static typeFlag isTP(QString TP);
+    static typeFlag isTP(QStringList TP);
 
 protected:
     double          offset        ;

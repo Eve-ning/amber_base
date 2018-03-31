@@ -21,7 +21,7 @@ cOM_TP::cOM_TP(QLineEdit *line) : cOM_TP()
 {
     loadTP(line);
 }
-cOM_TP::cOM_TP(double &newOffset, double &newValue) : cOM_TP()
+cOM_TP::cOM_TP(double newOffset, double newValue) : cOM_TP()
 {
     loadTP(newOffset, newValue);
 }
@@ -60,10 +60,13 @@ void cOM_TP::loadTP(QLineEdit *line)
 
     lineText = line->text();
 
-    if (isTP(lineText))
+    if (isTP(lineText) == typeFlag::INVALID)
     {
         loadFail = true;
         return;
+    } else
+    {
+        loadTP(lineText);
     }
 }
 void cOM_TP::loadTP(double newOffset, double newValue)
@@ -161,56 +164,6 @@ void cOM_TP::subtract(const cOM_TP rhsOM_TP, bool limitFlag)
 }
 
 // MISC
-bool cOM_TP::isTP_SV (QString TP)
-{
-    // Reference: 14724,-100,4,2,1,80,0,0
-
-    bool isValid;
-
-    isValid = true;
-
-    if (TP.split(",").count() != 8 ||
-        TP.split(",")[6] != "0")
-    {
-        isValid = false;
-    }
-
-    return isValid;
-}
-bool cOM_TP::isTP_BPM(QString TP)
-{
-    // Reference: 14724,-100,4,2,1,80,0,0
-
-    bool isValid;
-
-    isValid = true;
-
-    if (TP.split(",").count() != 8 ||
-        TP.split(",")[6] != "1")
-    {
-        isValid = false;
-    }
-
-    return isValid;
-}
-bool cOM_TP::isTP    (QString TP)
-{
-    // Reference: 14724,-100,4,2,1,80,0,0
-
-    bool isValid;
-
-    isValid = true;
-
-    if (!isTP_SV(TP) &&
-        !isTP_BPM(TP))
-    {
-        isValid = false;
-    }
-
-    return isValid;
-}
-
-
 void cOM_TP::limitValues()
 {
     if (isBPM) {
@@ -226,6 +179,57 @@ void cOM_TP::limitValues()
             setValue(10.0);
         }
     }
+}
+
+cOM_TP::typeFlag cOM_TP::isTP(QString TP)
+{
+    QStringList TPSplit;
+
+    TPSplit = TP.split("\n", QString::SkipEmptyParts);
+
+    return isTP(TPSplit);
+}
+
+cOM_TP::typeFlag cOM_TP::isTP(QStringList TP)
+{
+    int parameterCount;
+    bool isBPM;
+    QString temp;
+
+    typeFlag TPType;
+
+    parameterCount = TP[0].split(",").count();
+
+    if (parameterCount != 8)
+    {
+        qDebug() << __FUNCTION__ << "Invalid Input: " << temp;
+        return typeFlag::INVALID;
+    }
+
+    isBPM          = temp.split(",")[6] == "1";
+    TPType = isBPM ? typeFlag::BPM_ONLY : typeFlag::SV_ONLY;
+
+    // ---
+
+    foreach (temp, TP) {
+
+        parameterCount = temp.split(",").count();
+
+        if (parameterCount != 8)
+        {
+            qDebug() << __FUNCTION__ << "Invalid Input: " << temp;
+            return typeFlag::INVALID;
+        }
+
+        isBPM          = temp.split(",")[6] == "1";
+
+        if (TPType != (isBPM ? typeFlag::BPM_ONLY : typeFlag::SV_ONLY))
+        {
+            return typeFlag::SV_BPM_ONLY;
+        }
+    }
+
+    return TPType;
 }
 
 
