@@ -43,7 +43,7 @@ void cOM_HO::loadHO(QLineEdit *line, int newKeys)
     QString newOM_HO;
     newOM_HO = line->text();
 
-    if (cOM_Common::isHO(newOM_HO) == cOM_Common::HOTypeFlag::INVALID)
+    if (cOM_Common::isHO(newOM_HO) == cOM_Common::HOFlag::INVALID)
     {
         loadFail = true;
         return;

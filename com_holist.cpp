@@ -61,8 +61,8 @@ void cOM_HOList::loadHOList(QString &EHOorHO, int newKeys)
     bool boolEHO,
          boolHO;
 
-    boolEHO = cOM_Common::isOM_Type(EHOorHO) == cOM_Common::inputTypeFlag::EHO_ONLY;
-    boolHO  = cOM_Common::isOM_Type(EHOorHO) == cOM_Common::inputTypeFlag::HO_ONLY;
+    boolEHO = cOM_Common::isOM_Type(EHOorHO) == cOM_Common::OMFlag::EHO_ONLY;
+    boolHO  = cOM_Common::isOM_Type(EHOorHO) == cOM_Common::OMFlag::HO_ONLY;
 
     // IF NOT HO CALL EHO
     if (boolEHO)

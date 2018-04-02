@@ -65,7 +65,7 @@ void cOM_TPList::loadTPList(QString &str)
     QStringList strSplit;
 
     bool boolTP;
-    boolTP = (int(cOM_Common::isTP(str)) != int(cOM_Common::TPTypeFlag::INVALID));
+    boolTP = (int(cOM_Common::isTP(str)) != int(cOM_Common::TPFlag::INVALID));
 
     if (!boolTP)
     {
@@ -82,7 +82,7 @@ void cOM_TPList::loadTPList(QStringList &strList)
     bool boolTP;
     QString     temp;
 
-    boolTP = (int(cOM_Common::isTP(strList)) != int(cOM_Common::TPTypeFlag::INVALID));
+    boolTP = (int(cOM_Common::isTP(strList)) != int(cOM_Common::TPFlag::INVALID));
 
     if (!boolTP)
     {
@@ -143,14 +143,14 @@ void cOM_TPList::setValueList(QList<double> newValueList)
 }
 
 // GETTERS
-QList<double> cOM_TPList::getOffsetList(cOM_Common::TPTypeFlag onlyFlag) const
+QList<double> cOM_TPList::getOffsetList(cOM_Common::TPFlag onlyFlag) const
 {
     cOM_TP OM_TP;
     QList<double> output;
     foreach (OM_TP, OM_TPList)
     {
-        if (    ((onlyFlag == cOM_Common::TPTypeFlag::SV_ONLY ) && OM_TP.getIsBPM ()) // continue if foreach is BPM and we only accept SV
-             || ((onlyFlag == cOM_Common::TPTypeFlag::BPM_ONLY) && OM_TP.getIsKiai())) // continue if foreach is SV  and we only accept BPM
+        if (    ((onlyFlag == cOM_Common::TPFlag::SV_ONLY ) && OM_TP.getIsBPM ()) // continue if foreach is BPM and we only accept SV
+             || ((onlyFlag == cOM_Common::TPFlag::BPM_ONLY) && OM_TP.getIsKiai())) // continue if foreach is SV  and we only accept BPM
         {
             continue;
         }
@@ -159,14 +159,14 @@ QList<double> cOM_TPList::getOffsetList(cOM_Common::TPTypeFlag onlyFlag) const
 
     return output;
 }
-QList<double> cOM_TPList::getCodeList(cOM_Common::TPTypeFlag onlyFlag) const
+QList<double> cOM_TPList::getCodeList(cOM_Common::TPFlag onlyFlag) const
 {
     cOM_TP OM_TP;
     QList<double> output;
     foreach (OM_TP, OM_TPList)
     {
-        if (    ((onlyFlag == cOM_Common::TPTypeFlag::SV_ONLY ) && OM_TP.getIsBPM ()) // continue if foreach is BPM and we only accept SV
-             || ((onlyFlag == cOM_Common::TPTypeFlag::BPM_ONLY) && OM_TP.getIsKiai())) // continue if foreach is SV  and we only accept BPM
+        if (    ((onlyFlag == cOM_Common::TPFlag::SV_ONLY ) && OM_TP.getIsBPM ()) // continue if foreach is BPM and we only accept SV
+             || ((onlyFlag == cOM_Common::TPFlag::BPM_ONLY) && OM_TP.getIsKiai())) // continue if foreach is SV  and we only accept BPM
         {
             continue;
         }
@@ -175,14 +175,14 @@ QList<double> cOM_TPList::getCodeList(cOM_Common::TPTypeFlag onlyFlag) const
 
     return output;
 }
-QList<double> cOM_TPList::getValueList(cOM_Common::TPTypeFlag onlyFlag) const
+QList<double> cOM_TPList::getValueList(cOM_Common::TPFlag onlyFlag) const
 {
     cOM_TP OM_TP;
     QList<double> output;
     foreach (OM_TP, OM_TPList)
     {
-        if (    ((onlyFlag == cOM_Common::TPTypeFlag::SV_ONLY ) && (OM_TP.getIsBPM ())) // continue if foreach is BPM and we only accept SV
-             || ((onlyFlag == cOM_Common::TPTypeFlag::BPM_ONLY) && (OM_TP.getIsKiai()))) // continue if foreach is SV  and we only accept BPM
+        if (    ((onlyFlag == cOM_Common::TPFlag::SV_ONLY ) && (OM_TP.getIsBPM ())) // continue if foreach is BPM and we only accept SV
+             || ((onlyFlag == cOM_Common::TPFlag::BPM_ONLY) && (OM_TP.getIsKiai()))) // continue if foreach is SV  and we only accept BPM
         {
             continue;
         }
@@ -191,9 +191,9 @@ QList<double> cOM_TPList::getValueList(cOM_Common::TPTypeFlag onlyFlag) const
 
     return output;
 }
-QList<double> cOM_TPList::getLengthList(cOM_Common::TPTypeFlag onlyFlag) const
+QList<double> cOM_TPList::getLengthList(cOM_Common::TPFlag onlyFlag) const
 {
-    // Note: If cOM_Common::TPTypeFlag is specified, length calculation will skip some timingPoints
+    // Note: If cOM_Common::TPFlag is specified, length calculation will skip some timingPoints
     QList<double> output,
                   offsetList;
 
@@ -206,7 +206,7 @@ QList<double> cOM_TPList::getLengthList(cOM_Common::TPTypeFlag onlyFlag) const
 
     return output;
 }
-QList<double> cOM_TPList::getDistanceList(cOM_Common::TPTypeFlag onlyFlag) const
+QList<double> cOM_TPList::getDistanceList(cOM_Common::TPFlag onlyFlag) const
 {
     QList<double> lengthList,
                   valueList,
@@ -223,7 +223,7 @@ QList<double> cOM_TPList::getDistanceList(cOM_Common::TPTypeFlag onlyFlag) const
     return distanceList;
 }
 
-QList<double> cOM_TPList::getUnqOffsetList(cOM_Common::TPTypeFlag onlyFlag) const
+QList<double> cOM_TPList::getUnqOffsetList(cOM_Common::TPFlag onlyFlag) const
 {
     QList<double> offsetList,
                   unqOffsetList;
@@ -243,18 +243,18 @@ QList<double> cOM_TPList::getUnqOffsetList(cOM_Common::TPTypeFlag onlyFlag) cons
     return unqOffsetList;
 }
 
-cOM_TPList cOM_TPList::splitByType(cOM_Common::TPTypeFlag onlyFlag) const
+cOM_TPList cOM_TPList::splitByType(cOM_Common::TPFlag onlyFlag) const
 {
-    if (onlyFlag == cOM_Common::TPTypeFlag::SV_BPM_ONLY)
+    if (onlyFlag == cOM_Common::TPFlag::SV_BPM_ONLY)
     {
-        qDebug() << __FUNCTION__ << "does not support cOM_Common::TPTypeFlag::SV_BPM_ONLY";
+        qDebug() << __FUNCTION__ << "does not support cOM_Common::TPFlag::SV_BPM_ONLY";
         return cOM_TPList();
     }
 
     cOM_TPList output;
 
     switch (onlyFlag) {
-    case cOM_Common::TPTypeFlag::SV_ONLY:
+    case cOM_Common::TPFlag::SV_ONLY:
         for (int temp = 0; temp < OM_TPList.length(); temp++)
         {
             if (!OM_TPList[temp].getIsBPM())
@@ -264,7 +264,7 @@ cOM_TPList cOM_TPList::splitByType(cOM_Common::TPTypeFlag onlyFlag) const
         }
         break;
 
-    case cOM_Common::TPTypeFlag::BPM_ONLY:
+    case cOM_Common::TPFlag::BPM_ONLY:
         for (int temp = 0; temp < OM_TPList.length(); temp++)
         {
             if (OM_TPList[temp].getIsBPM())
@@ -321,16 +321,16 @@ double cOM_TPList::getLength(int index)
 
     return OM_TPList[index + 1].getOffset() - OM_TPList[index].getOffset();
 }
-int    cOM_TPList::getSize(cOM_Common::TPTypeFlag onlyFlag) const
+int    cOM_TPList::getSize(cOM_Common::TPFlag onlyFlag) const
 {
     cOM_TP temp;
     int counter = 0;
     switch (onlyFlag) {
-    case cOM_Common::TPTypeFlag::SV_BPM_ONLY:
+    case cOM_Common::TPFlag::SV_BPM_ONLY:
         return OM_TPList.count();
         break;
 
-    case cOM_Common::TPTypeFlag::SV_ONLY:
+    case cOM_Common::TPFlag::SV_ONLY:
         foreach (temp, OM_TPList) {
             if (!temp.getIsBPM())
             {
@@ -340,7 +340,7 @@ int    cOM_TPList::getSize(cOM_Common::TPTypeFlag onlyFlag) const
         return counter;
         break;
 
-    case cOM_Common::TPTypeFlag::BPM_ONLY:
+    case cOM_Common::TPFlag::BPM_ONLY:
         foreach (temp, OM_TPList) {
             if (temp.getIsBPM())
             {
@@ -357,11 +357,11 @@ int    cOM_TPList::getSize(cOM_Common::TPTypeFlag onlyFlag) const
 
     return counter;
 }
-double cOM_TPList::getAverage(cOM_Common::TPTypeFlag onlyFlag) const
+double cOM_TPList::getAverage(cOM_Common::TPFlag onlyFlag) const
 {
-    if (onlyFlag == cOM_Common::TPTypeFlag::SV_BPM_ONLY)
+    if (onlyFlag == cOM_Common::TPFlag::SV_BPM_ONLY)
     {
-        qDebug() << __FUNCTION__ << "does not support cOM_Common::TPTypeFlag::SV_BPM_ONLY";
+        qDebug() << __FUNCTION__ << "does not support cOM_Common::TPFlag::SV_BPM_ONLY";
         return 0;
     }
 
@@ -378,11 +378,11 @@ double cOM_TPList::getAverage(cOM_Common::TPTypeFlag onlyFlag) const
     output /= TPList.count();
     return output;
 }
-double cOM_TPList::getDistance(cOM_Common::TPTypeFlag onlyFlag) const
+double cOM_TPList::getDistance(cOM_Common::TPFlag onlyFlag) const
 {
-    if (onlyFlag == cOM_Common::TPTypeFlag::SV_BPM_ONLY)
+    if (onlyFlag == cOM_Common::TPFlag::SV_BPM_ONLY)
     {
-        qDebug() << __FUNCTION__ << "does not support cOM_Common::TPTypeFlag::SV_BPM_ONLY";
+        qDebug() << __FUNCTION__ << "does not support cOM_Common::TPFlag::SV_BPM_ONLY";
         return 0;
     }
 
@@ -439,7 +439,7 @@ cOM_TP cOM_TPList::operator [](int i) const {
     }
 }
 
-void cOM_TPList::multiply(const cOM_TPList rhsOM_TPList, bool limitFlag)
+void cOM_TPList::multiplyValue(const cOM_TPList rhsOM_TPList, bool limitFlag)
 {
     QList<double> lhsValueList,
                   rhsValueList,
@@ -461,8 +461,8 @@ void cOM_TPList::multiply(const cOM_TPList rhsOM_TPList, bool limitFlag)
 
     lhsTemp = rhsTemp = 0;
 
-    lhsValueList = getValueList(cOM_Common::TPTypeFlag::SV_BPM_ONLY);
-    rhsValueList = rhsOM_TPList.getValueList(cOM_Common::TPTypeFlag::SV_BPM_ONLY);
+    lhsValueList = getValueList(cOM_Common::TPFlag::SV_BPM_ONLY);
+    rhsValueList = rhsOM_TPList.getValueList(cOM_Common::TPFlag::SV_BPM_ONLY);
     lhsOffsetList = getOffsetList();
     rhsOffsetList = rhsOM_TPList.getOffsetList();
     rhsOffsetList.append(9999999); // Append to prevent out of index
@@ -514,7 +514,7 @@ void cOM_TPList::multiply(const cOM_TPList rhsOM_TPList, bool limitFlag)
     }
     return;
 }
-void cOM_TPList::divide(const cOM_TPList rhsOM_TPList, bool limitFlag)
+void cOM_TPList::divideValue(const cOM_TPList rhsOM_TPList, bool limitFlag)
 {
     QList<double> lhsValueList,
                   rhsValueList,
@@ -536,8 +536,8 @@ void cOM_TPList::divide(const cOM_TPList rhsOM_TPList, bool limitFlag)
 
     lhsTemp = rhsTemp = 0;
 
-    lhsValueList = getValueList(cOM_Common::TPTypeFlag::SV_BPM_ONLY);
-    rhsValueList = rhsOM_TPList.getValueList(cOM_Common::TPTypeFlag::SV_BPM_ONLY);
+    lhsValueList = getValueList(cOM_Common::TPFlag::SV_BPM_ONLY);
+    rhsValueList = rhsOM_TPList.getValueList(cOM_Common::TPFlag::SV_BPM_ONLY);
     lhsOffsetList = getOffsetList();
     rhsOffsetList = rhsOM_TPList.getOffsetList();
     rhsOffsetList.append(9999999); // Append to prevent out of index
@@ -589,7 +589,7 @@ void cOM_TPList::divide(const cOM_TPList rhsOM_TPList, bool limitFlag)
     }
     return;
 }
-void cOM_TPList::add(const cOM_TPList rhsOM_TPList, bool limitFlag)
+void cOM_TPList::addValue(const cOM_TPList rhsOM_TPList, bool limitFlag)
 {
     QList<double> lhsValueList,
                   rhsValueList,
@@ -611,8 +611,8 @@ void cOM_TPList::add(const cOM_TPList rhsOM_TPList, bool limitFlag)
 
     lhsTemp = rhsTemp = 0;
 
-    lhsValueList = getValueList(cOM_Common::TPTypeFlag::SV_BPM_ONLY);
-    rhsValueList = rhsOM_TPList.getValueList(cOM_Common::TPTypeFlag::SV_BPM_ONLY);
+    lhsValueList = getValueList(cOM_Common::TPFlag::SV_BPM_ONLY);
+    rhsValueList = rhsOM_TPList.getValueList(cOM_Common::TPFlag::SV_BPM_ONLY);
     lhsOffsetList = getOffsetList();
     rhsOffsetList = rhsOM_TPList.getOffsetList();
     rhsOffsetList.append(9999999); // Append to prevent out of index
@@ -664,7 +664,7 @@ void cOM_TPList::add(const cOM_TPList rhsOM_TPList, bool limitFlag)
     }
     return;
 }
-void cOM_TPList::subtract(const cOM_TPList rhsOM_TPList, bool limitFlag)
+void cOM_TPList::subtractValue(const cOM_TPList rhsOM_TPList, bool limitFlag)
 {
     QList<double> lhsValueList,
                   rhsValueList,
@@ -686,8 +686,8 @@ void cOM_TPList::subtract(const cOM_TPList rhsOM_TPList, bool limitFlag)
 
     lhsTemp = rhsTemp = 0;
 
-    lhsValueList = getValueList(cOM_Common::TPTypeFlag::SV_BPM_ONLY);
-    rhsValueList = rhsOM_TPList.getValueList(cOM_Common::TPTypeFlag::SV_BPM_ONLY);
+    lhsValueList = getValueList(cOM_Common::TPFlag::SV_BPM_ONLY);
+    rhsValueList = rhsOM_TPList.getValueList(cOM_Common::TPFlag::SV_BPM_ONLY);
     lhsOffsetList = getOffsetList();
     rhsOffsetList = rhsOM_TPList.getOffsetList();
     rhsOffsetList.append(9999999); // Append to prevent out of index
@@ -740,6 +740,171 @@ void cOM_TPList::subtract(const cOM_TPList rhsOM_TPList, bool limitFlag)
     return;
 }
 
+void cOM_TPList::multiplyValue  (const double rhsDouble, bool limitFlag)
+{
+    QList<double> newValueList,
+                  oldValueList;
+    double temp;
+
+    oldValueList = getValueList();
+
+    foreach (temp, oldValueList) {
+        newValueList.append(temp * rhsDouble);
+    }
+
+    setValueList(newValueList);
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+void cOM_TPList::divideValue    (const double rhsDouble, bool limitFlag)
+{
+    QList<double> newValueList,
+                  oldValueList;
+    double temp;
+
+    oldValueList = getValueList();
+
+    foreach (temp, oldValueList) {
+        newValueList.append(temp / rhsDouble);
+    }
+
+    setValueList(newValueList);
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+void cOM_TPList::addValue       (const double rhsDouble, bool limitFlag)
+{
+    QList<double> newValueList,
+                  oldValueList;
+    double temp;
+
+    oldValueList = getValueList();
+
+    foreach (temp, oldValueList) {
+        newValueList.append(temp + rhsDouble);
+    }
+
+    setValueList(newValueList);
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+void cOM_TPList::subtractValue  (const double rhsDouble, bool limitFlag)
+{
+    QList<double> newValueList,
+                  oldValueList;
+    double temp;
+
+    oldValueList = getValueList();
+
+    foreach (temp, oldValueList) {
+        newValueList.append(temp - rhsDouble);
+    }
+
+    setValueList(newValueList);
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+
+void cOM_TPList::multiplyOffset (const double rhsDouble, bool limitFlag)
+{
+    QList<double> newOffsetList,
+                  oldOffsetList;
+    double temp;
+
+    oldOffsetList = getOffsetList();
+
+    foreach (temp, oldOffsetList) {
+        newOffsetList.append(temp * rhsDouble);
+    }
+
+    setOffsetList(newOffsetList);
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+void cOM_TPList::divideOffset   (const double rhsDouble, bool limitFlag)
+{
+    QList<double> newOffsetList,
+                  oldOffsetList;
+    double temp;
+
+    oldOffsetList = getOffsetList();
+
+    foreach (temp, oldOffsetList) {
+        newOffsetList.append(temp / rhsDouble);
+    }
+
+    setOffsetList(newOffsetList);
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+void cOM_TPList::addOffset      (const double rhsDouble, bool limitFlag)
+{
+    QList<double> newOffsetList,
+                  oldOffsetList;
+    double temp;
+
+    oldOffsetList = getOffsetList();
+
+    foreach (temp, oldOffsetList) {
+        newOffsetList.append(temp + rhsDouble);
+    }
+
+    setOffsetList(newOffsetList);
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+void cOM_TPList::subtractOffset (const double rhsDouble, bool limitFlag)
+{
+    QList<double> newOffsetList,
+                  oldOffsetList;
+    double temp;
+
+    oldOffsetList = getOffsetList();
+
+    foreach (temp, oldOffsetList) {
+        newOffsetList.append(temp - rhsDouble);
+    }
+
+    setOffsetList(newOffsetList);
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+
+void cOM_TPList::zero()
+{
+    QList<double> newOffsetList,
+                  oldOffsetList;
+
+    double temp,
+           min;
+
+    min = getMinOffset();
+
+    oldOffsetList = getOffsetList();
+
+    foreach (temp, oldOffsetList) {
+        newOffsetList.append(temp - min);
+    }
+
+    setOffsetList(newOffsetList);
+}
+
 // MISC
 void cOM_TPList::sortOffset(bool isAscending)
 {
@@ -752,7 +917,7 @@ void cOM_TPList::sortOffset(bool isAscending)
     }
 }
 
-cOM_Common::TPTypeFlag cOM_TPList::isUniform()
+cOM_Common::TPFlag cOM_TPList::isUniform()
 {
     if (isEmpty()){
         qDebug() << "OM_TPList is Empty";
@@ -760,13 +925,13 @@ cOM_Common::TPTypeFlag cOM_TPList::isUniform()
 
     cOM_TP temp;
 
-    cOM_Common::TPTypeFlag output = OM_TPList[0].getIsBPM() ? cOM_Common::TPTypeFlag::BPM_ONLY : cOM_Common::TPTypeFlag::SV_ONLY;
+    cOM_Common::TPFlag output = OM_TPList[0].getIsBPM() ? cOM_Common::TPFlag::BPM_ONLY : cOM_Common::TPFlag::SV_ONLY;
 
     foreach (temp, OM_TPList)
     {
-        if (output != (temp.getIsBPM() ? cOM_Common::TPTypeFlag::BPM_ONLY : cOM_Common::TPTypeFlag::SV_ONLY))
+        if (output != (temp.getIsBPM() ? cOM_Common::TPFlag::BPM_ONLY : cOM_Common::TPFlag::SV_ONLY))
         {
-            return cOM_Common::TPTypeFlag::SV_BPM_ONLY; // If it isn't uniform then return this
+            return cOM_Common::TPFlag::SV_BPM_ONLY; // If it isn't uniform then return this
         }
     }
 
@@ -784,11 +949,11 @@ void cOM_TPList::limitValues()
         temp.limitValues();
     }
 }
-QList<int> cOM_TPList::indexList(cOM_Common::TPTypeFlag onlyFlag)
+QList<int> cOM_TPList::indexList(cOM_Common::TPFlag onlyFlag)
 {
-    if (onlyFlag == cOM_Common::TPTypeFlag::SV_BPM_ONLY)
+    if (onlyFlag == cOM_Common::TPFlag::SV_BPM_ONLY)
     {
-        qDebug() << __FUNCTION__ << "does not support cOM_Common::TPTypeFlag::SV_BPM_ONLY";
+        qDebug() << __FUNCTION__ << "does not support cOM_Common::TPFlag::SV_BPM_ONLY";
     }
 
     QList<int> indexList;
@@ -796,13 +961,13 @@ QList<int> cOM_TPList::indexList(cOM_Common::TPTypeFlag onlyFlag)
     for (int counter = 0; counter < OM_TPList.length(); counter ++)
     {
         switch (onlyFlag) {
-        case cOM_Common::TPTypeFlag::SV_ONLY:
+        case cOM_Common::TPFlag::SV_ONLY:
             if (!OM_TPList[counter].getIsBPM())
             {
                 indexList.append(counter);
             }
             break;
-        case cOM_Common::TPTypeFlag::BPM_ONLY:
+        case cOM_Common::TPFlag::BPM_ONLY:
             if (OM_TPList[counter].getIsBPM())
             {
                 indexList.append(counter);
@@ -819,7 +984,7 @@ QList<int> cOM_TPList::indexList(cOM_Common::TPTypeFlag onlyFlag)
 }
 void cOM_TPList::adjustToAverage(double averageSV, int adjustIndex)
 {
-    if (isUniform() == cOM_Common::TPTypeFlag::SV_BPM_ONLY)
+    if (isUniform() == cOM_Common::TPFlag::SV_BPM_ONLY)
     {
         qDebug() << __FUNCTION__ << "only works with uniform lists.";
     }
@@ -861,14 +1026,14 @@ void cOM_TPList::adjustToAverage(double averageSV, int adjustIndex)
     newAdjustValue = OM_TPList[adjustIndex].getValue() + (netDistance / oldAdjustLength);
 
     switch (isUniform()) {
-    case cOM_Common::TPTypeFlag::SV_ONLY:
+    case cOM_Common::TPFlag::SV_ONLY:
         if (newAdjustValue > 10.0 || newAdjustValue < 0.1)
         {
             qDebug() << __FUNCTION__ << "New Value exceeds limit";
         }
         break;
 
-    case cOM_Common::TPTypeFlag::BPM_ONLY:
+    case cOM_Common::TPFlag::BPM_ONLY:
         if (newAdjustValue < 0)
         {
             qDebug() << __FUNCTION__ << "New Value exceeds limit";

@@ -50,10 +50,20 @@ public:
     bool operator <(cOM_TP  OM_TP) { return offset < OM_TP.getOffset(); }
     bool operator >(cOM_TP  OM_TP) { return offset > OM_TP.getOffset(); }
 
-    void multiply(const cOM_TP rhsOM_TP, bool limitFlag = false);
-    void divide  (const cOM_TP rhsOM_TP, bool limitFlag = false);
-    void add     (const cOM_TP rhsOM_TP, bool limitFlag = false);
-    void subtract(const cOM_TP rhsOM_TP, bool limitFlag = false);
+    void multiplyValue  (const cOM_TP rhsOM_TP, bool limitFlag = false);
+    void divideValue    (const cOM_TP rhsOM_TP, bool limitFlag = false);
+    void addValue       (const cOM_TP rhsOM_TP, bool limitFlag = false);
+    void subtractValue  (const cOM_TP rhsOM_TP, bool limitFlag = false);
+
+    void multiplyValue  (const double rhsDouble, bool limitFlag = false);
+    void divideValue    (const double rhsDouble, bool limitFlag = false);
+    void addValue       (const double rhsDouble, bool limitFlag = false);
+    void subtractValue  (const double rhsDouble, bool limitFlag = false);
+
+    void multiplyOffset (const double rhsDouble, bool limitFlag = false);
+    void divideOffset   (const double rhsDouble, bool limitFlag = false);
+    void addOffset      (const double rhsDouble, bool limitFlag = false);
+    void subtractOffset (const double rhsDouble, bool limitFlag = false);
 
     // MISC
     void limitValues();

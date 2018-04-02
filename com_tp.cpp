@@ -60,7 +60,7 @@ void cOM_TP::loadTP(QLineEdit *line)
 
     lineText = line->text();
 
-    if (cOM_Common::isTP(lineText) == cOM_Common::TPTypeFlag::INVALID)
+    if (cOM_Common::isTP(lineText) == cOM_Common::TPFlag::INVALID)
     {
         loadFail = true;
         return;
@@ -130,7 +130,7 @@ QString cOM_TP::toString() const
 }
 
 // OPERS
-void cOM_TP::multiply(const cOM_TP rhsOM_TP, bool limitFlag)
+void cOM_TP::multiplyValue(const cOM_TP rhsOM_TP, bool limitFlag)
 {
     setValue(getValue() * rhsOM_TP.getValue());
     if (limitFlag)
@@ -138,7 +138,7 @@ void cOM_TP::multiply(const cOM_TP rhsOM_TP, bool limitFlag)
         limitValues();
     }
 }
-void cOM_TP::divide(const cOM_TP rhsOM_TP, bool limitFlag)
+void cOM_TP::divideValue(const cOM_TP rhsOM_TP, bool limitFlag)
 {
     setValue(getValue() / rhsOM_TP.getValue());
     if (limitFlag)
@@ -146,7 +146,7 @@ void cOM_TP::divide(const cOM_TP rhsOM_TP, bool limitFlag)
         limitValues();
     }
 }
-void cOM_TP::add(const cOM_TP rhsOM_TP, bool limitFlag)
+void cOM_TP::addValue(const cOM_TP rhsOM_TP, bool limitFlag)
 {
     setValue(getValue() + rhsOM_TP.getValue());
     if (limitFlag)
@@ -154,9 +154,75 @@ void cOM_TP::add(const cOM_TP rhsOM_TP, bool limitFlag)
         limitValues();
     }
 }
-void cOM_TP::subtract(const cOM_TP rhsOM_TP, bool limitFlag)
+void cOM_TP::subtractValue(const cOM_TP rhsOM_TP, bool limitFlag)
 {
     setValue(getValue() - rhsOM_TP.getValue());
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+
+void cOM_TP::multiplyValue  (const double rhsDouble, bool limitFlag)
+{
+    setValue(getValue() * rhsDouble);
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+void cOM_TP::divideValue    (const double rhsDouble, bool limitFlag)
+{
+    setValue(getValue() / rhsDouble);
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+void cOM_TP::addValue       (const double rhsDouble, bool limitFlag)
+{
+    setValue(getValue() + rhsDouble);
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+void cOM_TP::subtractValue  (const double rhsDouble, bool limitFlag)
+{
+    setValue(getValue() - rhsDouble);
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+
+void cOM_TP::multiplyOffset (const double rhsDouble, bool limitFlag)
+{
+    setOffset(getOffset() * rhsDouble);
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+void cOM_TP::divideOffset   (const double rhsDouble, bool limitFlag)
+{
+    setOffset(getOffset() * rhsDouble);
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+void cOM_TP::addOffset      (const double rhsDouble, bool limitFlag)
+{
+    setOffset(getOffset() * rhsDouble);
+    if (limitFlag)
+    {
+        limitValues();
+    }
+}
+void cOM_TP::subtractOffset (const double rhsDouble, bool limitFlag)
+{
+    setOffset(getOffset() * rhsDouble);
     if (limitFlag)
     {
         limitValues();

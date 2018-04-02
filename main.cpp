@@ -20,7 +20,7 @@ void calibrate(){
          TPDebugBool      = false,
          sortDebugBool    = false,
          unqDebugBool     = false,
-         omTypeDebugBool  = true;
+         omTypeDebugBool  = false;
 
     // Map Debug
     if (mapDebugBool){
@@ -77,10 +77,10 @@ void calibrate(){
             "90000,-250,4,2,1,80,0,0"   // [9]
                    });
 
-        TPList_A_add     .add     (TPList_B);
-        TPList_A_subtract.subtract(TPList_B);
-        TPList_A_multiply.multiply(TPList_B);
-        TPList_A_divide  .divide  (TPList_B);
+        TPList_A_add     .addValue     (TPList_B);
+        TPList_A_subtract.subtractValue(TPList_B);
+        TPList_A_multiply.multiplyValue(TPList_B);
+        TPList_A_divide  .divideValue  (TPList_B);
 
         qDebug() << "[--- ADD ---]";
         qDebug() << "          " << TPList_A_add.getValueList();
@@ -198,40 +198,51 @@ void calibrate(){
               "192,192,22259,1,0,0:0:0:0:";
 
         qDebug() << "[--- EHO ---]";
-        qDebug() << "EHO: " << (cOM_Common::isOM_Type(EHO) == cOM_Common::inputTypeFlag::EHO_ONLY)      << " | "
-                 << "HO : " << (cOM_Common::isOM_Type(EHO) == cOM_Common::inputTypeFlag::HO_ONLY)       << " | "
-                 << "TP : " << (cOM_Common::isOM_Type(EHO) == cOM_Common::inputTypeFlag::TP_ONLY)       << " | "
-                 << "MLT: " << (cOM_Common::isOM_Type(EHO) == cOM_Common::inputTypeFlag::MULTIPLETYPES) << " | "
-                 << "IVL: " << (cOM_Common::isOM_Type(EHO) == cOM_Common::inputTypeFlag::INVALID)       << "\n";
+        qDebug() << "EHO: " << (cOM_Common::isOM_Type(EHO) == cOM_Common::OMFlag::EHO_ONLY)      << " | "
+                 << "HO : " << (cOM_Common::isOM_Type(EHO) == cOM_Common::OMFlag::HO_ONLY)       << " | "
+                 << "TP : " << (cOM_Common::isOM_Type(EHO) == cOM_Common::OMFlag::TP_ONLY)       << " | "
+                 << "MLT: " << (cOM_Common::isOM_Type(EHO) == cOM_Common::OMFlag::MULTIPLETYPES) << " | "
+                 << "IVL: " << (cOM_Common::isOM_Type(EHO) == cOM_Common::OMFlag::INVALID)       << "\n";
 
         qDebug() << "[--- HO ---]";
-        qDebug() << "EHO: " << (cOM_Common::isOM_Type(HO) == cOM_Common::inputTypeFlag::EHO_ONLY)      << " | "
-                 << "HO : " << (cOM_Common::isOM_Type(HO) == cOM_Common::inputTypeFlag::HO_ONLY)       << " | "
-                 << "TP : " << (cOM_Common::isOM_Type(HO) == cOM_Common::inputTypeFlag::TP_ONLY)       << " | "
-                 << "MLT: " << (cOM_Common::isOM_Type(HO) == cOM_Common::inputTypeFlag::MULTIPLETYPES) << " | "
-                 << "IVL: " << (cOM_Common::isOM_Type(HO) == cOM_Common::inputTypeFlag::INVALID)       << "\n";
+        qDebug() << "EHO: " << (cOM_Common::isOM_Type(HO) == cOM_Common::OMFlag::EHO_ONLY)      << " | "
+                 << "HO : " << (cOM_Common::isOM_Type(HO) == cOM_Common::OMFlag::HO_ONLY)       << " | "
+                 << "TP : " << (cOM_Common::isOM_Type(HO) == cOM_Common::OMFlag::TP_ONLY)       << " | "
+                 << "MLT: " << (cOM_Common::isOM_Type(HO) == cOM_Common::OMFlag::MULTIPLETYPES) << " | "
+                 << "IVL: " << (cOM_Common::isOM_Type(HO) == cOM_Common::OMFlag::INVALID)       << "\n";
 
         qDebug() << "[--- TP ---]";
-        qDebug() << "EHO: " << (cOM_Common::isOM_Type(TP) == cOM_Common::inputTypeFlag::EHO_ONLY)      << " | "
-                 << "HO : " << (cOM_Common::isOM_Type(TP) == cOM_Common::inputTypeFlag::HO_ONLY)       << " | "
-                 << "TP : " << (cOM_Common::isOM_Type(TP) == cOM_Common::inputTypeFlag::TP_ONLY)       << " | "
-                 << "MLT: " << (cOM_Common::isOM_Type(TP) == cOM_Common::inputTypeFlag::MULTIPLETYPES) << " | "
-                 << "IVL: " << (cOM_Common::isOM_Type(TP) == cOM_Common::inputTypeFlag::INVALID)       << "\n";
+        qDebug() << "EHO: " << (cOM_Common::isOM_Type(TP) == cOM_Common::OMFlag::EHO_ONLY)      << " | "
+                 << "HO : " << (cOM_Common::isOM_Type(TP) == cOM_Common::OMFlag::HO_ONLY)       << " | "
+                 << "TP : " << (cOM_Common::isOM_Type(TP) == cOM_Common::OMFlag::TP_ONLY)       << " | "
+                 << "MLT: " << (cOM_Common::isOM_Type(TP) == cOM_Common::OMFlag::MULTIPLETYPES) << " | "
+                 << "IVL: " << (cOM_Common::isOM_Type(TP) == cOM_Common::OMFlag::INVALID)       << "\n";
 
         qDebug() << "[--- MLT ---]";
-        qDebug() << "EHO: " << (cOM_Common::isOM_Type(MLT) == cOM_Common::inputTypeFlag::EHO_ONLY)      << " | "
-                 << "HO : " << (cOM_Common::isOM_Type(MLT) == cOM_Common::inputTypeFlag::HO_ONLY)       << " | "
-                 << "TP : " << (cOM_Common::isOM_Type(MLT) == cOM_Common::inputTypeFlag::TP_ONLY)       << " | "
-                 << "MLT: " << (cOM_Common::isOM_Type(MLT) == cOM_Common::inputTypeFlag::MULTIPLETYPES) << " | "
-                 << "IVL: " << (cOM_Common::isOM_Type(MLT) == cOM_Common::inputTypeFlag::INVALID)       << "\n";
+        qDebug() << "EHO: " << (cOM_Common::isOM_Type(MLT) == cOM_Common::OMFlag::EHO_ONLY)      << " | "
+                 << "HO : " << (cOM_Common::isOM_Type(MLT) == cOM_Common::OMFlag::HO_ONLY)       << " | "
+                 << "TP : " << (cOM_Common::isOM_Type(MLT) == cOM_Common::OMFlag::TP_ONLY)       << " | "
+                 << "MLT: " << (cOM_Common::isOM_Type(MLT) == cOM_Common::OMFlag::MULTIPLETYPES) << " | "
+                 << "IVL: " << (cOM_Common::isOM_Type(MLT) == cOM_Common::OMFlag::INVALID)       << "\n";
 
         qDebug() << "[--- INV ---]";
-        qDebug() << "EHO: " << (cOM_Common::isOM_Type(INV) == cOM_Common::inputTypeFlag::EHO_ONLY)      << " | "
-                 << "HO : " << (cOM_Common::isOM_Type(INV) == cOM_Common::inputTypeFlag::HO_ONLY)       << " | "
-                 << "TP : " << (cOM_Common::isOM_Type(INV) == cOM_Common::inputTypeFlag::TP_ONLY)       << " | "
-                 << "MLT: " << (cOM_Common::isOM_Type(INV) == cOM_Common::inputTypeFlag::MULTIPLETYPES) << " | "
-                 << "IVL: " << (cOM_Common::isOM_Type(INV) == cOM_Common::inputTypeFlag::INVALID)       << "\n";
+        qDebug() << "EHO: " << (cOM_Common::isOM_Type(INV) == cOM_Common::OMFlag::EHO_ONLY)      << " | "
+                 << "HO : " << (cOM_Common::isOM_Type(INV) == cOM_Common::OMFlag::HO_ONLY)       << " | "
+                 << "TP : " << (cOM_Common::isOM_Type(INV) == cOM_Common::OMFlag::TP_ONLY)       << " | "
+                 << "MLT: " << (cOM_Common::isOM_Type(INV) == cOM_Common::OMFlag::MULTIPLETYPES) << " | "
+                 << "IVL: " << (cOM_Common::isOM_Type(INV) == cOM_Common::OMFlag::INVALID)       << "\n";
     }
 
+    cOM_TPList TPList_A = QStringList({
+                                                   "10000,-200,4,2,1,80,0,0" , // [1]
+                                                   "30000,-100,4,2,1,80,0,0" , // [3]
+                                                   "40000,-50,4,2,1,80,0,0"  , // [4]
+                                                   "70000,-1000,4,2,1,80,0,0", // [7]
+                                                   "80000,-200,4,2,1,80,0,0"   // [8]
+                                             });
+
+    qDebug() << TPList_A.getOffsetList();
+    TPList_A.addOffset(10, false);
+    qDebug() << TPList_A.getOffsetList();
 
 }
