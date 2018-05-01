@@ -1,0 +1,17 @@
+#ifndef AMBERBASE_GLOBAL_H
+#define AMBERBASE_GLOBAL_H
+
+#include <QtGlobal>
+
+#ifdef AMBERBASE_STATICLIB
+#  undef AMBERBASE_SHAREDLIB
+#  define AMBERBASE_EXPORT
+#else
+#  ifdef AMBERBASE_MAKEDLL
+#   define AMBERBASE_EXPORT Q_DECL_EXPORT
+#  else
+#   define AMBERBASE_EXPORT Q_DECL_IMPORT
+#  endif
+#endif
+
+#endif//AMBERBASE_GLOBAL_H

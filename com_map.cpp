@@ -1,10 +1,35 @@
-#include "com_map.h"
+#include "cOM_Map.h"
 
-// CONSTRUCTORS
+void cOM_Map::loadMap(QString newMapString)
+{
+    // Convert to StringList then pass to StringList Handler
+    loadMap(newMapString.split("\n",QString::KeepEmptyParts));
+}
+
+void cOM_Map::loadMap(QFileInfo newMapPath)
+{
+    // Convert to StringList then pass to StringList Handler
+    QStringList mapStringList;
+    QFile newMapFile;
+
+    newMapFile.setFileName(newMapPath.filePath());
+    if (newMapFile.open(QFile::ReadOnly)) {
+        QTextStream mapStream(&newMapFile);
+        while (!mapStream.atEnd()) {
+            mapStringList.append(mapStream.readLine());
+        }
+    } else {
+        qDebug() << "Map cannot be opened. \n"
+                 << "Map Path: "
+                 << newMapFile.fileName();
+    }
+
+    loadMap(mapStringList);
+}
+
 cOM_Map::cOM_Map()
 {
     // Load Default Map
-    osuFileName      = ""                  ;
     audioFileName    = "audio.mp3"         ;
     specialStyle     = false               ;
     widescreen       = false               ;
@@ -33,35 +58,6 @@ cOM_Map::cOM_Map()
     OM_TPList        = cOM_TPList()        ;
 }
 
-// LOADERS
-void cOM_Map::loadMap(QString newMapString)
-{
-    // Convert to StringList then pass to StringList Handler
-    loadMap(newMapString.split("\n",QString::KeepEmptyParts));
-}
-void cOM_Map::loadMap(QFileInfo newMapPath)
-{
-    // Convert to StringList then pass to StringList Handler
-    QStringList mapStringList;
-    QFile newMapFile;
-
-    newMapFile.setFileName(newMapPath.filePath());
-    if (newMapFile.open(QFile::ReadOnly)) {
-        QTextStream mapStream(&newMapFile);
-        while (!mapStream.atEnd()) {
-            mapStringList.append(mapStream.readLine());
-        }
-    } else {
-        WR_DEBUG("Map cannot be opened. \n"          );
-        WR_DEBUG("Map Path: " + newMapFile.fileName());
-    }
-
-    newMapFile.close();
-
-    osuFileName = newMapPath.filePath();
-
-    loadMap(mapStringList);
-}
 void cOM_Map::loadMap(QStringList newMapStringList)
 {
     QList<int> indexMapStringList;
@@ -105,54 +101,12 @@ void cOM_Map::loadMap(QStringList newMapStringList)
                 = newMapStringList[indexMapStringList[0]].split(":")[1].simplified().toInt(); }
     if (indexMapStringList[3]  != -1) { countdown
                 = bool (newMapStringList[indexMapStringList[0]].split(":")[1].simplified().toInt()); }
-    if (indexMapStringList[4]  != -1) { // sampleSet
-
-        QString temp;
-
-        temp = newMapStringList[indexMapStringList[0]].split(":")[1].simplified().toInt();
-
-        if (temp == "None")
-        {
-            sampleSet = cOM_Map::cSampleSet::AUTO;
-        }
-        else if (temp == "Soft")
-        {
-            sampleSet = cOM_Map::cSampleSet::SOFT;
-        }
-        else if (temp == "Normal")
-        {
-            sampleSet = cOM_Map::cSampleSet::NORMAL;
-        }
-        else if (temp == "Drum")
-        {
-            sampleSet = cOM_Map::cSampleSet::DRUM;
-        }
-        else
-        {
-            sampleSet = cOM_Map::cSampleSet::AUTO;
-        }
-    }
+    if (indexMapStringList[4]  != -1) { sampleSet
+                = newMapStringList[indexMapStringList[0]].split(":")[1].simplified().toInt(); }
     if (indexMapStringList[5]  != -1) { stackLeniency
                 = newMapStringList[indexMapStringList[0]].split(":")[1].simplified().toDouble(); }
-    if (indexMapStringList[6]  != -1) { // gameMode
-        switch (newMapStringList[indexMapStringList[0]].split(":")[1].simplified().toInt()) {
-        case 0:
-            gameMode = cGameMode::STANDARD;
-            break;
-        case 1:
-            gameMode = cGameMode::TAIKO;
-            break;
-        case 2:
-            gameMode = cGameMode::CTB;
-            break;
-        case 3:
-            gameMode = cGameMode::MANIA;
-            break;
-        default:
-            gameMode = cGameMode::STANDARD;
-            break;
-        }
-       }
+    if (indexMapStringList[6]  != -1) { gameMode
+                = newMapStringList[indexMapStringList[0]].split(":")[1].simplified().toInt(); }
     if (indexMapStringList[7]  != -1) { letterbox
                 = bool (newMapStringList[indexMapStringList[0]].split(":")[1].simplified().toInt()); }
     if (indexMapStringList[8]  != -1) { specialStyle
@@ -205,7 +159,7 @@ void cOM_Map::loadMap(QStringList newMapStringList)
                      newMapStringList[indexMapStringList[20]].length() -newMapStringList[indexMapStringList[20]].indexOf(":") - 1
                   ).simplified();
     }
-    if (indexMapStringList[21] != -1) { // tags
+    if (indexMapStringList[21] != -1) { //tags
         QString trimTag;
 
         trimTag =newMapStringList[indexMapStringList[21]].right
@@ -233,7 +187,7 @@ void cOM_Map::loadMap(QStringList newMapStringList)
                 = newMapStringList[indexMapStringList[28]].split(":")[1].simplified().toDouble(); }
     if (indexMapStringList[29] != -1) { sliderTick
                 = newMapStringList[indexMapStringList[29]].split(":")[1].simplified().toInt(); }
-    if (indexMapStringList[30] != -1) { // bgFileName
+    if (indexMapStringList[30] != -1) { //bgFileName
         QString lineBGFileName,
                 trimBGFileName;
         int firstQuoteIndex,
@@ -248,51 +202,15 @@ void cOM_Map::loadMap(QStringList newMapStringList)
 
         bgFileName = trimBGFileName;
                  }
-    if (indexMapStringList[31] != -1) { // videoFileName
-        QString lineVideoFileName;
-        int firstQuoteIndex,
-            secondQuoteIndex;
-
-        lineVideoFileName = newMapStringList[indexMapStringList[31]].simplified();
-
-        firstQuoteIndex  = lineVideoFileName.indexOf("\"");
-        secondQuoteIndex = lineVideoFileName.indexOf("\"", firstQuoteIndex + 1);
-
-        videoFileName = lineVideoFileName.mid(firstQuoteIndex + 1, secondQuoteIndex - firstQuoteIndex - 1);
-                 }
-    if (indexMapStringList[32] != -1) { // BreakP
-
-        int startBreakPIndex,
-            endBreakPIndex;
-
-        startBreakPIndex = endBreakPIndex = indexMapStringList[32] + 1;
-
-        for (int temp = 0;
-             temp < 50; // We assume there are no maps with more than 50 breaks.
-             temp ++)
-        {
-            if (newMapStringList[temp + startBreakPIndex].left(1) == "/"){
-                endBreakPIndex = temp + startBreakPIndex - 1;
-                break;
-            }
-        }
-
-        for (int temp = startBreakPIndex; temp <= endBreakPIndex; temp ++)
-        {
-            if (newMapStringList[temp].simplified() != ""){
-                breakPList.append(cOM_BreakP(newMapStringList[temp]));
-            }
-        }
-                 }
-    if (indexMapStringList[33] != -1) { // OM_TPList
+    if (indexMapStringList[31] != -1) { //OM_TPList
         int startOM_TPIndex,
             endOM_TPIndex;
 
-        startOM_TPIndex = indexMapStringList[33] + 1;
-        endOM_TPIndex = indexMapStringList[34] - 1;
+        startOM_TPIndex = indexMapStringList[31] + 1;
+        endOM_TPIndex = indexMapStringList[32] - 1;
 
-        INF_DEBUG("startOM_TPIndex: " + startOM_TPIndex);
-        INF_DEBUG("endOM_TPIndex: "   + endOM_TPIndex  );
+        qDebug() << "startOM_TPIndex: " << startOM_TPIndex;
+        qDebug() << "endOM_TPIndex: "   << endOM_TPIndex;
 
         for (int temp = startOM_TPIndex; temp <= endOM_TPIndex; temp ++)
         {
@@ -302,15 +220,15 @@ void cOM_Map::loadMap(QStringList newMapStringList)
         }
 
     }
-    if (indexMapStringList[34] != -1) { // OM_HOList
+    if (indexMapStringList[32] != -1) { //OM_HOList
         int startOM_HOIndex,
             endOM_HOIndex;
 
-        startOM_HOIndex = indexMapStringList[34] + 1;
+        startOM_HOIndex = indexMapStringList[32] + 1;
         endOM_HOIndex = newMapStringList.length();
 
-        INF_DEBUG("startOM_HOIndex: " + startOM_HOIndex);
-        INF_DEBUG("endOM_HOIndex: "   + endOM_HOIndex  );
+        qDebug() << "startOM_HOIndex: " << startOM_HOIndex;
+        qDebug() << "endOM_HOIndex: "   << endOM_HOIndex;
 
         for (int temp = startOM_HOIndex; temp < endOM_HOIndex; temp ++)
         {
@@ -319,211 +237,125 @@ void cOM_Map::loadMap(QStringList newMapStringList)
             }
         }
     }
-
-
 }
 
-// SETTERS
-
-// GETTERS
-void cOM_Map::getInfo() const
+void cOM_Map::getMapInfo()
 {
-    QString sampleSetStr,
-            gameModeStr;
-
-    // CONVERT SAMPLESET TO STR
-    switch (sampleSet) {
-    case cOM_Map::cSampleSet::AUTO:
-        sampleSetStr = "AUTO";
-        break;
-    case cOM_Map::cSampleSet::SOFT:
-        sampleSetStr = "SOFT";
-        break;
-    case cOM_Map::cSampleSet::NORMAL:
-        sampleSetStr = "NORMAL";
-        break;
-    case cOM_Map::cSampleSet::DRUM:
-        sampleSetStr = "DRUM";
-        break;
-    default:
-        break;
-    }
-
-    // CONVERT SAMPLESET TO STR
-    switch (gameMode) {
-    case cOM_Map::cGameMode::STANDARD:
-        gameModeStr = "STANDARD";
-        break;
-    case cOM_Map::cGameMode::TAIKO:
-        gameModeStr = "TAIKO";
-        break;
-    case cOM_Map::cGameMode::CTB:
-        gameModeStr = "CTB";
-        break;
-    case cOM_Map::cGameMode::MANIA:
-        gameModeStr = "MANIA";
-        break;
-    default:
-        break;
-    }
-
-    INF_DEBUG("[---- Map Info ----]");
-    INF_DEBUG("AUDIOFILENAME    : " + audioFileName                   );
-    INF_DEBUG("AUDIOLEADIN      : " + QString::number(audioLeadIn    ));
-    INF_DEBUG("PREVIEWTIME      : " + QString::number(previewTime    ));
-    INF_DEBUG("COUNTDOWN        : " + countdown                       );
-    INF_DEBUG("SAMPLESET        : " + sampleSetStr                    );
-    INF_DEBUG("STACKLENIENCY    : " + QString::number(stackLeniency  ));
-    INF_DEBUG("GAMEMODE         : " + gameModeStr                     );
-    INF_DEBUG("LETTERBOX        : " + letterbox                       );
-    INF_DEBUG("SPECIALSTYLE     : " + specialStyle                    );
-    INF_DEBUG("WIDESCREEN       : " + widescreen                      );
-    INF_DEBUG("DISTANCESPACING  : " + QString::number(distanceSpacing));
-    INF_DEBUG("BEATDIVISOR      : " + QString::number(beatDivisor    ));
-    INF_DEBUG("GRIDSIZE         : " + QString::number(gridSize       ));
-    INF_DEBUG("TIMELINEZOOM     : " + QString::number(timelineZoom   ));
-    INF_DEBUG("TITLE            : " + title                           );
-    INF_DEBUG("UNICODETITLE     : " + unicodeTitle                    );
-    INF_DEBUG("ARTIST           : " + artist                          );
-    INF_DEBUG("UNICODEARTIST    : " + unicodeArtist                   );
-    INF_DEBUG("CREATOR          : " + creator                         );
-    INF_DEBUG("DIFFICULTYNAME   : " + difficultyName                  );
-    INF_DEBUG("SOURCE           : " + source                          );
-    INF_DEBUG("TAGS             : " + tags                            );
-    INF_DEBUG("BEATMAPID        : " + QString::number(beatmapID      ));
-    INF_DEBUG("BEATMAPSETID     : " + QString::number(beatmapSetID   ));
-    INF_DEBUG("HP               : " + QString::number(HP             ));
-    INF_DEBUG("CS               : " + QString::number(CS             ));
-    INF_DEBUG("OD               : " + QString::number(OD             ));
-    INF_DEBUG("AR               : " + QString::number(AR             ));
-    INF_DEBUG("SLIDERMULT       : " + QString::number(sliderMult     ));
-    INF_DEBUG("SLIDERTICK       : " + QString::number(sliderTick     ));
-    INF_DEBUG("BGFILENAME       : " + bgFileName                      );
-    INF_DEBUG("VIDEOFILENAME    : " + videoFileName                   );
-    INF_DEBUG("BreakPList <SIZE>: " + breakPList.getSize()            );
-    INF_DEBUG("OM_TPLIST  <SIZE>: " + OM_TPList.getSize()             );
-    INF_DEBUG("OM_HOLIST  <SIZE>: " + OM_HOList.getSize()             );
+    qDebug() << "\r\n"
+             << "[---- Map Info ----]" << "\r\n"
+             << "audioFileName   : " << audioFileName       << "\r\n"
+             << "audioLeadIn     : " << audioLeadIn         << "\r\n"
+             << "previewTime     : " << previewTime         << "\r\n"
+             << "countdown       : " << countdown           << "\r\n"
+             << "sampleSet       : " << sampleSet           << "\r\n"
+             << "stackLeniency   : " << stackLeniency       << "\r\n"
+             << "gameMode        : " << gameMode            << "\r\n"
+             << "letterbox       : " << letterbox           << "\r\n"
+             << "specialStyle    : " << specialStyle        << "\r\n"
+             << "widescreen      : " << widescreen          << "\r\n"
+             << "distanceSpacing : " << distanceSpacing     << "\r\n"
+             << "beatDivisor     : " << beatDivisor         << "\r\n"
+             << "gridSize        : " << gridSize            << "\r\n"
+             << "timelineZoom    : " << timelineZoom        << "\r\n"
+             << "title           : " << title               << "\r\n"
+             << "unicodeTitle    : " << unicodeTitle        << "\r\n"
+             << "artist          : " << artist              << "\r\n"
+             << "unicodeArtist   : " << unicodeArtist       << "\r\n"
+             << "creator         : " << creator             << "\r\n"
+             << "difficultyName  : " << difficultyName      << "\r\n"
+             << "source          : " << source              << "\r\n"
+             << "tags            : " << tags                << "\r\n"
+             << "beatmapID       : " << beatmapID           << "\r\n"
+             << "beatmapSetID    : " << beatmapSetID        << "\r\n"
+             << "HP              : " << HP                  << "\r\n"
+             << "CS              : " << CS                  << "\r\n"
+             << "OD              : " << OD                  << "\r\n"
+             << "AR              : " << AR                  << "\r\n"
+             << "sliderMult      : " << sliderMult          << "\r\n"
+             << "sliderTick      : " << sliderTick          << "\r\n"
+             << "bgFileName      : " << bgFileName          << "\r\n"
+             << "OM_TPList <Size>: " << OM_TPList.getSize() << "\r\n"
+             << "OM_HOList <Size>: " << OM_HOList.getSize() << "\r\n";
 }
 
-void cOM_Map::copyAudioFileTo(QFileInfo copyLocation)
-{
-    QFile oldLocation(getAudioFileName());
-
-    if (oldLocation.copy(copyLocation.filePath()))
-    {
-        ER_DEBUG("Copy Failed.");
-    }
-}
-void cOM_Map::copyOsuFileTo(QFileInfo copyLocation)
-{
-    QFile oldLocation(getOsuFileName());
-
-    if (oldLocation.copy(copyLocation.filePath()))
-    {
-        ER_DEBUG("Copy Failed.");
-    }
-}
-void cOM_Map::copyBGFileTo(QFileInfo copyLocation)
-{
-    QFile oldLocation(getBGFileName());
-
-    if (oldLocation.copy(copyLocation.filePath()))
-    {
-        ER_DEBUG("Copy Failed.");
-    }
-}
-void cOM_Map::copyAllTo(QFileInfo copyLocation)
-{
-    copyAudioFileTo(copyLocation);
-    copyOsuFileTo(copyLocation);
-    copyBGFileTo(copyLocation);
-}
-
-// OPERS
-
-// MISC
 QList<int> cOM_Map::findMapSettings(QStringList &mapSList)
 {
     QList<QRegExp> settingsRegList;
     QList<bool> flagRegList;
-    QList<int> output({-1, -1, -1, -1, -1, // 35 elements
+    QList<int> output({-1, -1, -1, -1, -1, // 33 elements
                        -1, -1, -1, -1, -1,
                        -1, -1, -1, -1, -1,
                        -1, -1, -1, -1, -1,
                        -1, -1, -1, -1, -1,
                        -1, -1, -1, -1, -1,
-                       -1, -1, -1, -1, -1});
-    QRegExp REG_audioFileName  ("AudioFilename:.*"),
-            REG_audioLeadIn    ("AudioLeadIn:.*"),
-            REG_previewTime    ("PreviewTime:.*"),
-            REG_countdown      ("Countdown:.*"),
-            REG_sampleSet      ("SampleSet:.*"),
-            REG_stackLeniency  ("StackLeniency:.*"),
-            REG_gameMode       ("Mode:.*"),
-            REG_letterbox      ("LetterboxInBreaks:.*"),
-            REG_specialStyle   ("SpecialStyle:.*"),
-            REG_widescreen     ("WidescreenStoryboard:.*"),
-            REG_distanceSpacing("DistanceSpacing:.*"),
-            REG_beatDivisor    ("BeatDivisor:.*"),
-            REG_gridSize       ("GridSize:.*"),
-            REG_timelineZoom   ("TimelineZoom:.*"),
-            REG_title          ("Title:.*"),
-            REG_unicodeTitle   ("TitleUnicode:.*"),
-            REG_artist         ("Artist:.*"),
-            REG_unicodeArtist  ("ArtistUnicode:.*"),
-            REG_creator        ("Creator:.*"),
-            REG_difficultyName ("Version:.*"),
-            REG_source         ("Source:.*"),
-            REG_tags           ("Tags:.*"),
-            REG_beatmapID      ("BeatmapID:.*"),
-            REG_beatmapSetID   ("BeatmapSetID:.*"),
-            REG_HP             ("HPDrainRate:.*"),
-            REG_CS             ("CircleSize:.*"),
-            REG_OD             ("OverallDifficulty:.*"),
-            REG_AR             ("ApproachRate:.*"),
-            REG_sliderMult     ("SliderMultiplier:.*"),
-            REG_sliderTick     ("SliderTickRate:.*"),
-            REG_bgFileName     ("//Background and Video events"),
-            REG_videoFileName  ("Video,.*"),
-            REG_breakPList     ("//Break Periods"),
-            REG_OM_TPList      (".*TimingPoints.*"),
-            REG_OM_HOList      (".*HitObjects.*");
+                       -1, -1, -1});
+    QRegExp audioFileName  ("AudioFilename:.*"),
+            audioLeadIn    ("AudioLeadIn:.*"),
+            previewTime    ("PreviewTime:.*"),
+            countdown      ("Countdown:.*"),
+            sampleSet      ("SampleSet:.*"),
+            stackLeniency  ("StackLeniency:.*"),
+            gameMode       ("Mode:.*"),
+            letterbox      ("LetterboxInBreaks:.*"),
+            specialStyle   ("SpecialStyle:.*"),
+            widescreen     ("WidescreenStoryboard:.*"),
+            distanceSpacing("DistanceSpacing:.*"),
+            beatDivisor    ("BeatDivisor:.*"),
+            gridSize       ("GridSize:.*"),
+            timelineZoom   ("TimelineZoom:.*"),
+            title          ("Title:.*"),
+            unicodeTitle   ("TitleUnicode:.*"),
+            artist         ("Artist:.*"),
+            unicodeArtist  ("ArtistUnicode:.*"),
+            creator        ("Creator:.*"),
+            difficultyName ("Version:.*"),
+            source         ("Source:.*"),
+            tags           ("Tags:.*"),
+            beatmapID      ("BeatmapID:.*"),
+            beatmapSetID   ("BeatmapSetID:.*"),
+            HP             ("HPDrainRate:.*"),
+            CS             ("CircleSize:.*"),
+            OD             ("OverallDifficulty:.*"),
+            AR             ("ApproachRate:.*"),
+            sliderMult     ("SliderMultiplier:.*"),
+            sliderTick     ("SliderTickRate:.*"),
+            bgFileName     ("//Background and Video events"),
+            OM_TPList      (".*TimingPoints.*"),
+            OM_HOList      (".*HitObjects.*");
 
-    settingsRegList = {REG_audioFileName  ,
-                       REG_audioLeadIn    ,
-                       REG_previewTime    ,
-                       REG_countdown      ,
-                       REG_sampleSet      ,
-                       REG_stackLeniency  ,
-                       REG_gameMode       ,
-                       REG_letterbox      ,
-                       REG_specialStyle   ,
-                       REG_widescreen     ,
-                       REG_distanceSpacing,
-                       REG_beatDivisor    ,
-                       REG_gridSize       ,
-                       REG_timelineZoom   ,
-                       REG_title          ,
-                       REG_unicodeTitle   ,
-                       REG_artist         ,
-                       REG_unicodeArtist  ,
-                       REG_creator        ,
-                       REG_difficultyName ,
-                       REG_source         ,
-                       REG_tags           ,
-                       REG_beatmapID      ,
-                       REG_beatmapSetID   ,
-                       REG_HP             ,
-                       REG_CS             ,
-                       REG_OD             ,
-                       REG_AR             ,
-                       REG_sliderMult     ,
-                       REG_sliderTick     ,
-                       REG_bgFileName     ,
-                       REG_videoFileName  ,
-                       REG_breakPList     ,
-                       REG_OM_TPList      ,
-                       REG_OM_HOList      };
+    settingsRegList = {audioFileName  ,
+                       audioLeadIn    ,
+                       previewTime    ,
+                       countdown      ,
+                       sampleSet      ,
+                       stackLeniency  ,
+                       gameMode       ,
+                       letterbox      ,
+                       specialStyle   ,
+                       widescreen     ,
+                       distanceSpacing,
+                       beatDivisor    ,
+                       gridSize       ,
+                       timelineZoom   ,
+                       title          ,
+                       unicodeTitle   ,
+                       artist         ,
+                       unicodeArtist  ,
+                       creator        ,
+                       difficultyName ,
+                       source         ,
+                       tags           ,
+                       beatmapID      ,
+                       beatmapSetID   ,
+                       HP             ,
+                       CS             ,
+                       OD             ,
+                       AR             ,
+                       sliderMult     ,
+                       sliderTick     ,
+                       bgFileName     ,
+                       OM_TPList      ,
+                       OM_HOList      };
 
     bool    FLAG_audioFileName   = false,
             FLAG_audioLeadIn     = false,
@@ -556,8 +388,6 @@ QList<int> cOM_Map::findMapSettings(QStringList &mapSList)
             FLAG_sliderMult      = false,
             FLAG_sliderTick      = false,
             FLAG_bgFileName      = false,
-            FLAG_videoFileName   = false,
-            FLAG_breakPList      = false,
             FLAG_OM_TPList       = false,
             FLAG_OM_HOList       = false;
 
@@ -592,12 +422,8 @@ QList<int> cOM_Map::findMapSettings(QStringList &mapSList)
                    FLAG_sliderMult     ,
                    FLAG_sliderTick     ,
                    FLAG_bgFileName     ,
-                   FLAG_videoFileName  ,
-                   FLAG_breakPList     ,
                    FLAG_OM_TPList      ,
                    FLAG_OM_HOList      };
-
-    INF_DEBUG("[---- RegEx Matching ----]");
 
     for (int tempS = 0; tempS < mapSList.length(); tempS ++)
     {
@@ -611,9 +437,9 @@ QList<int> cOM_Map::findMapSettings(QStringList &mapSList)
             else if (settingsRegList[tempR].exactMatch(mapSList[tempS])) {
                 settingsRegList[tempR].setPatternSyntax(QRegExp::Wildcard);
 
-                INF_DEBUG("Pattern : " << settingsRegList[tempR].pattern());
-                INF_DEBUG("Match to: " << mapSList[tempS]                 );
-                INF_DEBUG("Found at: " << QString::number(tempS)          );
+                qDebug() << "Pattern: " << settingsRegList[tempR].pattern();
+                qDebug() << "Match to: " << mapSList[tempS];
+                qDebug() << "Found at: " << tempS << "\n";
 
                 flagRegList[tempR] = true; // Set to true to skip this parameter next loop
                 output[tempR] = tempS; // We return the line number where the parameter is located
@@ -623,5 +449,3 @@ QList<int> cOM_Map::findMapSettings(QStringList &mapSList)
 
     return output;
 }
-
-
