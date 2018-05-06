@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     }
     catch (amberException &e)
     {
-        qDebug() << e.msg;
+        qDebug() << e.what();
     }
     return a.exec();
 }
@@ -40,8 +40,8 @@ void calibrate(){
         map.getInfo();
 
         for (int temp = 0; temp < 1; temp ++) {
-            map.getOM_HOList ()[temp].printInfo();
-            map.getOM_TPList ()[temp].getInfo();
+            map.getHitObjectList()[temp].printInfo();
+            map.getTimingPointList()[temp].getInfo();
             map.getBreakPList()[temp].getInfo(); // Maps may not have breaks
         }
     }
@@ -148,7 +148,7 @@ void calibrate(){
         }
         catch (amberException &e)
         {
-            qDebug() << e.msg;
+            qDebug() << e.what();
         }
         qDebug() << "[--- ADJUST TO AVERAGE <MAX EXCEED> ---]";
         qDebug() << "         " << TPList_A_adjust.getValueList();
@@ -160,7 +160,7 @@ void calibrate(){
         }
         catch (amberException &e)
         {
-            qDebug() << e.msg;
+            qDebug() << e.what();
         }
         qDebug() << "[--- ATTEMPT TO ADJUST LAST INDEX ---]";
         qDebug() << "         " << TPList_A_adjust.getValueList();
