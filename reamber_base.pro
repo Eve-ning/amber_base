@@ -5,9 +5,15 @@ CONFIG -= qt
 
 SOURCES += \
         main.cpp \
-    hit_object.cpp \
-    osu_object.cpp
+    objects/singular/hit_object.cpp \
+    objects/singular/osu_object.cpp \
+    objects/singular/timing_point.cpp \
+    objects/multiple/hit_object_list.cpp \
+    exceptions/reamber_exception.cpp
 
 HEADERS += \
-    hit_object.h \
-    osu_object.h
+    objects/singular/hit_object.h \
+    objects/singular/osu_object.h \
+    objects/singular/timing_point.h \
+    objects/multiple/hit_object_list.h \
+    exceptions/reamber_exception.h

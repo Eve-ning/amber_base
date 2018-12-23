@@ -1,5 +1,6 @@
 #ifndef OSU_OBJECT_H
 #define OSU_OBJECT_H
+
 #include <string>
 
 // Defines the any object in the rhythm game
@@ -21,13 +22,9 @@ public:
 
 protected: // only allow inherited classes use the constructor
 
-    osu_object() : m_offset(0);
+    osu_object();
     osu_object(double new_offset);
-
-private:
-
     double m_offset; // defines the offset in ms
-
 };
 
 #endif // OSU_OBJECT_H
