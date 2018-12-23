@@ -7,7 +7,7 @@
 hit_object::hit_object() {
     m_column = 0;
     m_y_axis = 192;
-    m_is_ln = false;
+    m_note_type = 1;
     m_hitsound_set = sample_set::AUTO;
     m_ln_end = 0;
     m_sample_set = sample_set::AUTO;
@@ -33,7 +33,7 @@ void hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsi
     str = str.substr(str.find('(') - 1, str.find(')') - str.find('(') - 1);
 
     // We append this so that the while loop continues till the end
-    str.append(",");
+    str.push_back(',');
 
     // Now we are just left with the contents
     std::vector<double> offset_v = {};
@@ -62,6 +62,76 @@ void hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsi
     // Set according to index
     m_offset = offset_v[index];
     m_column = column_v[index];
+}
+
+void hit_object::load_raw_hit_object(std::string str, unsigned int keys)
+{
+    // We find out if it's an long note or a note
+    int count_colon = 0;
+    for (char c: str) {
+        if (c == ':') { count_colon++; }
+    }
+
+    // If it's invalid we throw
+    if (count_colon < 4 || count_colon > 5) {
+        throw reamber_exception("Raw Hit Object is not valid.");
+    }
+
+    m_keys = keys;
+
+    str.push_back(':');
+
+    std::vector<std::string> hit_object_comma_data = {};
+    std::vector<std::string> hit_object_colon_data = {};
+
+    std::string temp_;
+
+    while (str.find(',') != std::string::npos) {
+        temp_ = str.substr(0, str.find(',')); // Store data into temp so we can reference it during .erase
+
+        hit_object_comma_data.push_back(temp_);
+        str.erase(0, temp_.length() + 1); // + 1 for the delimieter
+    }
+
+    while (str.find(':') != std::string::npos) {
+        temp_ = str.substr(0, str.find(':')); // Store data into temp so we can reference it during .erase
+
+        hit_object_colon_data.push_back(temp_);
+        str.erase(0, temp_.length() + 1); // + 1 for the delimieter
+    }
+
+    switch (count_colon) {
+    case 4:
+        m_column = convert_x_axis_to_column(static_cast<unsigned int>(std::stoi(hit_object_comma_data[0])), keys);
+        m_y_axis = static_cast<unsigned int>(std::stoi(hit_object_comma_data[1]));
+        m_offset = std::stod(hit_object_comma_data[2]);
+        m_note_type = static_cast<unsigned int>(std::stoi(hit_object_comma_data[3]));
+        m_hitsound_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_comma_data[4]));
+        m_sample_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_data[0]));
+        m_addition_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_data[1]));
+        m_custom_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_data[2]));
+        m_volume = static_cast<unsigned int>(std::stoi(hit_object_colon_data[3]));
+        m_hitsound_file = hit_object_colon_data[4];
+
+        // m_ln_end is 0 as by constructor
+        break;
+    case 5:
+        m_column = convert_x_axis_to_column(static_cast<unsigned int>(std::stoi(hit_object_comma_data[0])), keys);
+        m_y_axis = static_cast<unsigned int>(std::stoi(hit_object_comma_data[1]));
+        m_offset = std::stod(hit_object_comma_data[2]);
+        m_note_type = static_cast<unsigned int>(std::stoi(hit_object_comma_data[3]));
+        m_hitsound_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_comma_data[4]));
+        m_ln_end = std::stod(hit_object_colon_data[0]);
+        m_sample_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_data[1]));
+        m_addition_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_data[2]));
+        m_custom_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_data[3]));
+        m_volume = static_cast<unsigned int>(std::stoi(hit_object_colon_data[4]));
+        m_hitsound_file = hit_object_colon_data[5];
+
+        break;
+    default:
+        throw reamber_exception("Raw Hit Object is not valid. [INVALID ERROR]");
+    }
 }
 
 void hit_object::load_parameters(unsigned int column, double offset, unsigned int ln_end, unsigned int keys){
@@ -97,14 +167,14 @@ void hit_object::set_y_axis(unsigned int y_axis)
     m_y_axis = y_axis;
 }
 
-bool hit_object::get_is_ln() const
+unsigned int hit_object::get_note_type() const
 {
-    return m_is_ln;
+    return m_note_type;
 }
 
-void hit_object::set_is_ln(bool is_ln)
+void hit_object::set_note_type(unsigned int note_type)
 {
-    m_is_ln = is_ln;
+    m_note_type = note_type;
 }
 
 osu_object::sample_set hit_object::get_sample_set() const
@@ -165,6 +235,16 @@ unsigned int hit_object::get_keys() const
 void hit_object::set_keys(unsigned int keys)
 {
     m_keys = keys;
+}
+
+double hit_object::get_ln_end() const
+{
+    return m_ln_end;
+}
+
+void hit_object::set_ln_end(double ln_end)
+{
+    m_ln_end = ln_end;
 }
 
 osu_object::sample_set hit_object::get_hitsound_set() const

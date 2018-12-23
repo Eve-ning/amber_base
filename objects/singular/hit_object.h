@@ -2,6 +2,7 @@
 #define HIT_OBJECT_H
 
 #include "osu_object.h"
+#include <math.h>
 
 // Defines the Hit Object/Note/Long Note in the rhythm game
 // Stems from osu_object
@@ -20,7 +21,7 @@ public:
     // Pass warning if editor hitobject has multiple objects
     // Keys isn't important if you're not extracting column
     // Returns true if only contains 1 object
-    bool load_editor_hit_object(std::string str, unsigned int keys = 0, unsigned int index = 0);
+    void load_editor_hit_object(std::string str, unsigned int keys = 0, unsigned int index = 0);
     void load_raw_hit_object(std::string str, unsigned int keys);
     void load_parameters(unsigned int column,
                          double offset,
@@ -42,8 +43,8 @@ public:
     unsigned int get_y_axis() const;
     void set_y_axis(unsigned int y_axis);
 
-    bool get_is_ln() const;
-    void set_is_ln(bool is_ln);
+    unsigned int get_note_type() const;
+    void set_note_type(unsigned int note_type);
 
     sample_set get_hitsound_set() const;
     void set_hitsound_set(const sample_set &hitsound_set);
@@ -66,13 +67,25 @@ public:
     unsigned int get_keys() const;
     void set_keys(unsigned int keys);
 
+    double get_ln_end() const;
+    void set_ln_end(double ln_end);
+
+    static unsigned int convert_column_to_x_axis(unsigned int column, unsigned int keys) {
+        return static_cast<unsigned int>(round(((512 * column) + 256) / keys));
+    }
+
+    static unsigned int convert_x_axis_to_column(unsigned int x_axis, unsigned int keys) {
+        return static_cast<unsigned int>(round((x_axis * keys - 256) / 512));
+    }
+
+
 private:
 
     unsigned int m_column; // Starts from 0
     unsigned int m_y_axis;
-    bool m_is_ln; // True: Long Note, False: Note
+    unsigned int m_note_type; // 1: Note, 128: Long Note
     sample_set m_hitsound_set;
-    unsigned int m_ln_end; // If note, ln_end = 0;
+    double m_ln_end; // If note, ln_end = 0;
     sample_set m_sample_set;
     sample_set m_addition_set;
     sample_set m_custom_set;
