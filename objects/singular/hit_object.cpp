@@ -1,5 +1,7 @@
 #include "hit_object.h"
 #include <assert.h>
+#include <vector>
+#include <iostream>
 #include "exceptions/reamber_exception.h"
 
 hit_object::hit_object() {
@@ -11,7 +13,58 @@ hit_object::hit_object() {
     m_sample_set = sample_set::AUTO;
 }
 
-bool hit_object::load_parameters(unsigned int column, double offset, unsigned int ln_end, unsigned int keys){
+void hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsigned int index)
+{
+    // Validate the str
+    // If either of these characters are not found, it's not valid
+    if (str.find('(') == std::string::npos || // == npos means not found
+        str.find(')') == std::string::npos || // means if any are not found, it's True
+        str.find('-') == std::string::npos) {
+        throw reamber_exception("This is not a valid Editor Hit Object string.");
+    }
+
+    if (str.find(',') != std::string::npos) {
+        std::cout << "Only one hit_object will be loaded.";
+    }
+
+    m_keys = keys;
+
+    // Remove the ( AND ) brackets
+    str = str.substr(str.find('(') - 1, str.find(')') - str.find('(') - 1);
+
+    // We append this so that the while loop continues till the end
+    str.append(",");
+
+    // Now we are just left with the contents
+    std::vector<double> offset_v = {};
+    std::vector<unsigned int> column_v = {};
+    std::string note = "";
+
+    while (str.find(',') != std::string::npos) { // While ',' still exists
+        // We get the note data
+        note = str.substr(0, str.find(','));
+        unsigned int note_len = note.length(); // Using this to remove parsed data at end of while loop
+
+        // Get offset from substring
+        std::string offset_str = note.substr(0, note.find('|'));
+
+        // Get column by removing the offset and delimeter
+        std::string column_str = note.erase(0, offset_str.length() + 1); // + 1 for delimeter length
+
+        // Cast to correct type
+        offset_v.push_back(std::stod(offset_str));
+        column_v.push_back(static_cast<unsigned int>(std::stoi(column_str)));
+
+        // Remove parsed data
+        str.erase(0, note_len + 1); // + 1 for the delimeter length
+    }
+
+    // Set according to index
+    m_offset = offset_v[index];
+    m_column = column_v[index];
+}
+
+void hit_object::load_parameters(unsigned int column, double offset, unsigned int ln_end, unsigned int keys){
     m_column = column;
     m_offset = offset;
     m_ln_end = ln_end;
