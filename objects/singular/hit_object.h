@@ -21,7 +21,7 @@ public:
     // Create a blank constructor
     hit_object();
 
-    //// Load any object explicitly
+    //// Explicit Loading
 
     // Pass warning if editor hitobject has multiple objects
     // Keys isn't important if you're not extracting column
@@ -33,12 +33,12 @@ public:
                          unsigned int ln_end = 0,
                          unsigned int keys = 0);
 
-    //// If the user is planning to export as a proper .osu file
+    //// Exporting
 
     // This will fail if keys = 0
-    std::string get_raw_hit_object();
+    std::string get_raw_hit_object() const;
     // This variant is to override and set the current keys if user failed the other variant
-    std::string get_raw_hit_object(int keys);
+    std::string get_raw_hit_object(int keys) const;
 
     //// Getter and Setters
 

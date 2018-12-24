@@ -7,6 +7,7 @@
     #define AMBER_BASE __declspec(dllimport)
 
 #include "osu_object.h"
+#include <string>
 
 class AMBER_BASE timing_point : public osu_object
 {
@@ -17,8 +18,16 @@ public:
     // Create a blank constructor
     timing_point();
 
-    void load_raw_timing_point();
+    //// Explicit Loading
+
+    void load_raw_timing_point(std::string str);
     void load_parameters();
+
+    //// Exporting
+
+    std::string get_raw_timing_point() const;
+
+    //// Getters & Setters
 
     double get_value() const;
     void set_value(double value);

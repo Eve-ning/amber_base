@@ -1,9 +1,36 @@
 #include "timing_point.h"
+#include "exceptions/reamber_exception.h"
+#include <vector>
 
 timing_point::timing_point()
 {
 
 }
+
+void timing_point::load_raw_timing_point(std::string str)
+{
+    // Validate the str
+    // If either of these characters are not found, it's not valid
+    if (str.find(',') == std::string::npos) { // == npos means not found
+        throw reamber_exception("This is not a valid Editor Hit Object string.");
+    }
+
+    // We append this so that the while loop continues till the end
+    str.push_back(',');
+
+    std::vector<std::string> timing_point_comma_data = {};
+
+    std::string temp_ = "";
+    while (str.find(',') != std::string::npos) {
+        temp_ = str.substr(0, str.find(','));
+        timing_point_comma_data.push_back(temp_);
+
+        str.erase(0, temp_.length() + 1); // + 1 for delimeter
+    }
+
+
+}
+
 
 double timing_point::get_value() const
 {
