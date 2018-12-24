@@ -16,7 +16,10 @@ public:
     //// Explicit Loading
 
     void load_raw_timing_point(std::string str);
-    void load_parameters(double value, bool is_bpm, bool is_kiai, unsigned int metronome);
+    void load_parameters(double value,
+                         bool is_bpm,
+                         bool is_kiai = false,
+                         unsigned int metronome = 4);
 
     //// Exporting
 
