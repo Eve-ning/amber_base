@@ -5,6 +5,7 @@
     #define AMBER_BASE __declspec(dllexport)                       
 #else
     #define AMBER_BASE __declspec(dllimport)
+#endif
 
 #include "osu_object.h"
 #include <string>
