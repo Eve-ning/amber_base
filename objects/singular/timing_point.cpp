@@ -4,7 +4,14 @@
 
 timing_point::timing_point()
 {
-
+    m_offset = 0;
+    m_value = 1;
+    m_metronome = 4;
+    m_sample_set = osu_object::sample_set::AUTO;
+    m_sample_set_index = 0;
+    m_volume = 25;
+    m_is_bpm = false;
+    m_is_kiai = false;
 }
 
 void timing_point::load_raw_timing_point(std::string str)
@@ -28,7 +35,22 @@ void timing_point::load_raw_timing_point(std::string str)
         str.erase(0, temp_.length() + 1); // + 1 for delimeter
     }
 
+    m_offset = std::stod(timing_point_comma_data[0]);
+    m_value = std::stod(timing_point_comma_data[1]);
+    m_metronome = static_cast<unsigned int>(std::stoi(timing_point_comma_data[2]));
+    m_sample_set = static_cast<osu_object::sample_set>(std::stoi(timing_point_comma_data[3]));
+    m_sample_set_index = static_cast<unsigned int>(std::stoi(timing_point_comma_data[4]));
+    m_volume = static_cast<unsigned int>(std::stoi(timing_point_comma_data[5]));
+    m_is_bpm = (timing_point_comma_data[6] == "1");
+    m_is_kiai = (timing_point_comma_data[7] == "1");
+}
 
+void timing_point::load_parameters(double value, bool is_bpm, bool is_kiai, unsigned int metronome)
+{
+    m_value = value;
+    m_is_bpm = is_bpm;
+    m_is_kiai = is_kiai;
+    m_metronome = metronome;
 }
 
 
