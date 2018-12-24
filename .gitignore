@@ -48,3 +48,10 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.db
+*.ipch
+.vs/amber_base/v15/.suo
+.vs/reamber_base/v15/.suo
+*.log
+*.tlog
+*.obj
