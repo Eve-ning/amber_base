@@ -1,9 +1,9 @@
 #pragma once 
 
 #ifdef AMBER_BASE_EX                                                // Declare this when compiling the library!
-    #define AMBER_BASE __declspec(dllimport)                       
+    #define AMBER_BASE __declspec(dllexport)                       
 #else
-    #define AMBER_BASE __declspec(dllexport)
+    #define AMBER_BASE __declspec(dllimport)
 #endif
 
 #include <string>
@@ -31,5 +31,3 @@ protected: // only allow inherited classes use the constructor
     osu_object(double new_offset);
     double m_offset; // defines the offset in ms
 };
-
-#endif // OSU_OBJECT_H

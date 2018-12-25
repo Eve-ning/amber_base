@@ -21,9 +21,6 @@
     <ClCompile Include="exceptions\reamber_exception.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objects\multiple\hit_object_list.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="objects\singular\hit_object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -33,12 +30,12 @@
     <ClCompile Include="objects\singular\timing_point.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="custom_functions\split_string.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="exceptions\reamber_exception.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="objects\multiple\hit_object_list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="objects\singular\hit_object.h">
@@ -48,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="objects\singular\timing_point.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="custom_functions\split_string.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

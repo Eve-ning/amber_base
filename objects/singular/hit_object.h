@@ -1,9 +1,9 @@
 #pragma once 
 
 #ifdef AMBER_BASE_EX                                                // Declare this when compiling the library!
-    #define AMBER_BASE __declspec(dllimport)                       
+    #define AMBER_BASE __declspec(dllexport)                       
 #else
-    #define AMBER_BASE __declspec(dllexport)
+    #define AMBER_BASE __declspec(dllimport)
 #endif
 
 #include "osu_object.h"
