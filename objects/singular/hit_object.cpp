@@ -1,4 +1,5 @@
 #include "hit_object.h"
+#include "../../custom_functions/split_string.h"
 #include <assert.h>
 #include <vector>
 #include <iostream>
@@ -40,24 +41,19 @@ void hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsi
     std::vector<unsigned int> column_v = {};
     std::string note = "";
 
-    while (str.find(',') != std::string::npos) { // While ',' still exists
-        // We get the note data
-        note = str.substr(0, str.find(','));
-        unsigned int note_len = note.length(); // Using this to remove parsed data at end of while loop
+	// We first split it by comma
+	std::vector<std::string> str_comma_v = split_string::by_delimeter(str, ',', false);
 
-        // Get offset from substring
-        std::string offset_str = note.substr(0, note.find('|'));
+	// Then for each element split by comma
+	for (std::string str_comma : str_comma_v) {
 
-        // Get column by removing the offset and delimeter
-        std::string column_str = note.erase(0, offset_str.length() + 1); // + 1 for delimeter length
+		// We split by bar
+		std::vector<std::string> str_bar_v = split_string::by_delimeter(str_comma);
 
-        // Cast to correct type
-        offset_v.push_back(std::stod(offset_str));
-        column_v.push_back(static_cast<unsigned int>(std::stoi(column_str)));
-
-        // Remove parsed data
-        str.erase(0, note_len + 1); // + 1 for the delimeter length
-    }
+		// We push back the data after conversion
+		offset_v.push_back(std::stod(str_bar_v[0]));
+		column_v.push_back(std::stoi(str_bar_v[1]));
+	}
 
     // Set according to index
     m_offset = offset_v[index];
@@ -81,52 +77,46 @@ void hit_object::load_raw_hit_object(std::string str, unsigned int keys)
 
     str.push_back(':');
 
-    std::vector<std::string> hit_object_comma_data = {};
-    std::vector<std::string> hit_object_colon_data = {};
+    std::vector<std::string> hit_object_comma_v = {};
+    std::vector<std::string> hit_object_colon_v = {};
 
     std::string temp_;
 
-    while (str.find(',') != std::string::npos) {
-        temp_ = str.substr(0, str.find(',')); // Store data into temp so we can reference it during .erase
+	// We split by comma
+	hit_object_comma_v = split_string::by_delimeter(str, ',');
 
-        hit_object_comma_data.push_back(temp_);
-        str.erase(0, temp_.length() + 1); // + 1 for the delimieter
-    }
+	// Last token of comma contains the data for colon, we split that by colon
+	hit_object_colon_v = split_string::by_delimeter(hit_object_comma_v.back(), ':');
 
-    while (str.find(':') != std::string::npos) {
-        temp_ = str.substr(0, str.find(':')); // Store data into temp so we can reference it during .erase
-
-        hit_object_colon_data.push_back(temp_);
-        str.erase(0, temp_.length() + 1); // + 1 for the delimieter
-    }
+	hit_object_comma_v.pop_back(); // Remove the last token as it's already split by colon
 
     switch (count_colon) {
     case 4:
-        m_column = convert_x_axis_to_column(static_cast<unsigned int>(std::stoi(hit_object_comma_data[0])), keys);
-        m_y_axis = static_cast<unsigned int>(std::stoi(hit_object_comma_data[1]));
-        m_offset = std::stod(hit_object_comma_data[2]);
-        m_note_type = static_cast<unsigned int>(std::stoi(hit_object_comma_data[3]));
-        m_hitsound_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_comma_data[4]));
-        m_sample_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_data[0]));
-        m_addition_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_data[1]));
-        m_custom_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_data[2]));
-        m_volume = static_cast<unsigned int>(std::stoi(hit_object_colon_data[3]));
-        m_hitsound_file = hit_object_colon_data[4];
+        m_column = convert_x_axis_to_column(static_cast<unsigned int>(std::stoi(hit_object_comma_v[0])), keys);
+        m_y_axis = static_cast<unsigned int>(std::stoi(hit_object_comma_v[1]));
+        m_offset = std::stod(hit_object_comma_v[2]);
+        m_note_type = static_cast<unsigned int>(std::stoi(hit_object_comma_v[3]));
+        m_hitsound_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_comma_v[4]));
+        m_sample_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_v[0]));
+        m_addition_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_v[1]));
+        m_custom_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_v[2]));
+        m_volume = static_cast<unsigned int>(std::stoi(hit_object_colon_v[3]));
+        m_hitsound_file = hit_object_colon_v[4];
 
         // m_ln_end is 0 as by constructor
         break;
     case 5:
-        m_column = convert_x_axis_to_column(static_cast<unsigned int>(std::stoi(hit_object_comma_data[0])), keys);
-        m_y_axis = static_cast<unsigned int>(std::stoi(hit_object_comma_data[1]));
-        m_offset = std::stod(hit_object_comma_data[2]);
-        m_note_type = static_cast<unsigned int>(std::stoi(hit_object_comma_data[3]));
-        m_hitsound_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_comma_data[4]));
-        m_ln_end = std::stod(hit_object_colon_data[0]);
-        m_sample_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_data[1]));
-        m_addition_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_data[2]));
-        m_custom_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_data[3]));
-        m_volume = static_cast<unsigned int>(std::stoi(hit_object_colon_data[4]));
-        m_hitsound_file = hit_object_colon_data[5];
+        m_column = convert_x_axis_to_column(static_cast<unsigned int>(std::stoi(hit_object_comma_v[0])), keys);
+        m_y_axis = static_cast<unsigned int>(std::stoi(hit_object_comma_v[1]));
+        m_offset = std::stod(hit_object_comma_v[2]);
+        m_note_type = static_cast<unsigned int>(std::stoi(hit_object_comma_v[3]));
+        m_hitsound_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_comma_v[4]));
+        m_ln_end = std::stod(hit_object_colon_v[0]);
+        m_sample_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_v[1]));
+        m_addition_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_v[2]));
+        m_custom_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_v[3]));
+        m_volume = static_cast<unsigned int>(std::stoi(hit_object_colon_v[4]));
+        m_hitsound_file = hit_object_colon_v[5];
 
         break;
     default:
@@ -145,6 +135,30 @@ void hit_object::load_parameters(unsigned int column, double offset, unsigned in
                                             "is before Head (" + offset_str + ")").c_str());
     }
     m_keys = keys;
+}
+
+std::string hit_object::get_raw_hit_object() const
+{
+	std::string output =
+		std::to_string(convert_column_to_x_axis(m_column, m_keys)) + "," +
+		std::to_string(m_y_axis) + "," +
+		std::to_string(m_offset) + "," +
+		std::to_string(m_note_type) + "," +
+		std::to_string(static_cast<unsigned int>(m_hitsound_set)) + "," +
+		(m_ln_end == 0 ? "" : (std::to_string(m_ln_end) + ":")) + // If it's a note, m_ln_end == 0
+		std::to_string(static_cast<unsigned int>(m_sample_set)) + ":" +
+		std::to_string(static_cast<unsigned int>(m_addition_set)) + ":" +
+		std::to_string(static_cast<unsigned int>(m_custom_set)) + ":" +
+		std::to_string(m_volume) + ":" +
+		m_hitsound_file;
+	
+	return output;
+}
+
+std::string hit_object::get_raw_hit_object(int keys)
+{
+	m_keys = keys;
+	return get_raw_hit_object(); // Call no-arg function
 }
 
 unsigned int hit_object::get_column() const

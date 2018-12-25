@@ -1,5 +1,4 @@
-#ifndef TIMING_POINT_H
-#define TIMING_POINT_H
+#pragma once 
 
 #ifdef AMBER_BASE_EX                                                // Declare this when compiling the library!
     #define AMBER_BASE __declspec(dllimport)                       
@@ -54,6 +53,9 @@ public:
     bool get_is_bpm() const;
     void set_is_bpm(bool is_bpm);
 
+	static double convert_code_to_value(double code, bool is_bpm);
+	static double convert_value_to_code(double value, bool is_bpm);
+
 private:
 
     double m_value; // Usually it's a positive value for the SV/BPM variant
@@ -64,5 +66,3 @@ private:
     bool m_is_kiai;
     bool m_is_bpm; // Defines if it's the SV/BPM variant
 };
-
-#endif // TIMING_POINT_H

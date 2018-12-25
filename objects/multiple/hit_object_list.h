@@ -1,5 +1,4 @@
-#ifndef HIT_OBJECT_LIST_H
-#define HIT_OBJECT_LIST_H
+#pragma once 
 
 // Implement the mechanics first, before uncommenting the block below
 
@@ -24,7 +23,15 @@ public:
 
     void load_editor_hit_object(std::string str);
     // Where if the user loads in the whole thing as a string
-    void load_raw_hit_object(std::string str, char delimeter = '\n');
+	void load_raw_hit_object(std::string str, char delimeter = '\n') {
+		std::vector<std::string> str_v;
+
+		str.push_back('\n'); // So that while loop will continue correctly
+
+		while (str.find('\n') != std::string::npos) {
+
+		}
+	}
     // User converts to vector or similar variants
     void load_raw_hit_object(std::vector<std::string> str_v);
 
@@ -39,5 +46,3 @@ private:
     std::vector<hit_object> m_hit_object_list;
 
 };
-
-#endif // HIT_OBJECT_LIST_H

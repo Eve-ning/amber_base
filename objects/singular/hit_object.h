@@ -1,5 +1,4 @@
-#ifndef HIT_OBJECT_H
-#define HIT_OBJECT_H
+#pragma once 
 
 #ifdef AMBER_BASE_EX                                                // Declare this when compiling the library!
     #define AMBER_BASE __declspec(dllimport)                       
@@ -39,7 +38,7 @@ public:
     // This will fail if keys = 0
     std::string get_raw_hit_object() const;
     // This variant is to override and set the current keys if user failed the other variant
-    std::string get_raw_hit_object(int keys) const;
+    std::string get_raw_hit_object(int keys);
 
     //// Getter and Setters
 
@@ -101,4 +100,3 @@ private:
 
 };
 
-#endif // HIT_OBJECT_H
