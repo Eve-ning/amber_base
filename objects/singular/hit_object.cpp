@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <vector>
 #include <iostream>
-#include "exceptions/reamber_exception.h"
+#include <exceptions/reamber_exception.h>
 
 hit_object::hit_object() {
     m_column = 0;

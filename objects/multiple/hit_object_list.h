@@ -1,13 +1,23 @@
 #ifndef HIT_OBJECT_LIST_H
 #define HIT_OBJECT_LIST_H
 
+// Implement the mechanics first, before uncommenting the block below
+
+/*
+#ifdef AMBER_BASE_EX                                                // Declare this when compiling the library!
+    #define AMBER_BASE __declspec(dllexport)                       
+#else
+    #define AMBER_BASE __declspec(dllimport)
+#endif
+*/
+
 #include "objects/singular/hit_object.h"
 #include <vector>
 #include <string>
 
 // The list variant provides additional features to load in hit_objects and modify them.
 
-class hit_object_list
+class AMBER_BASE hit_object_list
 {
 public:
     hit_object_list();

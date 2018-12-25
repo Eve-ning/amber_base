@@ -1,10 +1,16 @@
 #ifndef TIMING_POINT_H
 #define TIMING_POINT_H
 
+#ifdef AMBER_BASE_EX                                                // Declare this when compiling the library!
+    #define AMBER_BASE __declspec(dllexport)                       
+#else
+    #define AMBER_BASE __declspec(dllimport)
+#endif
+
 #include "osu_object.h"
 #include <string>
 
-class timing_point : public osu_object
+class AMBER_BASE timing_point : public osu_object
 {
 public:
 

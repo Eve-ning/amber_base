@@ -1,11 +1,17 @@
 #ifndef OSU_OBJECT_H
 #define OSU_OBJECT_H
 
+#ifdef AMBER_BASE_EX                                                // Declare this when compiling the library!
+    #define AMBER_BASE __declspec(dllexport)                       
+#else
+    #define AMBER_BASE __declspec(dllimport)
+#endif
+
 #include <string>
 
 // Defines the any object in the rhythm game
 
-class osu_object
+class AMBER_BASE osu_object
 {
 public:
 

@@ -1,13 +1,19 @@
 #ifndef HIT_OBJECT_H
 #define HIT_OBJECT_H
 
+#ifdef AMBER_BASE_EX                                                // Declare this when compiling the library!
+    #define AMBER_BASE __declspec(dllexport)                       
+#else
+    #define AMBER_BASE __declspec(dllimport)
+#endif
+
 #include "osu_object.h"
-#include <math.h>
+#include <cmath>                                                    // it's better to use the new C++ version of math.h
 
 // Defines the Hit Object/Note/Long Note in the rhythm game
 // Stems from osu_object
 
-class hit_object : public osu_object
+class AMBER_BASE hit_object : public osu_object
 {
 public:
 
