@@ -55,3 +55,5 @@ Temporary Items
 *.log
 *.tlog
 *.obj
+x64/
+.vs/
