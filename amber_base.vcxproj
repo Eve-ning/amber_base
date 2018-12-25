@@ -124,6 +124,7 @@
     <ClCompile Include="custom_functions\split_string.cpp" />
     <ClCompile Include="exceptions\reamber_exception.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="objects\multiple\hit_object_v.cpp" />
     <ClCompile Include="objects\singular\hit_object.cpp" />
     <ClCompile Include="objects\singular\osu_object.cpp" />
     <ClCompile Include="objects\singular\timing_point.cpp" />
@@ -131,6 +132,7 @@
   <ItemGroup>
     <ClInclude Include="custom_functions\split_string.h" />
     <ClInclude Include="exceptions\reamber_exception.h" />
+    <ClInclude Include="objects\multiple\hit_object_v.h" />
     <ClInclude Include="objects\singular\hit_object.h" />
     <ClInclude Include="objects\singular\osu_object.h" />
     <ClInclude Include="objects\singular\timing_point.h" />
