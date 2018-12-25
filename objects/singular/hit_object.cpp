@@ -16,22 +16,9 @@ hit_object::hit_object() {
 
 void hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsigned int index)
 {
-    // Validate the str
-    // If either of these characters are not found, it's not valid
-    if (str.find('(') == std::string::npos || // == npos means not found
-        str.find(')') == std::string::npos || // means if any are not found, it's True
-        str.find('-') == std::string::npos) {
-        throw reamber_exception("This is not a valid Editor Hit Object string.");
-    }
-
-    if (str.find(',') != std::string::npos) {
-        std::cout << "Only one hit_object will be loaded.";
-    }
-
-    m_keys = keys;
-
-    // Remove the ( AND ) brackets
-    str = str.substr(str.find('(') - 1, str.find(')') - str.find('(') - 1);
+	// Remove the brackets
+	str = trim_editor_hit_object(str);
+	m_keys = keys;
 
     // We append this so that the while loop continues till the end
     str.push_back(',');
@@ -259,6 +246,24 @@ double hit_object::get_ln_end() const
 void hit_object::set_ln_end(double ln_end)
 {
     m_ln_end = ln_end;
+}
+
+std::string hit_object::trim_editor_hit_object(std::string str)
+{
+	// Validate the str
+	// If either of these characters are not found, it's not valid
+	if (str.find('(') == std::string::npos || // == npos means not found
+		str.find(')') == std::string::npos || // means if any are not found, it's True
+		str.find('-') == std::string::npos) {
+		throw reamber_exception("This is not a valid Editor Hit Object string.");
+	}
+
+	if (str.find(',') != std::string::npos) {
+		std::cout << "Only one hit_object will be loaded.";
+	}
+
+	// Remove the ( AND ) brackets
+	return str.substr(str.find('(') - 1, str.find(')') - str.find('(') - 1);
 }
 
 osu_object::sample_set hit_object::get_hitsound_set() const

@@ -83,6 +83,8 @@ public:
         return static_cast<unsigned int>(round((x_axis * keys - 256) / 512));
     }
 
+	// Removed the brackets on the editor hitobject
+	static std::string trim_editor_hit_object(std::string str);
 
 private:
 
