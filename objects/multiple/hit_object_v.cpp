@@ -3,7 +3,7 @@
 
 hit_object_v::hit_object_v()
 {
-
+	m_hit_object_v = {};
 }
 
 void hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {

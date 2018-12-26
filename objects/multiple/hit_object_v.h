@@ -40,5 +40,4 @@ public:
 
 private:
     std::vector<hit_object> m_hit_object_v;
-
 };
