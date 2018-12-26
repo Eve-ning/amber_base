@@ -38,6 +38,11 @@ public:
     hit_object operator [](unsigned int i) const { return get_hit_object(i); }
     hit_object & operator [](unsigned int i) { return get_hit_object(i); }
 
+	std::vector<hit_object>::iterator begin() { return m_hit_object_v.begin(); }
+	std::vector<hit_object>::iterator end() { return m_hit_object_v.end(); }
+	std::vector<hit_object>::const_iterator cbegin() const { return m_hit_object_v.cbegin(); }
+	std::vector<hit_object>::const_iterator cend() const { return m_hit_object_v.cend(); }
+
 private:
     std::vector<hit_object> m_hit_object_v;
 };

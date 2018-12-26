@@ -35,6 +35,11 @@ public:
 	timing_point operator [](unsigned int i) const { return get_timing_point(i); }
 	timing_point & operator [](unsigned int i) { return get_timing_point(i); }
 
+	std::vector<timing_point>::iterator begin() { return m_timing_point_v.begin(); }
+	std::vector<timing_point>::iterator end() { return m_timing_point_v.end(); }
+	std::vector<timing_point>::const_iterator cbegin() const { return m_timing_point_v.cbegin(); }
+	std::vector<timing_point>::const_iterator cend() const { return m_timing_point_v.cend(); }
+
 private:
 	std::vector<timing_point> m_timing_point_v;
 };
