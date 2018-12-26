@@ -30,9 +30,7 @@ void hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
 // Where if the user loads in the whole thing as a string
 
 void hit_object_v::load_raw_hit_object(std::string str, unsigned int keys, char delimeter) {
-	std::vector<std::string> str_v = split_string::by_delimeter(str, '\n'); // Split the string
-
-	load_raw_hit_object(str_v, keys); // Use the vector variant of this function
+	load_raw_hit_object(split_string::by_delimeter(str, '\n'), keys); // Use the vector variant of this function
 }
 
 void hit_object_v::load_raw_hit_object(std::vector<std::string> str_v, unsigned int keys)
