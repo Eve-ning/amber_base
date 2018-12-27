@@ -1,4 +1,6 @@
 #include "timing_point_v.h"
+#include "timing_point_v.h"
+#include "timing_point_v.h"
 #include "../../custom_functions/split_string.h"
 
 timing_point_v::timing_point_v()
@@ -18,6 +20,16 @@ void timing_point_v::load_raw_timing_point(std::vector<std::string> str_v)
 		tp.load_raw_timing_point(str); // Load by string
 		m_timing_point_v.push_back(str); // Push back to private member
 	}
+}
+
+std::vector<timing_point> timing_point_v::get_timing_point_v() const
+{
+	return m_timing_point_v;
+}
+
+void timing_point_v::set_timing_point_v(std::vector<timing_point> timing_point_v)
+{
+	m_timing_point_v = timing_point_v;
 }
 
 std::vector<std::string> timing_point_v::get_raw_timing_point_v() const {
