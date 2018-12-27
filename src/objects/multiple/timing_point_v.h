@@ -34,7 +34,8 @@ public:
 	std::vector<timing_point> get_timing_point_v() const;
 	void set_timing_point_v(std::vector<timing_point> timing_point_v);
 
-
+	// Returns shared_ptr of the hit_object_v
+	std::vector<std::shared_ptr<osu_object>> get_timing_point_sptr_v() const;
 
 	// Get hit_object by index
 	timing_point get_timing_point(unsigned index) const {

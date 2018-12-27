@@ -25,7 +25,7 @@ void timing_point_v::load_raw_timing_point(std::vector<std::string> str_v)
 
 std::vector<std::string> timing_point_v::get_raw_timing_point_v() const {
 	std::vector<std::string> output;
-	std::transform(m_timing_point_v.begin(), m_timing_point_v.end(), output.begin(), [](const timing_point &tp) {
+	std::transform(m_timing_point_v.begin(), m_timing_point_v.end(), std::back_inserter(output), [&](const timing_point &tp) {
 		return tp.get_raw_timing_point();
 	});
 	return output;
@@ -39,5 +39,14 @@ std::vector<timing_point> timing_point_v::get_timing_point_v() const
 void timing_point_v::set_timing_point_v(std::vector<timing_point> timing_point_v)
 {
 	m_timing_point_v = timing_point_v;
+}
+
+// Returns shared_ptr of the hit_object_v
+
+std::vector<std::shared_ptr<osu_object>> timing_point_v::get_timing_point_sptr_v() const {
+	std::vector<std::shared_ptr<osu_object>> output;
+	std::transform(m_timing_point_v.begin(), m_timing_point_v.end(), std::back_inserter(output), [&](const timing_point &tp) {
+		return std::make_shared<timing_point>(tp);
+	});
 }
 

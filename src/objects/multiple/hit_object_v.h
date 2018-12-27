@@ -34,6 +34,9 @@ public:
 	std::vector<hit_object> get_hit_object_v() const;
 	void set_hit_object_v(std::vector<hit_object> hit_object_v);
 
+	// Returns shared_ptr of the hit_object_v
+	std::vector<std::shared_ptr<osu_object>> get_hit_object_sptr_v() const;
+
     // Get hit_object by index
 	hit_object get_hit_object(unsigned index) const {
 		return m_hit_object_v[index];
