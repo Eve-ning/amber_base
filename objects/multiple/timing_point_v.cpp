@@ -19,3 +19,11 @@ void timing_point_v::load_raw_timing_point(std::vector<std::string> str_v)
 		m_timing_point_v.push_back(str); // Push back to private member
 	}
 }
+
+std::vector<std::string> timing_point_v::get_raw_timing_point_v() const {
+	std::vector<std::string> output = {};
+	std::transform(m_timing_point_v.begin(), m_timing_point_v.end(), output.begin(), [](const timing_point &tp) {
+		return tp.get_raw_timing_point();
+	});
+	return output;
+}

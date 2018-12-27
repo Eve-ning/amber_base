@@ -57,3 +57,4 @@ Temporary Items
 *.obj
 x64/
 .vs/
+debug/

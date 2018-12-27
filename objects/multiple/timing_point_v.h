@@ -40,6 +40,7 @@ public:
 	std::vector<timing_point>::const_iterator cbegin() const { return m_timing_point_v.cbegin(); }
 	std::vector<timing_point>::const_iterator cend() const { return m_timing_point_v.cend(); }
 
+
 private:
 	std::vector<timing_point> m_timing_point_v;
 };

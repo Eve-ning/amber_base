@@ -122,6 +122,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="custom_functions\split_string.cpp" />
+    <ClCompile Include="custom_lib_functions\lib_functions.cpp" />
     <ClCompile Include="exceptions\reamber_exception.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="objects\multiple\hit_object_v.cpp" />
@@ -131,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="custom_functions\split_string.h" />
+    <ClInclude Include="custom_lib_functions\lib_functions.h" />
     <ClInclude Include="exceptions\reamber_exception.h" />
     <ClInclude Include="objects\multiple\hit_object_v.h" />
     <ClInclude Include="objects\singular\hit_object.h" />

@@ -42,3 +42,19 @@ void hit_object_v::load_raw_hit_object(std::vector<std::string> str_v, unsigned 
 		m_hit_object_v.push_back(ho); // Append to our private hit_object vector
 	}
 }
+
+std::vector<std::string> hit_object_v::get_raw_hit_object_v() const {
+	std::vector<std::string> output = {};
+	std::transform(m_hit_object_v.begin(), m_hit_object_v.end(), output.begin(), [](const hit_object &ho) {
+		return ho.get_raw_hit_object();
+	});
+	return output;
+}
+
+std::vector<hit_object> hit_object_v::get_hit_object_v() const {
+	return m_hit_object_v;
+}
+
+void hit_object_v::set_hit_object_v(std::vector<hit_object> hit_object_v) {
+	m_hit_object_v = hit_object_v;
+}
