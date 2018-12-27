@@ -40,6 +40,8 @@ public:
     // This variant is to override and set the current keys if user failed the other variant
     std::string get_raw_hit_object(int keys);
 
+
+
     //// Getter and Setters
 
     unsigned int get_column() const;

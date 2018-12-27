@@ -25,6 +25,13 @@ public:
         DRUM
     };
 
+	bool operator <(const osu_object &ho) const {
+		return m_offset < ho.m_offset;
+	}
+	bool operator ==(const osu_object &ho) const {
+		return m_offset == ho.m_offset;
+	}
+
 protected: // only allow inherited classes use the constructor
 
     osu_object();
