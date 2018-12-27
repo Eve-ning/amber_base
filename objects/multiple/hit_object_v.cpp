@@ -1,4 +1,5 @@
 #include "hit_object_v.h"
+#include <algorithm>
 #include "../../custom_functions/split_string.h"
 
 hit_object_v::hit_object_v()
@@ -44,6 +45,7 @@ void hit_object_v::load_raw_hit_object(std::vector<std::string> str_v, unsigned 
 }
 
 std::vector<std::string> hit_object_v::get_raw_hit_object_v() const {
+
 	std::vector<std::string> output = {};
 	std::transform(m_hit_object_v.begin(), m_hit_object_v.end(), output.begin(), [](const hit_object &ho) {
 		return ho.get_raw_hit_object();

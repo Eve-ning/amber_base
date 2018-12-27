@@ -7,7 +7,7 @@
 #endif
 
 #include "osu_object.h"
-#include <cmath>                                                    // it's better to use the new C++ version of math.h
+#include <string>
 
 // Defines the Hit Object/Note/Long Note in the rhythm game
 // Stems from osu_object
@@ -75,13 +75,8 @@ public:
     double get_ln_end() const;
     void set_ln_end(double ln_end);
 
-    static unsigned int convert_column_to_x_axis(unsigned int column, unsigned int keys) {
-        return static_cast<unsigned int>(round(((512 * column) + 256) / keys));
-    }
-
-    static unsigned int convert_x_axis_to_column(unsigned int x_axis, unsigned int keys) {
-        return static_cast<unsigned int>(round((x_axis * keys - 256) / 512));
-    }
+	static unsigned int convert_column_to_x_axis(unsigned int column, unsigned int keys);
+	static unsigned int convert_x_axis_to_column(unsigned int x_axis, unsigned int keys);
 
 	// Removed the brackets on the editor hitobject
 	static std::string trim_editor_hit_object(std::string str);

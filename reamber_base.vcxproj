@@ -23,6 +23,7 @@
     <ProjectGuid>{457CBCE3-6079-4F24-BFD8-E6DF52C645BD}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>reamber_base</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -126,6 +127,7 @@
     <ClCompile Include="exceptions\reamber_exception.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="objects\multiple\hit_object_v.cpp" />
+    <ClCompile Include="objects\multiple\timing_point_v.cpp" />
     <ClCompile Include="objects\singular\hit_object.cpp" />
     <ClCompile Include="objects\singular\osu_object.cpp" />
     <ClCompile Include="objects\singular\timing_point.cpp" />
@@ -135,6 +137,7 @@
     <ClInclude Include="custom_lib_functions\lib_functions.h" />
     <ClInclude Include="exceptions\reamber_exception.h" />
     <ClInclude Include="objects\multiple\hit_object_v.h" />
+    <ClInclude Include="objects\multiple\timing_point_v.h" />
     <ClInclude Include="objects\singular\hit_object.h" />
     <ClInclude Include="objects\singular\osu_object.h" />
     <ClInclude Include="objects\singular\timing_point.h" />

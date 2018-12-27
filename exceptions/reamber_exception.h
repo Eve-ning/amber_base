@@ -1,17 +1,17 @@
 #pragma once 
 
-#ifdef AMBER_BASE_EX                                                // Declare this when compiling the library!
-#define AMBER_BASE __declspec(dllexport)                       
-#else
-#define AMBER_BASE __declspec(dllimport)
-#endif
+//#ifdef AMBER_BASE_EX                                                // Declare this when compiling the library!
+//#define AMBER_BASE __declspec(dllexport)                       
+//#else
+//#define AMBER_BASE __declspec(dllimport)
+//#endif
 
 #include <exception>
 #include <string>
 
 // Handles all of reamber's exceptions
 
-class AMBER_BASE reamber_exception : public std::exception
+class reamber_exception : public std::exception
 {
 public:
     reamber_exception(const char* msg);

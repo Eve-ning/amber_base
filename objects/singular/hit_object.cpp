@@ -1,6 +1,6 @@
 #include "hit_object.h"
 #include "../../custom_functions/split_string.h"
-#include <assert.h>
+#include <cmath>
 #include <vector>
 #include <iostream>
 #include <exceptions/reamber_exception.h>
@@ -246,6 +246,14 @@ double hit_object::get_ln_end() const
 void hit_object::set_ln_end(double ln_end)
 {
     m_ln_end = ln_end;
+}
+
+unsigned int hit_object::convert_column_to_x_axis(unsigned int column, unsigned int keys) {
+	return static_cast<unsigned int>(round(((512 * column) + 256) / keys));
+}
+
+unsigned int hit_object::convert_x_axis_to_column(unsigned int x_axis, unsigned int keys) {
+	return static_cast<unsigned int>(round((x_axis * keys - 256) / 512));
 }
 
 std::string hit_object::trim_editor_hit_object(std::string str)

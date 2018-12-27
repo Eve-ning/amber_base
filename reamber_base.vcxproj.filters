@@ -39,6 +39,9 @@
     <ClCompile Include="custom_lib_functions\lib_functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="objects\multiple\timing_point_v.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="exceptions\reamber_exception.h">
@@ -60,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="custom_lib_functions\lib_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="objects\multiple\timing_point_v.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

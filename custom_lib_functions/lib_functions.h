@@ -6,6 +6,12 @@
 #include <vector>
 // Here we declare all common functions that amber_base will include
 
+#ifdef AMBER_BASE_EX                                                // Declare this when compiling the library!
+#define AMBER_BASE __declspec(dllexport)                       
+#else
+#define AMBER_BASE __declspec(dllimport)
+#endif
+
 namespace lib_functions
 {
 	std::shared_ptr<osu_object> first_object(const std::vector<std::shared_ptr<osu_object>> obj_v);
