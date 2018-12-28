@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.28307.136
+VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "amber_base", "amber_base.vcxproj", "{457CBCE3-6079-4F24-BFD8-E6DF52C645BD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "reamber_base", "reamber_base.vcxproj", "{457CBCE3-6079-4F24-BFD8-E6DF52C645BD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "reamber_base_test", "..\reamber_base_test\reamber_base_test.vcxproj", "{267CCC72-48C3-4DB7-A334-A1C523C62715}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,11 +23,19 @@ Global
 		{457CBCE3-6079-4F24-BFD8-E6DF52C645BD}.Release|x64.Build.0 = Release|x64
 		{457CBCE3-6079-4F24-BFD8-E6DF52C645BD}.Release|x86.ActiveCfg = Release|Win32
 		{457CBCE3-6079-4F24-BFD8-E6DF52C645BD}.Release|x86.Build.0 = Release|Win32
+		{267CCC72-48C3-4DB7-A334-A1C523C62715}.Debug|x64.ActiveCfg = Debug|x64
+		{267CCC72-48C3-4DB7-A334-A1C523C62715}.Debug|x64.Build.0 = Debug|x64
+		{267CCC72-48C3-4DB7-A334-A1C523C62715}.Debug|x86.ActiveCfg = Debug|Win32
+		{267CCC72-48C3-4DB7-A334-A1C523C62715}.Debug|x86.Build.0 = Debug|Win32
+		{267CCC72-48C3-4DB7-A334-A1C523C62715}.Release|x64.ActiveCfg = Release|x64
+		{267CCC72-48C3-4DB7-A334-A1C523C62715}.Release|x64.Build.0 = Release|x64
+		{267CCC72-48C3-4DB7-A334-A1C523C62715}.Release|x86.ActiveCfg = Release|Win32
+		{267CCC72-48C3-4DB7-A334-A1C523C62715}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {ECDE3835-6118-4E6C-843A-CA148E5754A2}
+		SolutionGuid = {284CF19D-E200-43BB-BDBB-9DE43896F337}
 	EndGlobalSection
 EndGlobal
