@@ -131,6 +131,37 @@ void hit_object::load_parameters(unsigned int column, double offset, unsigned in
     m_keys = keys;
 }
 
+void hit_object::load_parameters(unsigned int column, unsigned int y_axis, double offset, unsigned int note_type, sample_set hitsound_set, double ln_end, sample_set sample_set_, sample_set addition_set, sample_set custom_set, unsigned int volume, std::string hitsound_file, unsigned int keys) {
+	m_column = column;
+	m_y_axis = y_axis;
+	m_offset = offset;
+	m_note_type = note_type;
+	m_hitsound_set = hitsound_set;
+	m_ln_end = ln_end;
+	m_sample_set = sample_set_;
+	m_addition_set = addition_set;
+	m_custom_set = custom_set;
+	m_volume = volume;
+	m_hitsound_file = hitsound_file;
+	m_keys = keys;
+}
+
+bool hit_object::operator ==(const hit_object & ho) const {
+	return (
+		m_column == ho.m_column &&
+		m_y_axis == ho.m_y_axis &&
+		m_note_type == ho.m_note_type &&
+		m_hitsound_set == ho.m_hitsound_set &&
+		m_ln_end == ho.m_ln_end &&
+		m_sample_set == ho.m_sample_set &&
+		m_addition_set == ho.m_addition_set &&
+		m_custom_set == ho.m_custom_set &&
+		m_volume == ho.m_volume &&
+		m_hitsound_file == ho.m_hitsound_file &&
+		m_keys == ho.m_keys
+		);
+}
+
 std::string hit_object::get_raw_hit_object() const
 {
 	std::string output =

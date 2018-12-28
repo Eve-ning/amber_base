@@ -34,28 +34,10 @@ public:
 						 unsigned int sample_set_index,
 						 unsigned int volume,
 						 bool is_bpm,
-						 bool is_kiai) {
-		m_offset = offset;
-		m_value = value;
-		m_metronome = metronome;
-		m_sample_set = sample_set_;
-		m_sample_set_index = sample_set_index;
-		m_volume = volume;
-		m_is_kiai = is_kiai;
-		m_is_bpm = is_bpm;
-	}
+						 bool is_kiai);
 
-	bool operator ==(const timing_point &tp) {
-		return(
-			m_value == tp.m_value &&
-			m_metronome == tp.m_metronome &&
-			m_sample_set == tp.m_sample_set &&
-			m_sample_set_index == tp.m_sample_set_index &&
-			m_volume == tp.m_volume &&
-			m_is_kiai == tp.m_is_kiai &&
-			m_is_bpm == tp.m_is_bpm
-		);
-	}
+	// Checks if all variables match
+	bool operator ==(const timing_point &tp) const;
 
     //// Exporting
 

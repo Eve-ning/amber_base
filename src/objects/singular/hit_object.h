@@ -41,36 +41,10 @@ public:
 						 sample_set custom_set,
 						 unsigned int volume,
 						 std::string hitsound_file,
-						 unsigned int keys) {
-		m_column = column;
-		m_y_axis = y_axis;
-		m_offset = offset;
-		m_note_type = note_type;
-		m_hitsound_set = hitsound_set;
-		m_ln_end = ln_end;
-		m_sample_set = sample_set_;
-		m_addition_set = addition_set;
-		m_custom_set = custom_set;
-		m_volume = volume;
-		m_hitsound_file = hitsound_file;
-		m_keys = keys; 
-	}
+						 unsigned int keys);
 
-	bool operator ==(const hit_object &ho) {
-		return (
-			m_column == ho.m_column &&
-			m_y_axis == ho.m_y_axis &&
-			m_note_type == ho.m_note_type &&
-			m_hitsound_set == ho.m_hitsound_set &&
-			m_ln_end == ho.m_ln_end &&
-			m_sample_set == ho.m_sample_set &&
-			m_addition_set == ho.m_addition_set &&
-			m_custom_set == ho.m_custom_set &&
-			m_volume == ho.m_volume &&
-			m_hitsound_file == ho.m_hitsound_file &&
-			m_keys == ho.m_keys
-			);
-	}
+	// Checks if all variables match
+	bool operator ==(const hit_object &ho) const;
 
     //// Exporting
 
