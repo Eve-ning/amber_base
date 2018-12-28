@@ -66,4 +66,5 @@ std::vector<std::shared_ptr<osu_object>> hit_object_v::get_hit_object_sptr_v() c
 	std::transform(m_hit_object_v.begin(), m_hit_object_v.end(), std::back_inserter(output), [&](const hit_object &tp) {
 		return std::make_shared<hit_object>(tp);
 	});
+	return output;
 }

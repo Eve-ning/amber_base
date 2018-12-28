@@ -15,57 +15,57 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="exceptions\reamber_exception.cpp">
+    <ClCompile Include="src\objects\multiple\hit_object_v.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objects\singular\hit_object.cpp">
+    <ClCompile Include="src\objects\multiple\timing_point_v.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objects\singular\osu_object.cpp">
+    <ClCompile Include="src\objects\singular\hit_object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objects\singular\timing_point.cpp">
+    <ClCompile Include="src\custom_lib_functions\lib_functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="custom_functions\split_string.cpp">
+    <ClCompile Include="src\custom_functions\split_string.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objects\multiple\hit_object_v.cpp">
+    <ClCompile Include="src\exceptions\reamber_exception.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="custom_lib_functions\lib_functions.cpp">
+    <ClCompile Include="src\objects\singular\timing_point.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objects\multiple\timing_point_v.cpp">
+    <ClCompile Include="src\objects\singular\osu_object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="exceptions\reamber_exception.h">
+    <ClInclude Include="src\objects\multiple\timing_point_v.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="objects\singular\hit_object.h">
+    <ClInclude Include="src\objects\multiple\hit_object_v.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="objects\singular\osu_object.h">
+    <ClInclude Include="src\objects\singular\hit_object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="objects\singular\timing_point.h">
+    <ClInclude Include="src\objects\singular\osu_object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="custom_functions\split_string.h">
+    <ClInclude Include="src\exceptions\reamber_exception.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="objects\multiple\hit_object_v.h">
+    <ClInclude Include="src\custom_lib_functions\lib_functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="custom_lib_functions\lib_functions.h">
+    <ClInclude Include="src\objects\singular\timing_point.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="objects\multiple\timing_point_v.h">
+    <ClInclude Include="src\custom_functions\split_string.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

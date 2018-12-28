@@ -6,7 +6,7 @@
     #define AMBER_BASE __declspec(dllimport)
 #endif
 
-#include "objects/singular/hit_object.h"
+#include "../../objects/singular/hit_object.h"
 #include <vector>
 #include <string>
 

@@ -14,8 +14,8 @@
 
 namespace lib_functions
 {
-	std::shared_ptr<osu_object> first_object(const std::vector<std::shared_ptr<osu_object>> obj_v);
-	std::shared_ptr<osu_object> last_object(const std::vector<std::shared_ptr<osu_object>> obj_v);
+	std::shared_ptr<osu_object> first_object_by_offset(const std::vector<std::shared_ptr<osu_object>> obj_v);
+	std::shared_ptr<osu_object> last_object_by_offset(const std::vector<std::shared_ptr<osu_object>> obj_v);
 
 	void sort_by_offset(std::vector<std::shared_ptr<osu_object>> obj_v, bool ascending = true);
 

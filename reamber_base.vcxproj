@@ -18,6 +18,27 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\custom_functions\split_string.cpp" />
+    <ClCompile Include="src\custom_lib_functions\lib_functions.cpp" />
+    <ClCompile Include="src\exceptions\reamber_exception.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\objects\multiple\hit_object_v.cpp" />
+    <ClCompile Include="src\objects\multiple\timing_point_v.cpp" />
+    <ClCompile Include="src\objects\singular\hit_object.cpp" />
+    <ClCompile Include="src\objects\singular\osu_object.cpp" />
+    <ClCompile Include="src\objects\singular\timing_point.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\custom_functions\split_string.h" />
+    <ClInclude Include="src\custom_lib_functions\lib_functions.h" />
+    <ClInclude Include="src\exceptions\reamber_exception.h" />
+    <ClInclude Include="src\objects\multiple\hit_object_v.h" />
+    <ClInclude Include="src\objects\multiple\timing_point_v.h" />
+    <ClInclude Include="src\objects\singular\hit_object.h" />
+    <ClInclude Include="src\objects\singular\osu_object.h" />
+    <ClInclude Include="src\objects\singular\timing_point.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{457CBCE3-6079-4F24-BFD8-E6DF52C645BD}</ProjectGuid>
@@ -121,27 +142,6 @@
       <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;_USRDLL;AMBER_BASE_EXPORTS;AMBER_BASE_EX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="custom_functions\split_string.cpp" />
-    <ClCompile Include="custom_lib_functions\lib_functions.cpp" />
-    <ClCompile Include="exceptions\reamber_exception.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="objects\multiple\hit_object_v.cpp" />
-    <ClCompile Include="objects\multiple\timing_point_v.cpp" />
-    <ClCompile Include="objects\singular\hit_object.cpp" />
-    <ClCompile Include="objects\singular\osu_object.cpp" />
-    <ClCompile Include="objects\singular\timing_point.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="custom_functions\split_string.h" />
-    <ClInclude Include="custom_lib_functions\lib_functions.h" />
-    <ClInclude Include="exceptions\reamber_exception.h" />
-    <ClInclude Include="objects\multiple\hit_object_v.h" />
-    <ClInclude Include="objects\multiple\timing_point_v.h" />
-    <ClInclude Include="objects\singular\hit_object.h" />
-    <ClInclude Include="objects\singular\osu_object.h" />
-    <ClInclude Include="objects\singular\timing_point.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

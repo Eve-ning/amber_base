@@ -1,5 +1,5 @@
 #include "timing_point.h"
-#include "exceptions/reamber_exception.h"
+#include "../../exceptions/reamber_exception.h"
 #include "../../custom_functions/split_string.h"	
 #include <vector>
 

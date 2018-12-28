@@ -6,7 +6,7 @@
     #define AMBER_BASE __declspec(dllimport)
 #endif
 
-#include "objects/singular/timing_point.h"
+#include "../../objects/singular/timing_point.h"
 #include <vector>
 #include <string>
 #include <algorithm>

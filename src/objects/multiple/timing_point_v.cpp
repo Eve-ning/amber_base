@@ -48,5 +48,6 @@ std::vector<std::shared_ptr<osu_object>> timing_point_v::get_timing_point_sptr_v
 	std::transform(m_timing_point_v.begin(), m_timing_point_v.end(), std::back_inserter(output), [&](const timing_point &tp) {
 		return std::make_shared<timing_point>(tp);
 	});
+	return output;
 }
 
