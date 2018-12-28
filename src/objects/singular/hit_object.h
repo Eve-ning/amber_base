@@ -23,9 +23,6 @@ public:
 
     //// Explicit Loading
 
-    // Pass warning if editor hitobject has multiple objects
-    // Keys isn't important if you're not extracting column
-    // Returns true if only contains 1 object
     void load_editor_hit_object(std::string str, unsigned int keys = 0, unsigned int index = 0);
     void load_raw_hit_object(std::string str, unsigned int keys);
     void load_parameters(unsigned int column,
@@ -33,14 +30,52 @@ public:
                          unsigned int ln_end = 0,
                          unsigned int keys = 0);
 
+	void load_parameters(unsigned int column, // Starts from 0
+						 unsigned int y_axis,
+						 unsigned int note_type, // 1: Note, 128: Long Note
+						 sample_set hitsound_set,
+						 double ln_end, // If note, ln_end = 0,
+						 sample_set sample_set_,
+						 sample_set addition_set,
+						 sample_set custom_set,
+						 unsigned int volume,
+						 std::string hitsound_file,
+						 unsigned int keys) {
+		m_column = column;
+		m_y_axis = y_axis;
+		m_note_type = note_type;
+		m_hitsound_set = hitsound_set;
+		m_ln_end = ln_end;
+		m_sample_set = sample_set_;
+		m_addition_set = addition_set;
+		m_custom_set = custom_set;
+		m_volume = volume;
+		m_hitsound_file = hitsound_file;
+		m_keys = keys; 
+	}
+
+	bool operator ==(const hit_object &ho) {
+		return (
+			m_column == ho.m_column &&
+			m_y_axis == ho.m_y_axis &&
+			m_note_type == ho.m_note_type &&
+			m_hitsound_set == ho.m_hitsound_set &&
+			m_ln_end == ho.m_ln_end &&
+			m_sample_set == ho.m_sample_set &&
+			m_addition_set == ho.m_addition_set &&
+			m_custom_set == ho.m_custom_set &&
+			m_volume == ho.m_volume &&
+			m_hitsound_file == ho.m_hitsound_file &&
+			m_keys == ho.m_keys
+			);
+	}
+
     //// Exporting
 
     // This will fail if keys = 0
     std::string get_raw_hit_object() const;
     // This variant is to override and set the current keys if user failed the other variant
     std::string get_raw_hit_object(int keys);
-
-
 
     //// Getter and Setters
 

@@ -12,6 +12,11 @@ hit_object::hit_object() {
     m_hitsound_set = sample_set::AUTO;
     m_ln_end = 0;
     m_sample_set = sample_set::AUTO;
+	m_addition_set = sample_set::AUTO;
+	m_custom_set = sample_set::AUTO;
+	m_volume = 50;
+	m_hitsound_file = "";
+	m_keys = 4;
 }
 
 void hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsigned int index)

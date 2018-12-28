@@ -26,6 +26,34 @@ public:
                          bool is_kiai = false,
                          unsigned int metronome = 4);
 
+	void load_parameter(double value, // Usually it's a positive value for the SV/BPM variant
+						unsigned int metronome,
+						sample_set sample_set_,
+						unsigned int sample_set_index,
+						unsigned int volume,
+						bool is_kiai,
+						bool is_bpm) {
+		m_value = value;
+		m_metronome = metronome;
+		m_sample_set = sample_set_;
+		m_sample_set_index = sample_set_index;
+		m_volume = volume;
+		m_is_kiai = is_kiai;
+		m_is_bpm = is_bpm;
+	}
+
+	bool operator ==(const timing_point &tp) {
+		return(
+			m_value == tp.m_value &&
+			m_metronome == tp.m_metronome &&
+			m_sample_set == tp.m_sample_set &&
+			m_sample_set_index == tp.m_sample_set_index &&
+			m_volume == tp.m_volume &&
+			m_is_kiai == tp.m_is_kiai &&
+			m_is_bpm == tp.m_is_bpm
+		);
+	}
+
     //// Exporting
 
     std::string get_raw_timing_point() const;
