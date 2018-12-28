@@ -32,6 +32,7 @@ public:
 
 	void load_parameters(unsigned int column, // Starts from 0
 						 unsigned int y_axis,
+						 double offset,
 						 unsigned int note_type, // 1: Note, 128: Long Note
 						 sample_set hitsound_set,
 						 double ln_end, // If note, ln_end = 0,
@@ -43,6 +44,7 @@ public:
 						 unsigned int keys) {
 		m_column = column;
 		m_y_axis = y_axis;
+		m_offset = offset;
 		m_note_type = note_type;
 		m_hitsound_set = hitsound_set;
 		m_ln_end = ln_end;

@@ -43,8 +43,9 @@ void timing_point::load_raw_timing_point(std::string str)
 	m_value = convert_code_to_value(std::stod(timing_point_comma_v[1]), m_is_bpm); 
 }
 
-void timing_point::load_parameters(double value, bool is_bpm, bool is_kiai, unsigned int metronome)
+void timing_point::load_parameters(double offset, double value, bool is_bpm, bool is_kiai, unsigned int metronome)
 {
+	m_offset = offset;
     m_value = value;
     m_is_bpm = is_bpm;
     m_is_kiai = is_kiai;

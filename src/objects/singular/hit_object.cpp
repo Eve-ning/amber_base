@@ -25,9 +25,6 @@ void hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsi
 	str = trim_editor_hit_object(str);
 	m_keys = keys;
 
-    // We append this so that the while loop continues till the end
-    str.push_back(',');
-
     // Now we are just left with the contents
     std::vector<double> offset_v = {};
     std::vector<unsigned int> column_v = {};
@@ -40,11 +37,16 @@ void hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsi
 	for (std::string str_comma : str_comma_v) {
 
 		// We split by bar
-		std::vector<std::string> str_bar_v = split_string::by_delimeter(str_comma);
+		std::vector<std::string> str_bar_v = split_string::by_delimeter(str_comma, '|', false);
 
 		// We push back the data after conversion
-		offset_v.push_back(std::stod(str_bar_v[0]));
-		column_v.push_back(std::stoi(str_bar_v[1]));
+		try {
+			offset_v.push_back(std::stod(str_bar_v[0]));
+			column_v.push_back(std::stoi(str_bar_v[1]));
+		}
+		catch (...) {
+			throw reamber_exception(str_comma_v[0].c_str());
+		}
 	}
 
     // Set according to index
@@ -276,7 +278,7 @@ std::string hit_object::trim_editor_hit_object(std::string str)
 	}
 
 	// Remove the ( AND ) brackets
-	return str.substr(str.find('(') - 1, str.find(')') - str.find('(') - 1);
+	return str.substr(str.find('(') + 1, str.find(')') - str.find('(') - 1);
 }
 
 osu_object::sample_set hit_object::get_hitsound_set() const
