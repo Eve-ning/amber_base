@@ -122,8 +122,8 @@ void hit_object::load_parameters(unsigned int column, double offset, unsigned in
     m_column = column;
     m_offset = offset;
     m_ln_end = ln_end;
-    if (ln_end < offset){
-        // Throw if Long Note End is before Long Note Head
+    if (ln_end != 0 && ln_end < offset){
+        // Throw if Long Note End is before Long Note Head unless it's 0
         std::string ln_end_str = std::to_string(ln_end), offset_str = std::to_string(offset);
         throw reamber_exception(std::string("Long Note End (" + ln_end_str + ")"
                                             "is before Head (" + offset_str + ")").c_str());
