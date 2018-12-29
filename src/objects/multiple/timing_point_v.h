@@ -54,9 +54,6 @@ public:
 	void push_back(const timing_point& tp) {
 		m_timing_point_v.push_back(tp);
 	}
-	void push_back(timing_point tp) {
-		m_timing_point_v.push_back(tp);
-	}
 
 	timing_point operator [](unsigned int i) const { return get_timing_point(i); }
 	timing_point & operator [](unsigned int i) { return get_timing_point(i); }

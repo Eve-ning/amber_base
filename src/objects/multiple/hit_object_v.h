@@ -62,9 +62,6 @@ public:
 		return m_hit_object_v[index];
 	}
 
-	void push_back(const hit_object& ho) {
-		m_hit_object_v.push_back(ho);
-	}
 	void push_back(hit_object ho) {
 		m_hit_object_v.push_back(ho);
 	}
