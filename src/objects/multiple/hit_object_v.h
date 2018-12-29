@@ -62,6 +62,13 @@ public:
 		return m_hit_object_v[index];
 	}
 
+	void push_back(const hit_object& ho) {
+		m_hit_object_v.push_back(ho);
+	}
+	void push_back(hit_object ho) {
+		m_hit_object_v.push_back(ho);
+	}
+
     hit_object operator [](unsigned int i) const { return get_hit_object(i); }
     hit_object & operator [](unsigned int i) { return get_hit_object(i); }
 
