@@ -39,6 +39,9 @@
     <ClInclude Include="src\objects\singular\osu_object.h" />
     <ClInclude Include="src\objects\singular\timing_point.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{457CBCE3-6079-4F24-BFD8-E6DF52C645BD}</ProjectGuid>

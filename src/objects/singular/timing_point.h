@@ -15,20 +15,27 @@ public:
 
     // We don't do a string constructor as it'll be clearer on how the user loaded in their objects
 
-    // Create a blank constructor
+	// Create a blank constructor
+	// Load in via the load_<functions>
     timing_point();
 
     //// Explicit Loading
 
+	// Loads from data from the .osu file
     void load_raw_timing_point(std::string str);
+
+	// Loads parameters manually (Simple)
+	// value is dependent on is_bpm
     void load_parameters(double offset,
 						 double value,
                          bool is_bpm,
                          bool is_kiai = false,
                          unsigned int metronome = 4);
 
+	// Loads parameters manually (Advanced)
+	// value is dependent on is_bpm
 	void load_parameters(double offset,
-						 double value, // Usually it's a positive value for the SV/BPM variant
+						 double value,
 						 unsigned int metronome,
 						 sample_set sample_set_,
 						 unsigned int sample_set_index,
@@ -41,6 +48,7 @@ public:
 
     //// Exporting
 
+	//
     std::string get_raw_timing_point() const;
 
     //// Getters & Setters

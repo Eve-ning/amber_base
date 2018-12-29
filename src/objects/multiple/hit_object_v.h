@@ -15,19 +15,36 @@
 class AMBER_BASE hit_object_v
 {
 public:
+	// We don't do a string constructor as it'll be clearer on how the user loaded in their objects
+
+	// Create a blank constructor
+	// Load in via the load_<functions>
     hit_object_v();
 
 	//// Explicit Loading
 
+	// Loads from data from the editor
+	// Do not skip keys if you want to export to .osu
 	void load_editor_hit_object(std::string str, unsigned int keys = 0);
-    // Where if the user loads in the whole thing as a string
+
+	// Loads from data from the .osu file as one whole string
+	// Key count is required for conversion to columns
 	void load_raw_hit_object(std::string str, unsigned int keys, char delimeter = '\n');
-    // User converts to vector or similar variants
+
+	// Loads from data from the .osu file as a vector
+	// Key count is required for conversion to columns
     void load_raw_hit_object(std::vector<std::string> str_v, unsigned int keys);
 
 	//// Exporting
 
+	// Get the vector of strings compatible to .osu format
+	// This will fail if keys = 0
 	std::vector<std::string> get_raw_hit_object_v() const;
+
+	// Get the vector of strings compatible to .osu format
+	// This variant is to override and set the current keys if user failed the other variant
+	// Note that this will override all keys set initially
+	std::vector<std::string> get_raw_hit_object_v(int keys);
 
 	//// Getters and Setters
 

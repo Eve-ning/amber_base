@@ -53,6 +53,15 @@ std::vector<std::string> hit_object_v::get_raw_hit_object_v() const {
 	return output;
 }
 
+std::vector<std::string> hit_object_v::get_raw_hit_object_v(int keys)
+{
+	std::vector<std::string> output = {};
+	std::transform(m_hit_object_v.begin(), m_hit_object_v.end(), std::back_inserter(output), [&](hit_object &ho) {
+		return ho.get_raw_hit_object(keys);
+	});
+	return output;
+}
+
 std::vector<hit_object> hit_object_v::get_hit_object_v() const {
 	return m_hit_object_v;
 }

@@ -14,7 +14,7 @@ class AMBER_BASE osu_object
 {
 public:
 
-    double get_offset() const;
+	double get_offset() const;
     void set_offset(double value);
 
     enum class sample_set

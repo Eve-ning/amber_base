@@ -16,17 +16,23 @@
 class AMBER_BASE timing_point_v
 {
 public:
+	// We don't do a string constructor as it'll be clearer on how the user loaded in their objects
+
+	// Create a blank constructor
+	// Load in via the load_<functions>
 	timing_point_v();
 
 	//// Explicit Loading
 
-	// Where if the user loads in the whole thing as a string
+	// Loads from data from the .osu file as one whole string
 	void load_raw_timing_point(std::string str, char delimeter = '\n');
-	// User converts to vector or similar variants
+
+	// Loads from data from the .osu file as a vector
 	void load_raw_timing_point(std::vector<std::string> str_v);
 
 	//// Exporting
 
+	// Get the vector of strings compatible to .osu format
 	std::vector<std::string> get_raw_timing_point_v() const;
 
 	//// Getters and Setters

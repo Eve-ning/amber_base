@@ -19,17 +19,33 @@ public:
     // We don't do a string constructor as it'll be clearer on how the user loaded in their objects
 
     // Create a blank constructor
+	// Load in via the load_<functions>
     hit_object();
 
     //// Explicit Loading
 
+	// Loads from data from the editor
+	// Do not skip keys if you want to export to .osu
+	// Specify index to use if you are inputting multiple editor hit objects
     void load_editor_hit_object(std::string str, unsigned int keys = 0, unsigned int index = 0);
+
+	// Loads from data from the .osu file
+	// Key count is required for conversion to columns
     void load_raw_hit_object(std::string str, unsigned int keys);
+
+	// Loads parameters manually (Simple)
+	// Column starts from 0
+	// ln_end = 0 for Normal Notes
+	// Do not skip keys if you want to export to .osu
     void load_parameters(unsigned int column,
                          double offset,
                          unsigned int ln_end = 0,
                          unsigned int keys = 0);
 
+	// Loads parameters manually (Advanced)
+	// Column starts from 0
+	// ln_end = 0 for Normal Notes
+	// Do not skip keys if you want to export to .osu
 	void load_parameters(unsigned int column, // Starts from 0
 						 unsigned int y_axis,
 						 double offset,
@@ -48,8 +64,11 @@ public:
 
     //// Exporting
 
+	// Get the string compatible to .osu format
     // This will fail if keys = 0
     std::string get_raw_hit_object() const;
+
+	// Get the string compatible to .osu format
     // This variant is to override and set the current keys if user failed the other variant
     std::string get_raw_hit_object(int keys);
 
@@ -91,7 +110,7 @@ public:
 	static unsigned int convert_column_to_x_axis(unsigned int column, unsigned int keys);
 	static unsigned int convert_x_axis_to_column(unsigned int x_axis, unsigned int keys);
 
-	// Removed the brackets on the editor hitobject
+	// Removes the brackets on the editor hitobject
 	static std::string trim_editor_hit_object(std::string str);
 
 private:
