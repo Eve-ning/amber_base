@@ -59,3 +59,21 @@ std::vector<std::shared_ptr<osu_object>> timing_point_v::get_timing_point_sptr_v
 	return output;
 }
 
+bool timing_point_v::operator == (const timing_point_v & tp_v) const {
+	bool flag = true;
+	size_t input_size = tp_v.size();
+
+	if (m_timing_point_v.size() != input_size) {
+		return false; // Mismatch in size
+	}
+
+	size_t x = 0;
+	while (x < input_size && (flag == true)) {
+		// If any mismatch, flag will be false;
+		flag &= (tp_v[0] == m_timing_point_v[0]);
+		x++;
+	}
+
+	return flag;
+}
+

@@ -20,17 +20,17 @@ void hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
 	str = hit_object::trim_editor_hit_object(str); // Shed the brackets
 
 	std::vector<std::string> str_comma_v = split_string::by_delimeter(str, ','); // Split by comma
-	std::vector<std::string> str_colon_v = {};
+	std::vector<std::string> str_bar_v = {};
 
 	for (std::string str_comma : str_comma_v) {
 		hit_object ho;
-		str_colon_v = split_string::by_delimeter(str_comma); // Split each comma token by bar
+		str_bar_v = split_string::by_delimeter(str_comma, '|'); // Split each comma token by bar
 
 		ho.load_parameters( // Load in by parameter
-			std::stoi(str_colon_v[1]),  // Column
-			std::stod(str_colon_v[0]),  // Offset
-			0,                          // LN End (default to 0)
-			keys);                      // Keys
+			std::stoi(str_bar_v[1]),  // Column
+			std::stod(str_bar_v[0]),  // Offset
+			0,                        // LN End (default to 0)
+			keys);                    // Keys
 
 		m_hit_object_v.push_back(ho); // Append to our private hit_object vector
 	}
@@ -84,4 +84,22 @@ std::vector<std::shared_ptr<osu_object>> hit_object_v::get_hit_object_sptr_v() c
 		return std::make_shared<hit_object>(tp);
 	});
 	return output;
+}
+
+bool hit_object_v::operator ==(const hit_object_v & ho_v) const {
+	bool flag = true;
+	size_t input_size = ho_v.size();
+
+	if (m_hit_object_v.size() != input_size) {
+		return false; // Mismatch in size
+	}
+
+	size_t x = 0;
+	while (x < input_size && (flag == true)) {
+		// If any mismatch, flag will be false;
+		flag &= (ho_v[0] == m_hit_object_v[0]);
+		x++;
+	}
+
+	return flag;
 }

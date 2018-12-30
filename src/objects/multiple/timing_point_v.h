@@ -61,23 +61,7 @@ public:
 	timing_point operator [](unsigned int i) const { return get_timing_point(i); }
 	timing_point & operator [](unsigned int i) { return get_timing_point(i); }
 
-	bool operator ==(const timing_point_v &tp_v) const {
-		bool flag = true;
-		size_t input_size = tp_v.size();
-
-		if (m_timing_point_v.size() != input_size) {
-			return false; // Mismatch in size
-		}
-
-		size_t x = 0;
-		while (x < input_size && (flag == true)) {
-			// If any mismatch, flag will be false;
-			flag &= (tp_v[0] == m_timing_point_v[0]);
-			x++;
-		}
-
-		return flag;
-	}
+	bool operator ==(const timing_point_v &tp_v) const;
 
 	size_t size() const {
 		return m_timing_point_v.size();
