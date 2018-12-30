@@ -48,7 +48,7 @@ public:
 
     //// Exporting
 
-	//
+	// Get the string compatible to .osu format
     std::string get_raw_timing_point() const;
 
     //// Getters & Setters

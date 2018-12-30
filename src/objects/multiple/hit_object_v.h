@@ -21,6 +21,9 @@ public:
 	// Load in via the load_<functions>
     hit_object_v();
 
+	// Create an object with a designated amount of default constructed hit_objects
+	hit_object_v(unsigned int object_fill);
+
 	//// Explicit Loading
 
 	// Loads from data from the editor
@@ -56,7 +59,7 @@ public:
 
     // Get hit_object by index
 	hit_object get_hit_object(unsigned index) const {
-		return m_hit_object_v[index];
+		return m_hit_object_v[index];	
 	}
 	hit_object & get_hit_object(unsigned index) {
 		return m_hit_object_v[index];

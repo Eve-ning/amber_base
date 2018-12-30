@@ -18,9 +18,12 @@ class AMBER_BASE timing_point_v
 public:
 	// We don't do a string constructor as it'll be clearer on how the user loaded in their objects
 
-	// Create a blank constructor
+	// Create a blank object
 	// Load in via the load_<functions>
 	timing_point_v();
+
+	// Create an object with a designated amount of default constructed timing_points 
+	timing_point_v(unsigned int object_fill);
 
 	//// Explicit Loading
 
@@ -51,7 +54,7 @@ public:
 		return m_timing_point_v[index];
 	}
 
-	void push_back(const timing_point& tp) {
+	void push_back(timing_point tp) {
 		m_timing_point_v.push_back(tp);
 	}
 

@@ -7,6 +7,14 @@ timing_point_v::timing_point_v()
 	m_timing_point_v = {};
 }
 
+// Create an object with a designated amount of default constructed timing_points 
+
+timing_point_v::timing_point_v(unsigned int object_fill) {
+	for (int x = 0; x < object_fill; x++) {
+		m_timing_point_v.push_back(timing_point());
+	}
+}
+
 void timing_point_v::load_raw_timing_point(std::string str, char delimeter)
 {
 	load_raw_timing_point(split_string::by_delimeter(str, delimeter));

@@ -7,6 +7,14 @@ hit_object_v::hit_object_v()
 	m_hit_object_v = {};
 }
 
+// Create an object with a designated amount of default constructed hit_objects
+
+hit_object_v::hit_object_v(unsigned int object_fill) {
+	for (int x = 0; x < object_fill; x++) {
+		m_hit_object_v.push_back(hit_object());
+	}
+}
+
 void hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
 
 	str = hit_object::trim_editor_hit_object(str); // Shed the brackets
