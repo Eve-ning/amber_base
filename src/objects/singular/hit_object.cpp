@@ -69,8 +69,6 @@ void hit_object::load_raw_hit_object(std::string str, unsigned int keys)
 
     m_keys = keys;
 
-    str.push_back(':');
-
     std::vector<std::string> hit_object_comma_v = {};
     std::vector<std::string> hit_object_colon_v = {};
 

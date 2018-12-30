@@ -72,6 +72,28 @@ public:
     hit_object operator [](unsigned int i) const { return get_hit_object(i); }
     hit_object & operator [](unsigned int i) { return get_hit_object(i); }
 
+	bool operator ==(const hit_object_v &ho_v) const {
+		bool flag = true;
+		size_t input_size = ho_v.size();
+
+		if (m_hit_object_v.size() != input_size) {
+			return false; // Mismatch in size
+		}
+
+		size_t x = 0;
+		while (x < input_size && (flag == true)) {
+			// If any mismatch, flag will be false;
+			flag &= (ho_v[0] == m_hit_object_v[0]);
+			x++;
+		}
+		
+		return flag;
+	}
+
+	size_t size() const {
+		return m_hit_object_v.size();
+	}
+
 	//// Iterator Implementation
 
 	std::vector<hit_object>::iterator begin() { return m_hit_object_v.begin(); }
