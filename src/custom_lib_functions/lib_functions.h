@@ -28,6 +28,6 @@ namespace lib_functions
 	AMBER_BASE double get_offset_max(const std::vector<std::shared_ptr<osu_object>>& obj_v);
 
 	AMBER_BASE std::vector<double> get_offset_v(const std::vector<std::shared_ptr<osu_object>> &obj_v);
-	AMBER_BASE std::vector<double> get_column_v(const std::vector<hit_object> &ho_v);
+	AMBER_BASE std::vector<unsigned int> get_column_v(const std::vector<hit_object> &ho_v);
 };
 

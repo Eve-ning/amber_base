@@ -15,11 +15,11 @@ std::shared_ptr<osu_object> lib_functions::last_object_by_offset(const std::vect
 }
 
 void lib_functions::sort_by_offset(std::vector<std::shared_ptr<osu_object>>& obj_v, bool ascending) {
-	std::sort(obj_v.begin(), obj_v.end(), [&](std::shared_ptr<osu_object>& obj1,
-		std::shared_ptr<osu_object>& obj2) {
+	std::sort(obj_v.begin(), obj_v.end(), [=](const std::shared_ptr<osu_object>& obj1,
+										      const std::shared_ptr<osu_object>& obj2) {
 		return (ascending ? // Ternary expression on ascending
-			obj1->get_offset() < obj2->get_offset() : // If ascending is true
-			obj1->get_offset() > obj2->get_offset()); // If ascending is false
+			(obj1->get_offset() < obj2->get_offset()) : // If ascending is true
+			(obj1->get_offset() > obj2->get_offset())); // If ascending is false
 	});
 }
 
@@ -39,8 +39,8 @@ std::vector<double> lib_functions::get_offset_v(const std::vector<std::shared_pt
 	return offset_v;
 }
 
-std::vector<double> lib_functions::get_column_v(const std::vector<hit_object>& ho_v) {
-	std::vector<double> column_v = {};
+std::vector<unsigned int> lib_functions::get_column_v(const std::vector<hit_object>& ho_v) {
+	std::vector<unsigned int> column_v = {};
 	std::transform(ho_v.cbegin(), ho_v.cend(), std::back_inserter(column_v), [](const hit_object &ho) {
 		return ho.get_column();
 	});

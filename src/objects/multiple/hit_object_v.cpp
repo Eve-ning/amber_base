@@ -78,7 +78,7 @@ void hit_object_v::set_hit_object_v(std::vector<hit_object> hit_object_v) {
 	m_hit_object_v = hit_object_v;
 }
 
-std::vector<std::shared_ptr<osu_object>> hit_object_v::get_object_sptr_v() const {
+std::vector<std::shared_ptr<osu_object>> hit_object_v::get_obj_sptr_v() const {
 	std::vector<std::shared_ptr<osu_object>> output;
 	std::transform(m_hit_object_v.begin(), m_hit_object_v.end(), std::back_inserter(output), [&](const hit_object &tp) {
 		return std::make_shared<hit_object>(tp);

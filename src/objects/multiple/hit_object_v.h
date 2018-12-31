@@ -8,12 +8,10 @@
 
 #include "../../objects/singular/hit_object.h"
 #include "osu_object_v.h"
-#include <vector>
-#include <string>
 
 // The list variant provides additional features to load in hit_objects and modify them.
 
-class AMBER_BASE hit_object_v : public osu_object_v
+class AMBER_BASE hit_object_v : public osu_object_v<hit_object>
 {
 public:
 	// We don't do a string constructor as it'll be clearer on how the user loaded in their objects
@@ -39,6 +37,21 @@ public:
 	// Key count is required for conversion to columns
     void load_raw_hit_object(std::vector<std::string> str_v, unsigned int keys);
 
+	// Loads from a sptr vector
+	void load_obj_sptr(std::vector<std::shared_ptr<osu_object>> obj_sptr_v) {
+		// Empty our current vector
+		m_hit_object_v = {};
+
+		for (auto obj : obj_sptr_v) {
+			m_hit_object_v.push_back(*std::dynamic_pointer_cast<hit_object>(obj));
+		}
+	}
+
+	// Loads from a sptr vector
+	hit_object_v& operator =(std::vector<std::shared_ptr<osu_object>> obj_sptr_v) {
+		load_obj_sptr(obj_sptr_v);
+	}
+
 	//// Exporting
 
 	// Get the vector of strings compatible to .osu format
@@ -56,7 +69,7 @@ public:
 	void set_hit_object_v(std::vector<hit_object> hit_object_v);
 
 	// Returns shared_ptr of the hit_object_v
-	std::vector<std::shared_ptr<osu_object>> get_object_sptr_v() const;
+	std::vector<std::shared_ptr<osu_object>> get_obj_sptr_v() const;
 
     // Get hit_object by index
 	hit_object get_hit_object(unsigned index) const {

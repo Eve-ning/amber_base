@@ -8,9 +8,6 @@
 
 #include "../../objects/singular/timing_point.h"
 #include "osu_object_v.h"
-#include <vector>
-#include <string>
-#include <algorithm>
 
 // The list variant provides additional features to load in hit_objects and modify them.
 
@@ -45,7 +42,7 @@ public:
 	void set_timing_point_v(std::vector<timing_point> timing_point_v);
 
 	// Returns shared_ptr of the hit_object_v
-	std::vector<std::shared_ptr<osu_object>> get_object_sptr_v() const;
+	std::vector<std::shared_ptr<osu_object>> get_obj_sptr_v() const;
 
 	// Get hit_object by index
 	timing_point get_timing_point(unsigned index) const {
