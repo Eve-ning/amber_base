@@ -7,12 +7,13 @@
 #endif
 
 #include "../../objects/singular/hit_object.h"
+#include "osu_object_v.h"
 #include <vector>
 #include <string>
 
 // The list variant provides additional features to load in hit_objects and modify them.
 
-class AMBER_BASE hit_object_v
+class AMBER_BASE hit_object_v : public osu_object_v
 {
 public:
 	// We don't do a string constructor as it'll be clearer on how the user loaded in their objects
@@ -42,12 +43,12 @@ public:
 
 	// Get the vector of strings compatible to .osu format
 	// This will fail if keys = 0
-	std::vector<std::string> get_raw_hit_object_v() const;
+	std::vector<std::string> get_string_raw_v() const;
 
 	// Get the vector of strings compatible to .osu format
 	// This variant is to override and set the current keys if user failed the other variant
 	// Note that this will override all keys set initially
-	std::vector<std::string> get_raw_hit_object_v(int keys);
+	std::vector<std::string> get_string_raw_v(int keys);
 
 	//// Getters and Setters
 
@@ -55,7 +56,7 @@ public:
 	void set_hit_object_v(std::vector<hit_object> hit_object_v);
 
 	// Returns shared_ptr of the hit_object_v
-	std::vector<std::shared_ptr<osu_object>> get_hit_object_sptr_v() const;
+	std::vector<std::shared_ptr<osu_object>> get_object_sptr_v() const;
 
     // Get hit_object by index
 	hit_object get_hit_object(unsigned index) const {

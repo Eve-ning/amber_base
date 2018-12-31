@@ -7,13 +7,14 @@
 #endif
 
 #include "../../objects/singular/timing_point.h"
+#include "osu_object_v.h"
 #include <vector>
 #include <string>
 #include <algorithm>
 
 // The list variant provides additional features to load in hit_objects and modify them.
 
-class AMBER_BASE timing_point_v
+class AMBER_BASE timing_point_v : public osu_object_v
 {
 public:
 	// We don't do a string constructor as it'll be clearer on how the user loaded in their objects
@@ -36,7 +37,7 @@ public:
 	//// Exporting
 
 	// Get the vector of strings compatible to .osu format
-	std::vector<std::string> get_raw_timing_point_v() const;
+	std::vector<std::string> get_string_raw_v() const;
 
 	//// Getters and Setters
 
@@ -44,7 +45,7 @@ public:
 	void set_timing_point_v(std::vector<timing_point> timing_point_v);
 
 	// Returns shared_ptr of the hit_object_v
-	std::vector<std::shared_ptr<osu_object>> get_timing_point_sptr_v() const;
+	std::vector<std::shared_ptr<osu_object>> get_object_sptr_v() const;
 
 	// Get hit_object by index
 	timing_point get_timing_point(unsigned index) const {
