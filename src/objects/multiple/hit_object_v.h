@@ -21,7 +21,7 @@ public:
     hit_object_v();
 
 	// Create an object with a designated amount of default constructed hit_objects
-	hit_object_v(unsigned int object_fill);
+	hit_object_v(unsigned int amount);
 
 	//// Explicit Loading
 
@@ -38,67 +38,15 @@ public:
     void load_raw_hit_object(std::vector<std::string> str_v, unsigned int keys);
 
 	// Loads from a sptr vector
-	void load_obj_sptr(std::vector<std::shared_ptr<osu_object>> obj_sptr_v) {
-		// Empty our current vector
-		m_hit_object_v = {};
-
-		for (auto obj : obj_sptr_v) {
-			m_hit_object_v.push_back(*std::dynamic_pointer_cast<hit_object>(obj));
-		}
-	}
-
-	// Loads from a sptr vector
-	hit_object_v& operator =(std::vector<std::shared_ptr<osu_object>> obj_sptr_v) {
-		load_obj_sptr(obj_sptr_v);
-	}
+	//hit_object_v& operator =(std::vector<std::shared_ptr<osu_object>> obj_sptr_v) {
+	//	load_obj_sptr(obj_sptr_v);
+	//	return *this;
+	//}
 
 	//// Exporting
-
-	// Get the vector of strings compatible to .osu format
-	// This will fail if keys = 0
-	std::vector<std::string> get_string_raw_v() const;
 
 	// Get the vector of strings compatible to .osu format
 	// This variant is to override and set the current keys if user failed the other variant
 	// Note that this will override all keys set initially
 	std::vector<std::string> get_string_raw_v(int keys);
-
-	//// Getters and Setters
-
-	std::vector<hit_object> get_hit_object_v() const;
-	void set_hit_object_v(std::vector<hit_object> hit_object_v);
-
-	// Returns shared_ptr of the hit_object_v
-	std::vector<std::shared_ptr<osu_object>> get_obj_sptr_v() const;
-
-    // Get hit_object by index
-	hit_object get_hit_object(unsigned index) const {
-		return m_hit_object_v[index];	
-	}
-	hit_object & get_hit_object(unsigned index) {
-		return m_hit_object_v[index];
-	}
-
-	void push_back(hit_object ho) {
-		m_hit_object_v.push_back(ho);
-	}
-
-    hit_object operator [](unsigned int i) const { return get_hit_object(i); }
-    hit_object & operator [](unsigned int i) { return get_hit_object(i); }
-
-	bool operator ==(const hit_object_v &ho_v) const;
-
-	size_t size() const {
-		return m_hit_object_v.size();
-	}
-
-	//// Iterator Implementation
-
-	std::vector<hit_object>::iterator begin() { return m_hit_object_v.begin(); }
-	std::vector<hit_object>::iterator end() { return m_hit_object_v.end(); }
-	std::vector<hit_object>::const_iterator cbegin() const { return m_hit_object_v.cbegin(); }
-	std::vector<hit_object>::const_iterator cend() const { return m_hit_object_v.cend(); }
-
-private:
-    std::vector<hit_object> m_hit_object_v;
 };
