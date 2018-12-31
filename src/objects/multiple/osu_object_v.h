@@ -10,6 +10,9 @@ template <class obj_type>
 class osu_object_v
 {
 public:
+
+	//// Explicit Loading
+
 	// Loads from a sptr vector
 	virtual void load_obj_sptr(std::vector<std::shared_ptr<osu_object>> obj_sptr_v) {
 		// Empty our current vector
@@ -19,18 +22,20 @@ public:
 			m_object_v.push_back(*std::dynamic_pointer_cast<obj_type>(obj));
 		}
 	}
-	virtual size_t size() const {
-		return m_object_v.size();
-	}
-
 	virtual void load_defaults(unsigned int amount) {
 		for (unsigned int x = 0; x < amount; x++) {
 			m_object_v.push_back(obj_type());
 		}
 	}
+	
+	//// Getters & Setters
+
+	virtual size_t size() const {
+		return m_object_v.size();
+	}
 
 	// Get the vector of strings compatible to .osu format
-	// This will fail if keys = 0
+	// hit_object_v this will fail if keys = 0
 	std::vector<std::string> get_string_raw_v() const {
 		std::vector<std::string> output = {};
 		std::transform(m_object_v.begin(), m_object_v.end(),
@@ -40,11 +45,12 @@ public:
 		return output;
 	}
 
+	// Gets the object vector
 	std::vector<obj_type> get_object_v() const {
 		return m_object_v;
 	}
-
-	void set_hit_object_v(std::vector<obj_type> object_v) {
+	// Sets the object vector
+	void set_object_v(std::vector<obj_type> object_v) {
 		m_object_v = object_v;
 	}
 
@@ -57,6 +63,7 @@ public:
 		return output;
 	}
 
+	// Appends to back of vector
 	void push_back(obj_type obj) {
 		m_object_v.push_back(obj);
 	}
@@ -93,6 +100,7 @@ public:
 	obj_type operator [](unsigned int i) const { return get_index(i); }
 	obj_type & operator [](unsigned int i) { return get_index(i); }
 
+	// Direct all iterator functions to the vector
 	typename std::vector<obj_type>::iterator begin() { return m_object_v.begin(); }
 	typename std::vector<obj_type>::iterator end() { return m_object_v.end(); }
 	typename std::vector<obj_type>::const_iterator cbegin() const { return m_object_v.cbegin(); }

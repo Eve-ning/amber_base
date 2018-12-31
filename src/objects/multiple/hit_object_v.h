@@ -37,12 +37,6 @@ public:
 	// Key count is required for conversion to columns
     void load_raw_hit_object(std::vector<std::string> str_v, unsigned int keys);
 
-	// Loads from a sptr vector
-	//hit_object_v& operator =(std::vector<std::shared_ptr<osu_object>> obj_sptr_v) {
-	//	load_obj_sptr(obj_sptr_v);
-	//	return *this;
-	//}
-
 	//// Exporting
 
 	// Get the vector of strings compatible to .osu format

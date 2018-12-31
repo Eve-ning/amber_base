@@ -30,9 +30,4 @@ public:
 
 	// Loads from data from the .osu file as a vector
 	void load_raw_timing_point(std::vector<std::string> str_v);
-
-	//timing_point_v& operator =(std::vector<std::shared_ptr<osu_object>> obj_sptr_v) {
-	//	load_obj_sptr(obj_sptr_v);
-	//	return *this;
-	//}
 };

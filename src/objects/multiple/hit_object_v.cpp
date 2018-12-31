@@ -49,3 +49,12 @@ void hit_object_v::load_raw_hit_object(std::vector<std::string> str_v, unsigned 
 		m_object_v.push_back(ho); // Append to our private hit_object vector
 	}
 }
+
+std::vector<std::string> hit_object_v::get_string_raw_v(int keys)
+{
+	std::vector<std::string> output = {};
+	std::transform(m_object_v.begin(), m_object_v.end(), std::back_inserter(output), [&](hit_object &ho) {
+		return ho.get_string_raw(keys);
+	});
+	return output;
+}
