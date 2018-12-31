@@ -75,7 +75,7 @@ bool timing_point::operator ==(const timing_point & tp) const {
 		);
 }
 
-std::string timing_point::get_raw_timing_point() const
+std::string timing_point::get_string_raw() const
 {
 	std::string output =
 		std::to_string(m_offset) + "," +

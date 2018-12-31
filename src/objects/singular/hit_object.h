@@ -66,11 +66,11 @@ public:
 
 	// Get the string compatible to .osu format
     // This will fail if keys = 0
-    std::string get_raw_hit_object() const;
+    virtual std::string get_string_raw() const;
 
 	// Get the string compatible to .osu format
     // This variant is to override and set the current keys if user failed the other variant
-    std::string get_raw_hit_object(int keys);
+	virtual std::string get_string_raw(int keys);
 
     //// Getter and Setters
 

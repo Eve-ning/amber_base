@@ -160,7 +160,7 @@ bool hit_object::operator ==(const hit_object & ho) const {
 		);
 }
 
-std::string hit_object::get_raw_hit_object() const
+std::string hit_object::get_string_raw() const
 {
 	std::string output =
 		std::to_string(convert_column_to_x_axis(m_column, m_keys)) + "," +
@@ -178,10 +178,10 @@ std::string hit_object::get_raw_hit_object() const
 	return output;
 }
 
-std::string hit_object::get_raw_hit_object(int keys)
+std::string hit_object::get_string_raw(int keys)
 {
 	m_keys = keys;
-	return get_raw_hit_object(); // Call no-arg function
+	return get_string_raw(); // Call no-arg function
 }
 
 unsigned int hit_object::get_column() const

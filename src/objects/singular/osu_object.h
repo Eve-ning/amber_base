@@ -32,6 +32,8 @@ public:
 		return m_offset == ho.m_offset;
 	}
 
+	virtual std::string get_string_raw() const = 0;
+
 protected: // only allow inherited classes use the constructor
 
     osu_object();

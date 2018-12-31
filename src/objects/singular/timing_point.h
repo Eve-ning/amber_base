@@ -49,7 +49,7 @@ public:
     //// Exporting
 
 	// Get the string compatible to .osu format
-    std::string get_raw_timing_point() const;
+	virtual std::string get_string_raw() const;
 
     //// Getters & Setters
 
