@@ -74,6 +74,9 @@ public:
     bool get_is_bpm() const;
     void set_is_bpm(bool is_bpm);
 
+	bool get_is_sv() const;
+	void set_is_sv(bool is_sv);
+
 	static double convert_code_to_value(double code, bool is_bpm);
 	static double convert_value_to_code(double value, bool is_bpm);
 

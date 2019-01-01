@@ -107,6 +107,9 @@ public:
     double get_ln_end() const;
     void set_ln_end(double ln_end);
 
+	bool get_is_note() const;
+	bool get_is_long_note() const;
+
 	static unsigned int convert_column_to_x_axis(unsigned int column, unsigned int keys);
 	static unsigned int convert_x_axis_to_column(unsigned int x_axis, unsigned int keys);
 

@@ -161,6 +161,14 @@ void timing_point::set_is_bpm(bool is_bpm)
     m_is_bpm = is_bpm;
 }
 
+bool timing_point::get_is_sv() const {
+	return !get_is_bpm();
+}
+
+void timing_point::set_is_sv(bool is_sv) {
+	set_is_bpm(!is_sv);
+}
+
 double timing_point::convert_code_to_value(double code, bool is_bpm) {
 	if (is_bpm) {
 		return 60000 / code;

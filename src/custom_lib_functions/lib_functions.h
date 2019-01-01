@@ -34,34 +34,90 @@ namespace lib_functions
 	AMBER_BASE std::vector<unsigned int> get_column_v(const hit_object_v &ho_v);
 
 	// Gets notes only in a vector form
-	AMBER_BASE hit_object_v get_notes_only(const hit_object_v &ho_v);
+	AMBER_BASE hit_object_v get_notes_only(const hit_object_v &ho_v) {
+		hit_object_v output = hit_object_v();
+		for (const auto &ho : ho_v) {
+			if (ho.get_is_note()) {
+				output.push_back(ho);
+			}
+		}
+	}
 	// Gets long notes only in a vector form
-	AMBER_BASE hit_object_v get_long_notes_only(const hit_object_v &ho_v);
+	AMBER_BASE hit_object_v get_long_notes_only(const hit_object_v &ho_v) {
+		hit_object_v output = hit_object_v();
+		for (const auto &ho : ho_v) {
+			if (ho.get_is_long_note()) {
+				output.push_back(ho);
+			}
+		}
+	}
 	// Gets sv only in a vector form
-	AMBER_BASE timing_point_v get_sv_only(const timing_point_v &tp_v);
+	AMBER_BASE timing_point_v get_sv_only(const timing_point_v &tp_v) {
+		timing_point_v output = timing_point_v();
+		for (const auto &tp : tp_v) {
+			if (tp.get_is_sv()) {
+				output.push_back(tp);
+			}
+		}
+	}
 	// Gets bpm only in a vector form
-	AMBER_BASE timing_point_v get_bpm_only(const timing_point_v &tp_v);
+	AMBER_BASE timing_point_v get_bpm_only(const timing_point_v &tp_v) {
+		timing_point_v output = timing_point_v();
+		for (const auto &tp : tp_v) {
+			if (tp.get_is_bpm()) {
+				output.push_back(tp);
+			}
+		}
+	}
 
-	// Gets the difference in all offsets in a vector form
+	// Gets the difference in all offset difference in a vector form
+	// Note that notes on the same offset will be regarded as 1 offset
 	// This will return a vector that has a -1 size
-	AMBER_BASE std::vector<double> get_offset_difference(const hit_object_v &ho_v);
+	AMBER_BASE std::vector<double> get_offset_difference(std::vector<std::shared_ptr<osu_object>> obj_v) {
+		sort_by_offset(obj_v, true);
+		double offset_buffer = obj_v.front()->get_offset();
+		std::vector<double> output = { };
+		
+		for (const std::shared_ptr<osu_object> &obj : obj_v) {
+			// If the offset is different, then we push the difference back to the output
+			// We also set the offset_buffer as the new offset
+			if (obj->get_offset() != offset_buffer) {
+				output.push_back(obj->get_offset() - offset_buffer);
+				offset_buffer = obj->get_offset();
+			}
+		}
+		return output;
+	}
 
 	// Adjusts the offset of all objects in the vector
 	AMBER_BASE std::vector<std::shared_ptr<osu_object>> adjust_offset(
-		const std::vector<std::shared_ptr<osu_object>> &obj, double adjust_by);
+		std::vector<std::shared_ptr<osu_object>> obj_v, double adjust_by) {
+		for (std::shared_ptr<osu_object> &obj : obj_v) {
+			obj->set_offset(obj->get_offset() + adjust_by);
+		}
+		return obj_v;
+	}
 
 	// Copies object to specified vector offsets
 	AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies(
-		const std::shared_ptr<osu_object> &obj, std::vector<double> copy_to);
+		const std::shared_ptr<osu_object> &obj, std::vector<double> copy_to_v) {
+		std::vector<std::shared_ptr<osu_object>> output = {};
+		for (double copy_to : copy_to_v) {
+
+		}
+
+	}
 	// Copies objects to specified vector offsets
+	// anchor_front defines if the start/end of the vector should be on the specified copy_to offset
 	AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies(
-		const std::vector<std::shared_ptr<osu_object>> &obj, std::vector<double> copy_to);
+		const std::vector<std::shared_ptr<osu_object>> &obj_v, std::vector<double> copy_to_v, bool anchor_front = true);
 	// Copies object to specified vector offset
 	AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies(
 		const std::shared_ptr<osu_object> &obj, double copy_to);
 	// Copies objects to specified vector offset
+	// anchor_front defines if the start/end of the vector should be on the specified copy_to offset
 	AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies(
-		const std::vector<std::shared_ptr<osu_object>> &obj, double copy_to);
+		const std::vector<std::shared_ptr<osu_object>> &obj_v, double copy_to, bool anchor_front = true);
 
 	// Divides the space in between each obj pair in obj_v then creates objects that segment it
 	// The object created will be defined by the user

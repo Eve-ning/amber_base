@@ -284,6 +284,14 @@ void hit_object::set_ln_end(double ln_end)
     m_ln_end = ln_end;
 }
 
+bool hit_object::get_is_note() const {
+	return (m_ln_end == 0);
+}
+
+bool hit_object::get_is_long_note() const {
+	return !get_is_note();
+}
+
 unsigned int hit_object::convert_column_to_x_axis(unsigned int column, unsigned int keys) {
 	return static_cast<unsigned int>(round(((512 * column) + 256) / keys));
 }

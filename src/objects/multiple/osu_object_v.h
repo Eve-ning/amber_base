@@ -103,8 +103,11 @@ public:
 	// Direct all iterator functions to the vector
 	typename std::vector<obj_type>::iterator begin() { return m_object_v.begin(); }
 	typename std::vector<obj_type>::iterator end() { return m_object_v.end(); }
-	typename std::vector<obj_type>::const_iterator cbegin() const { return m_object_v.cbegin(); }
-	typename std::vector<obj_type>::const_iterator cend() const { return m_object_v.cend(); }
+	typename std::vector<obj_type>::const_iterator begin() const { return m_object_v.cbegin(); }
+	typename std::vector<obj_type>::const_iterator end() const { return m_object_v.cend(); }
+
+	obj_type front() const { return m_object_v.front(); }
+	obj_type back() const { return m_object_v.back(); }
 
 protected:
 	std::vector<obj_type> m_object_v;
