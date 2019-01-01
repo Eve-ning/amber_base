@@ -39,7 +39,7 @@ std::vector<double> lib_functions::get_offset_v(const std::vector<std::shared_pt
 	return offset_v;
 }
 
-std::vector<unsigned int> lib_functions::get_column_v(const std::vector<hit_object>& ho_v) {
+std::vector<unsigned int> lib_functions::get_column_v(const hit_object_v& ho_v) {
 	std::vector<unsigned int> column_v = {};
 	std::transform(ho_v.cbegin(), ho_v.cend(), std::back_inserter(column_v), [](const hit_object &ho) {
 		return ho.get_column();
