@@ -14,7 +14,7 @@ std::shared_ptr<osu_object> lib_functions::last_object_by_offset(const std::vect
 	});
 }
 
-void lib_functions::sort_by_offset(std::vector<std::shared_ptr<const osu_object>>& obj_v, bool ascending) {
+void lib_functions::sort_by_offset(std::vector<std::shared_ptr<osu_object>>& obj_v, bool ascending) {
 	std::sort(obj_v.begin(), obj_v.end(), [=](const std::shared_ptr<const osu_object>& obj1,
 										      const std::shared_ptr<const osu_object>& obj2) {
 		return (ascending ? // Ternary expression on ascending
@@ -32,7 +32,7 @@ double lib_functions::get_offset_max(const std::vector<std::shared_ptr<osu_objec
 }
 
 // Gets offset in a vector form
-std::vector<double> lib_functions::get_offset_v(const std::vector<std::shared_ptr<const osu_object>>& obj_v) {
+std::vector<double> lib_functions::get_offset_v(const std::vector<std::shared_ptr<osu_object>>& obj_v) {
 	std::vector<double> offset_v = {};
 	std::transform(obj_v.cbegin(), obj_v.cend(), std::back_inserter(offset_v), [](const std::shared_ptr<const osu_object> &obj) {
 		return obj->get_offset();
@@ -92,6 +92,27 @@ timing_point_v lib_functions::get_bpm_only(const timing_point_v & tp_v) {
 	return output;
 }
 
+
+
+// Gets the difference in all offset difference in a vector form
+// Note that notes on the same offset will be regarded as 1 offset
+// This will return a vector that has a -1 size
+std::vector<double> lib_functions::get_offset_difference(std::vector<std::shared_ptr<osu_object>> obj_v) {
+
+	sort_by_offset(obj_v, true);
+	double offset_buffer = obj_v.front()->get_offset();
+	std::vector<double> output = {};
+
+	for (const std::shared_ptr<osu_object> &obj : obj_v) {
+		// If the offset is different, then we push the difference back to the output
+		// We also set the offset_buffer as the new offset
+		if (obj->get_offset() != offset_buffer) {
+			output.push_back(obj->get_offset() - offset_buffer);
+			offset_buffer = obj->get_offset();
+		}
+	}
+	return output;
+}
 
 // Adjusts the offset of all objects in the vector BY a value
 // Adjusts the offset of all objects in the vector BY a value
