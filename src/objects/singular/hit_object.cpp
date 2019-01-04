@@ -320,10 +320,10 @@ std::string hit_object::trim_editor_hit_object(std::string str)
 
 // Clones the object
 
-inline std::shared_ptr<osu_object> hit_object::clone() const {
+std::shared_ptr<osu_object> hit_object::clone() const {
 	hit_object ho;
 	ho = *this;
-	return std::make_shared<osu_object>(ho);
+	return std::make_shared<hit_object>(ho);
 }
 
 osu_object::sample_set hit_object::get_hitsound_set() const

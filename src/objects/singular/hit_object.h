@@ -117,7 +117,7 @@ public:
 	static std::string trim_editor_hit_object(std::string str);
 
 	// Clones the object
-	std::shared_ptr<osu_object> clone() const;
+	virtual std::shared_ptr<osu_object> clone() const;
 
 private:
 

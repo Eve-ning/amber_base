@@ -6,10 +6,29 @@
 #include <vector>
 #include <algorithm>
 
-template <class obj_type>
+template <class obj_type=hit_object>
 class osu_object_v
 {
 public:
+
+	// Clones the vector of shared_ptrs
+	// Any template argument will work in order to access this static function
+	static std::vector<std::shared_ptr<osu_object>> clone_obj_sptr_v(
+		const std::vector<std::shared_ptr<const osu_object>> obj_sptr_v) {
+		std::vector<std::shared_ptr<osu_object>> obj_sptr_v_copy;
+
+		// This makes a copy of the obj_sptr_v by dereferencing every element and creating
+		// a new instance of the shared_ptr
+		// This is pushed back to the obj_sptr_v_copy
+		std::transform(obj_sptr_v.begin(), obj_sptr_v.begin(), std::back_inserter(obj_sptr_v_copy),
+			[](const std::shared_ptr<const osu_object> &obj) -> std::shared_ptr<osu_object> {
+			return obj->clone();
+		}
+		);
+
+		return obj_sptr_v_copy;
+	}
+
 
 	//// Explicit Loading
 
@@ -57,8 +76,8 @@ public:
 	// Returns shared_ptr of the object_v
 	std::vector<std::shared_ptr<osu_object>> get_obj_sptr_v() const {
 		std::vector<std::shared_ptr<osu_object>> output;
-		std::transform(m_object_v.begin(), m_object_v.end(), std::back_inserter(output), [&](const obj_type &tp) {
-			return std::make_shared<obj_type>(tp);
+		std::transform(m_object_v.begin(), m_object_v.end(), std::back_inserter(output), [&](const obj_type &obj) {
+			return std::make_shared<obj_type>(obj);
 		});
 		return output;
 	}

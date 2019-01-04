@@ -81,7 +81,7 @@ public:
 	static double convert_value_to_code(double value, bool is_bpm);
 
 	// Clones the object
-	std::shared_ptr<osu_object> clone() const;
+	virtual std::shared_ptr<osu_object> clone() const;
 
 private:
 
