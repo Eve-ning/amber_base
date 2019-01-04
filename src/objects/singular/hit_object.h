@@ -116,6 +116,9 @@ public:
 	// Removes the brackets on the editor hitobject
 	static std::string trim_editor_hit_object(std::string str);
 
+	// Clones the object
+	std::shared_ptr<osu_object> clone() const;
+
 private:
 
     unsigned int m_column; // Starts from 0

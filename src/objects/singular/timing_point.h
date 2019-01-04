@@ -80,6 +80,9 @@ public:
 	static double convert_code_to_value(double code, bool is_bpm);
 	static double convert_value_to_code(double value, bool is_bpm);
 
+	// Clones the object
+	std::shared_ptr<osu_object> clone() const;
+
 private:
 
     double m_value; // Usually it's a positive value for the SV/BPM variant

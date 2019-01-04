@@ -186,3 +186,11 @@ double timing_point::convert_value_to_code(double value, bool is_bpm) {
 		return -100 / value;
 	}
 }
+
+// Clones the object
+
+inline std::shared_ptr<osu_object> timing_point::clone() const {
+	timing_point tp;
+	tp = *this;
+	return std::make_shared<osu_object>(tp);
+}

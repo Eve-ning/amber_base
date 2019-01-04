@@ -17,6 +17,8 @@ public:
 	double get_offset() const;
     void set_offset(double value);
 
+	std::shared_ptr<osu_object> clone() const = 0;
+
     enum class sample_set
     {
         AUTO,
