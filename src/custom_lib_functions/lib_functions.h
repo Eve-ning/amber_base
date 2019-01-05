@@ -60,48 +60,83 @@ namespace lib_functions
 
 	// Copies object to specified vector offsets
 	AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies(
-		const std::shared_ptr<const osu_object> &obj, std::vector<double> copy_to_v);
+		const std::shared_ptr<osu_object> &obj, std::vector<double> copy_to_v);
 
 	// Copies objects to specified vector offsets
 	// anchor_front defines if the start/end of the vector should be on the specified copy_to offset
 	AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies(
-		const std::vector<std::shared_ptr<const osu_object>> &obj_v, std::vector<double> copy_to_v, bool anchor_front = true);
+		const std::vector<std::shared_ptr<osu_object>> &obj_v, std::vector<double> copy_to_v, bool anchor_front = true);
 
-	//// Divides the space in between each obj pair in obj_v then creates objects that segment it
-	//// The object created will be defined by the user
-	//// include_with defines if the created objects exports alongside the original
-	//AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies_by_subdivision(
-	//	const std::vector<std::shared_ptr<const osu_object>> &obj_v,
-	//	const std::shared_ptr<const osu_object> obj_define,
-	//	unsigned int subdivisions, bool include_with = false);
+	// Divides the space in between each offset pair in offset_v then creates objects that segment it
+	// The object created will be defined by the user
+	// include_with defines if the created objects exports alongside the original
+	AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies_by_subdivision(
+		std::vector<double> offset_v,
+		const std::shared_ptr<osu_object> obj_define,
+		unsigned int subdivisions, bool include_with = true) {
 
-	//// Divides the space in between each obj pair in obj_v then creates objects that segment it
-	//// The object created will be automatically determined by copy_before
-	//// copy_prev defines if the object created copies the previous or next object
-	//// include_with defines if the created objects exports alongside the original
-	//AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies_by_subdivision(
-	//	const std::vector<std::shared_ptr<osu_object>> &obj_v,
-	//	unsigned int subdivisions, bool copy_prev = true, bool include_with = false);
+		// Remove any duplicates
+		std::sort(offset_v.begin(), offset_v.end());
+		auto last = std::unique(offset_v.begin(), offset_v.end());
+		offset_v.erase(last, offset_v.end());
 
-	//// Creates a object in between each obj pair in obj_v, placement is determined by relativity
-	//// If relativity is 0.25, the obj will be created 25% in between obj pairs, closer to the first
-	//// The object created will be defined by the user
-	//// include_with defines if the created objects exports alongside the original
-	//AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies_by_relative_difference(
-	//	const std::vector<std::shared_ptr<osu_object>> &obj_v,
-	//	const std::shared_ptr<osu_object> obj_define,
-	//	double relativity = 0.5, bool include_with = false);
+		// If we don't want to include the initial offsets with it, we will do a blank vector
+		// We create another vector of offset
+		std::vector<double> offset_v_new = include_with ? offset_v : std::vector<double>();
 
-	//// Creates a object in between each obj pair in obj_v, placement is determined by relativity
-	//// If relativity is 0.25, the obj will be created 25% in between obj pairs, closer to the first
-	//// copy_prev defines if the object created copies the previous or next object
-	//// include_with defines if the created objects exports alongside the original
-	//AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies_by_relative_difference(
-	//	const std::vector<std::shared_ptr<osu_object>> &obj_v,
-	//	double relativity = 0.5, bool copy_prev = true, bool include_with = false);
+		// We extract the offsets on the subdivisions
+		for (auto start = offset_v.begin(); start + 1 != offset_v.end(); start++) {
+			
+			// Eg. For 3 Subdivisions
+			//     0   1   2   3   E
+			//     O   |   |   |   O
+			//     <--->
+			//       ^ slice_distance
+			double slice_distance = ((*start + 1) - (*start)) / subdivisions;
 
-	//// Automatically creates svs to counteract bpm line scroll speed manipulation
-	//// include_with defines if the created svs exports alongside the original
-	//AMBER_BASE timing_point_v create_bpm_normalize(const timing_point_v &tp_v, const double &reference, bool include_with = false);
+			// We start on 1 and end on <= due to multiplication of slice
+			for (int slice = 1; slice <= subdivisions; slice++) {
+				offset_v_new.push_back(*start + slice_distance * slice);
+			}
+		}
+
+		// Create copies of the obj defined on the new offset list
+		return create_copies(obj_define, offset_v_new);
+	}
+
+	// Creates a object in between each obj pair in obj_v, placement is determined by relativity
+	// If relativity is 0.25, the obj will be created 25% in between obj pairs, closer to the first
+	// The object created will be defined by the user
+	// include_with defines if the created objects exports alongside the original
+	AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies_by_relative_difference(
+		const std::vector<std::shared_ptr<osu_object>> &obj_v,
+		const std::shared_ptr<osu_object> obj_define,
+		double relativity = 0.5, bool include_with = false) {
+
+	}
+
+
+	// Divides the space in between each obj pair in obj_v then creates objects that segment it
+	// The object created will be automatically determined by copy_before
+	// copy_prev defines if the object created copies the previous or next object
+	// include_with defines if the created objects exports alongside the original
+	AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies_by_subdivision(
+		const std::vector<std::shared_ptr<osu_object>> &obj_v,
+		unsigned int subdivisions, bool copy_prev = true, bool include_with = false) {
+
+	}
+
+
+	// Creates a object in between each obj pair in obj_v, placement is determined by relativity
+	// If relativity is 0.25, the obj will be created 25% in between obj pairs, closer to the first
+	// copy_prev defines if the object created copies the previous or next object
+	// include_with defines if the created objects exports alongside the original
+	AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies_by_relative_difference(
+		const std::vector<std::shared_ptr<osu_object>> &obj_v,
+		double relativity = 0.5, bool copy_prev = true, bool include_with = false);
+
+	// Automatically creates svs to counteract bpm line scroll speed manipulation
+	// include_with defines if the created svs exports alongside the original
+	AMBER_BASE timing_point_v create_bpm_normalize(const timing_point_v &tp_v, const double &reference, bool include_with = false);
 };
 

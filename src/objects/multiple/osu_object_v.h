@@ -14,7 +14,7 @@ public:
 	// Clones the vector of shared_ptrs
 	// Any template argument will work in order to access this static function
 	static std::vector<std::shared_ptr<osu_object>> clone_obj_sptr_v(
-		const std::vector<std::shared_ptr<const osu_object>> obj_sptr_v) {
+		const std::vector<std::shared_ptr<osu_object>> obj_sptr_v) {
 		std::vector<std::shared_ptr<osu_object>> obj_sptr_v_copy;
 
 		// This makes a copy of the obj_sptr_v by dereferencing every element and creating

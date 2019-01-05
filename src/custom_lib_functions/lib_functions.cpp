@@ -137,7 +137,7 @@ void lib_functions::adjust_offset_to(const std::vector<std::shared_ptr<osu_objec
 }
 
 // Copies object to specified vector offsets
-std::vector<std::shared_ptr<osu_object>> lib_functions::create_copies(const std::shared_ptr<const osu_object>& obj, std::vector<double> copy_to_v) {
+std::vector<std::shared_ptr<osu_object>> lib_functions::create_copies(const std::shared_ptr<osu_object>& obj, std::vector<double> copy_to_v) {
 
 	std::vector<std::shared_ptr<osu_object>> output = {};
 	// For each offset to copy to
@@ -151,7 +151,7 @@ std::vector<std::shared_ptr<osu_object>> lib_functions::create_copies(const std:
 
 // Copies objects to specified vector offsets
 // anchor_front defines if the start/end of the vector should be on the specified copy_to offset
-std::vector<std::shared_ptr<osu_object>> lib_functions::create_copies(const std::vector<std::shared_ptr<const osu_object>>& obj_v, std::vector<double> copy_to_v, bool anchor_front) {
+std::vector<std::shared_ptr<osu_object>> lib_functions::create_copies(const std::vector<std::shared_ptr<osu_object>>& obj_v, std::vector<double> copy_to_v, bool anchor_front) {
 
 	std::vector<std::shared_ptr<osu_object>> output = {};
 	std::vector<std::shared_ptr<osu_object>> obj_v_copy = osu_object_v<>::clone_obj_sptr_v(obj_v);
