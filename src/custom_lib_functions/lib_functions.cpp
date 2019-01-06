@@ -94,26 +94,6 @@ timing_point_v lib_functions::get_bpm_only(const timing_point_v & tp_v) {
 
 
 
-// Gets the difference in all offset difference in a vector form
-// Note that notes on the same offset will be regarded as 1 offset
-// This will return a vector that has a -1 size
-std::vector<double> lib_functions::get_offset_difference(std::vector<std::shared_ptr<osu_object>> obj_v) {
-
-	sort_by_offset(obj_v, true);
-	double offset_buffer = obj_v.front()->get_offset();
-	std::vector<double> output = {};
-
-	for (const std::shared_ptr<osu_object> &obj : obj_v) {
-		// If the offset is different, then we push the difference back to the output
-		// We also set the offset_buffer as the new offset
-		if (obj->get_offset() != offset_buffer) {
-			output.push_back(obj->get_offset() - offset_buffer);
-			offset_buffer = obj->get_offset();
-		}
-	}
-	return output;
-}
-
 // Adjusts the offset of all objects in the vector BY a value
 // Adjusts the offset of all objects in the vector BY a value
 void lib_functions::adjust_offset_by(const std::vector<std::shared_ptr<osu_object>> obj_v, double adjust_by) {
