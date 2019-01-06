@@ -12,98 +12,88 @@
 	#define AMBER_BASE __declspec(dllimport)
 #endif
 
+/*	REPRESENTING A VECTOR OF OSU_OBJECTs
+
+	There are 2 ways to represent hit_object_v AND timing_point_v in a type
+	
+	1) std::shared_ptr<osu_object_v<T = hit_object/timing_point>> (Recommended)
+		+ You get to use functions implemented in osu_object_v<T> class
+		- Polymorphism may be a bit messy and confusing
+		- Longer type name
+
+	2) std::vector<T = hit_object/timing_point> 
+		+ Shorter type name
+		+ Simpler to use
+		- No custom defined functions to use
+
+	3) T = hit_object_v/timing_point_v
+		+ Simple
+		- Risky as T can be hit_object or timing_point too
+		- Unclear on input
+
+	For this library I've chosen the former so that I can utilize osu_object_v<T>'s own functions
+	We are also able to shorten most library code and shift common and important implementations
+		to the class itself
+*/
+
 namespace lib_functions 
 {
-	// Grabs the first osu_object, sorted by offset
-	// It will not modify the vector
-	template <typename T>
-	AMBER_BASE std::shared_ptr<osu_object> first_object_by_offset(const std::shared_ptr<osu_object_v<T>>& obj_v) {
-		return *std::min_element(obj_v->begin(), obj_v->end(),
-			[](const std::shared_ptr<const osu_object>& obj1, const std::shared_ptr<const osu_object>& obj2) {
-			return obj1->get_offset() < obj2->get_offset();
-		});
-	}
-
-	// Grabs the last osu_object, sorted by offset
-	// It will not modify the vector
-	template <typename T>
-	AMBER_BASE std::shared_ptr<osu_object> last_object_by_offset(const std::shared_ptr<osu_object_v<T>>& obj_v) {
-		return *std::max_element(obj_v.cbegin(), obj_v.cend(), [&](const std::shared_ptr<osu_object>& obj1,
-			const std::shared_ptr<osu_object>& obj2) {
-			return obj1->get_offset() < obj2->get_offset();
-		});
-	}
-
-	AMBER_BASE void sort_by_offset(std::vector<std::shared_ptr<osu_object>>& obj_v, bool ascending = true);
-
-	AMBER_BASE double get_offset_min(const std::vector<std::shared_ptr<osu_object>>& obj_v);
-	AMBER_BASE double get_offset_max(const std::vector<std::shared_ptr<osu_object>>& obj_v);
-
-	// Gets offset in a vector form
-	AMBER_BASE std::vector<double> get_offset_v(const std::vector<std::shared_ptr<osu_object>> &obj_v);
-
-	// Gets column in a vector form
-	AMBER_BASE std::vector<unsigned int> get_column_v(const hit_object_v &ho_v);
-
-	// Gets notes only in a vector form
-	AMBER_BASE hit_object_v get_notes_only(const hit_object_v &ho_v);
-	// Gets long notes only in a vector form
-	AMBER_BASE hit_object_v get_long_notes_only(const hit_object_v &ho_v);
-	// Gets sv only in a vector form
-	AMBER_BASE timing_point_v get_sv_only(const timing_point_v &tp_v);
-	// Gets bpm only in a vector form
-	AMBER_BASE timing_point_v get_bpm_only(const timing_point_v &tp_v);
-
-	// Gets the difference in all offset difference in a vector form
-	// Note that notes on the same offset will be regarded as 1 offset
-	// This will return a vector that has a -1 size
 	// Gets the difference in all offset difference in a vector form
 	// Note that notes on the same offset will be regarded as 1 offset
 	// This will return a vector that has a -1 size
 	template <typename T>
 	AMBER_BASE std::vector<double> get_offset_difference(std::shared_ptr<osu_object_v<T>> obj_v) {
 
-		sort_by_offset(obj_v, true);
-		double offset_buffer = obj_v.front()->get_offset();
+		obj_v->sort_by_offset(true);
+		double offset_buffer = obj_v->get_index(0).get_offset();
 		std::vector<double> output = {};
 
-		for (const std::shared_ptr<osu_object> &obj : obj_v) {
+		for (const T &obj : *obj_v) {
 			// If the offset is different, then we push the difference back to the output
 			// We also set the offset_buffer as the new offset
-			if (obj->get_offset() != offset_buffer) {
-				output.push_back(obj->get_offset() - offset_buffer);
-				offset_buffer = obj->get_offset();
+			if (obj.get_offset() != offset_buffer) {
+				output.push_back(obj.get_offset() - offset_buffer);
+				offset_buffer = obj.get_offset();
 			}
 		}
 		return output;
 	}
 
-	// Adjusts the offset of all objects in the vector BY a value
-	// Adjusts the offset of all objects in the vector BY a value
-	AMBER_BASE void adjust_offset_by(const std::vector<std::shared_ptr<osu_object>> obj_v, double adjust_by);
-
-	// Adjust the vector offsets such that the front/back of the vector is on zero
-	AMBER_BASE void adjust_offset_to_zero(const std::vector<std::shared_ptr<osu_object>> obj_v, bool anchor_front = true);
-
-	// Adjusts the offset of all objects in the vector TO a value
-	// Adjusts the offset of all objects in the vector TO a value
-	AMBER_BASE void adjust_offset_to(const std::vector<std::shared_ptr<osu_object>> obj_v, double adjust_to, bool anchor_front = true);
-
 	// Copies object to specified vector offsets
-	AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies(
-		const std::shared_ptr<osu_object> &obj, std::vector<double> copy_to_v);
+	template <typename T>
+	AMBER_BASE osu_object_v<T> create_copies(T obj, std::vector<double> copy_to_v) {
+
+		osu_object_v<T> output = {};
+		// For each offset to copy to
+		for (double copy_to : copy_to_v) {
+			obj.set_offset(copy_to);
+			output.push_back(obj);
+		}
+		return output;
+	}
 
 	// Copies objects to specified vector offsets
 	// anchor_front defines if the start/end of the vector should be on the specified copy_to offset
-	AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies(
-		const std::vector<std::shared_ptr<osu_object>> &obj_v, std::vector<double> copy_to_v, bool anchor_front = true);
+	template <typename T>
+	AMBER_BASE osu_object_v<T> create_copies(
+		osu_object_v<T> obj_v, std::vector<double> copy_to_v, bool anchor_front = true) {
+
+		osu_object_v<T> output = {};
+
+		// For each offset to copy to
+		for (double copy_to : copy_to_v) {
+			obj_v.adjust_offset_to(copy_to, anchor_front);
+			output.push_back(obj_v);
+		}
+		return output;
+	}
 
 	// Divides the space in between each offset pair in offset_v then creates objects that segment it
 	// The object created will be defined by the user
 	// include_with defines if the created objects exports alongside the original
-	AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies_by_subdivision(
-		std::vector<double> offset_v,
-		const std::shared_ptr<osu_object> obj_define,
+	template <typename T>
+	AMBER_BASE osu_object_v<T> create_copies_by_subdivision(
+		std::vector<double> offset_v, const T& obj_define,
 		unsigned int subdivisions, bool include_with = true) {
 
 		// Remove any duplicates
@@ -139,8 +129,9 @@ namespace lib_functions
 	// If relativity is 0.25, the obj will be created 25% in between obj pairs, closer to the first
 	// The object created will be defined by the user
 	// include_with defines if the created objects exports alongside the original
-	AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies_by_relative_difference(
-		const std::vector<std::shared_ptr<osu_object>> &obj_v,
+	template <typename T>
+	AMBER_BASE std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
+		const std::shared_ptr<osu_object_v<T>> &obj_v,
 		const std::shared_ptr<osu_object> obj_define,
 		double relativity = 0.5, bool include_with = false) {
 
@@ -151,8 +142,9 @@ namespace lib_functions
 	// The object created will be automatically determined by copy_before
 	// copy_prev defines if the object created copies the previous or next object
 	// include_with defines if the created objects exports alongside the original
-	AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies_by_subdivision(
-		const std::vector<std::shared_ptr<osu_object>> &obj_v,
+	template <typename T>
+	AMBER_BASE std::shared_ptr<osu_object_v<T>> create_copies_by_subdivision(
+		const std::shared_ptr<osu_object_v<T>> &obj_v,
 		unsigned int subdivisions, bool copy_prev = true, bool include_with = false) {
 
 	}
@@ -162,8 +154,9 @@ namespace lib_functions
 	// If relativity is 0.25, the obj will be created 25% in between obj pairs, closer to the first
 	// copy_prev defines if the object created copies the previous or next object
 	// include_with defines if the created objects exports alongside the original
-	AMBER_BASE std::vector<std::shared_ptr<osu_object>> create_copies_by_relative_difference(
-		const std::vector<std::shared_ptr<osu_object>> &obj_v,
+	template <typename T>
+	AMBER_BASE std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
+		const std::shared_ptr<osu_object_v<T>> &obj_v,
 		double relativity = 0.5, bool copy_prev = true, bool include_with = false);
 
 	// Automatically creates svs to counteract bpm line scroll speed manipulation

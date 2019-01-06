@@ -82,8 +82,14 @@ public:
 	}
 
 	// Appends to back of vector
-	void push_back(obj_type obj) {
+	void push_back(const obj_type& obj) {
 		m_object_v.push_back(obj);
+	}
+	// Appends vector to back of vector
+	void push_back(osu_object_v obj_v) {
+		for (const obj_type& obj : obj_v) {
+			push_back(obj);
+		}
 	}
 
 	osu_object_v& operator =(std::vector<std::shared_ptr<osu_object>> obj_sptr_v) {
