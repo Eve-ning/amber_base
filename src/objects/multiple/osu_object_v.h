@@ -6,7 +6,7 @@
 #include <vector>
 #include <algorithm>
 
-template <class obj_type=hit_object>
+template <class obj_type>
 class osu_object_v
 {
 public:
@@ -28,7 +28,6 @@ public:
 
 		return obj_sptr_v_copy;
 	}
-
 
 	//// Explicit Loading
 
@@ -109,6 +108,8 @@ public:
 		return flag;
 	}
 
+	std::vector<double> get_offset_v() const;
+
 	obj_type get_index(unsigned index) const {
 		return m_object_v[index];
 	}
@@ -132,3 +133,11 @@ protected:
 	std::vector<obj_type> m_object_v;
 };
 
+template<class obj_type>
+inline std::vector<double> osu_object_v<obj_type>::get_offset_v() const {
+	std::vector<double> offset_v = {};
+	std::transform(m_object_v.begin(), m_object_v.end(), std::back_inserter(offset_v), [](const obj_type &obj) {
+		return obj.get_offset();
+	});
+	return offset_v;
+}
