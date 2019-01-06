@@ -58,3 +58,37 @@ std::vector<std::string> hit_object_v::get_string_raw_v(int keys)
 	});
 	return output;
 }
+
+// Gets column in a vector form
+
+Std::vector<unsigned int> hit_object_v::get_column_v() const {
+	std::vector<unsigned int> column_v = {};
+	std::transform(begin(), end(), std::back_inserter(column_v), [](const hit_object &ho) {
+		return ho.get_column();
+	});
+	return column_v;
+}
+
+// Gets notes only in a vector form
+
+hit_object_v hit_object_v::get_notes_only() const {
+	hit_object_v output = hit_object_v();
+	for (const auto &ho : m_object_v) {
+		if (ho.get_is_note()) {
+			output.push_back(ho);
+		}
+	}
+	return output;
+}
+
+// Gets long notes only in a vector form
+
+hit_object_v hit_object_v::get_long_notes_only() const {
+	hit_object_v output = hit_object_v();
+	for (const auto &ho : m_object_v) {
+		if (ho.get_is_long_note()) {
+			output.push_back(ho);
+		}
+	}
+	return output;
+}

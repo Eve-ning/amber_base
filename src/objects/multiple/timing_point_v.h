@@ -30,4 +30,10 @@ public:
 
 	// Loads from data from the .osu file as a vector
 	void load_raw_timing_point(std::vector<std::string> str_v);
+
+	// Gets sv only in a vector form
+	timing_point_v get_sv_only() const;
+
+	// Gets bpm only in a vector form
+	timing_point_v get_bpm_only() const;
 };

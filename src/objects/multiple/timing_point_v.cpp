@@ -26,3 +26,27 @@ void timing_point_v::load_raw_timing_point(std::vector<std::string> str_v)
 	}
 }
 
+// Gets sv only in a vector form
+
+timing_point_v timing_point_v::get_sv_only() const {
+	timing_point_v output = timing_point_v();
+	for (const auto &tp : m_object_v) {
+		if (tp.get_is_sv()) {
+			output.push_back(tp);
+		}
+	}
+	return output;
+}
+
+// Gets bpm only in a vector form
+
+timing_point_v timing_point_v::get_bpm_only() const {
+	timing_point_v output = timing_point_v();
+	for (const auto &tp : m_object_v) {
+		if (tp.get_is_bpm()) {
+			output.push_back(tp);
+		}
+	}
+	return output;
+}
+

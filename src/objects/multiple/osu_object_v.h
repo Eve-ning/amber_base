@@ -108,7 +108,13 @@ public:
 		return flag;
 	}
 
-	std::vector<double> get_offset_v() const;
+	std::vector<double> get_offset_v() const {
+		std::vector<double> offset_v = {};
+		std::transform(begin(), end(), std::back_inserter(offset_v), [](const obj_type &obj) {
+			return obj.get_offset();
+		});
+		return offset_v;
+	}
 
 	obj_type get_index(unsigned index) const {
 		return m_object_v[index];
@@ -129,15 +135,61 @@ public:
 	obj_type front() const { return m_object_v.front(); }
 	obj_type back() const { return m_object_v.back(); }
 
+	void sort_by_offset(bool ascending = true) {
+		std::sort(begin(), end(), [=](obj_type& obj1, obj_type& obj2) {
+			return (ascending ? // Ternary expression on ascending
+				(obj1.get_offset() < obj2.get_offset()) : // If ascending is true
+				(obj1.get_offset() > obj2.get_offset())); // If ascending is false
+		});
+	}
+
+	// Adjusts the offset of all objects in the vector BY a value
+	void adjust_offset_by(double adjust_by) {
+		for (obj_type &obj : m_object_v) {
+			obj.set_offset(obj.get_offset() + adjust_by);
+		}
+	}
+	
+	// Adjust the vector offsets such that the front/back of the vector is on zero
+	void adjust_offset_to_zero(bool anchor_front = true) {
+		anchor_front ?
+			adjust_offset_by(-get_offset_min()) : // Minus off the lowest offset
+			adjust_offset_by(-get_offset_max());  // Minus off the largest offset
+	}
+
+	// Adjusts the offset of all objects in the vector TO a value
+	void adjust_offset_to(double adjust_to, bool anchor_front = true) {
+		adjust_offset_to_zero(); // Zero then move by the value
+		adjust_offset_by(adjust_to);
+	}
+
+	// Grabs the first osu_object, sorted by offset
+	// It will not modify the vector
+	obj_type first_object_by_offset() const {
+		return *std::min_element(begin(), end(),
+			[](const obj_type& obj1, const obj_type& obj2) {
+			return obj1.get_offset() < obj2.get_offset();
+		});
+	}
+
+	// Grabs the last osu_object, sorted by offset
+	// It will not modify the vector
+	obj_type last_object_by_offset() const {
+		return *std::max_element(begin(), end(),
+			[](const obj_type& obj1, const obj_type& obj2) {
+			return obj1.get_offset() < obj2.get_offset();
+		});
+	}
+
+	double get_offset_min() const {
+		return first_object_by_offset().get_offset();
+	}
+	double get_offset_max() const {
+		return last_object_by_offset().get_offset();
+	}
+
+
 protected:
 	std::vector<obj_type> m_object_v;
 };
 
-template<class obj_type>
-inline std::vector<double> osu_object_v<obj_type>::get_offset_v() const {
-	std::vector<double> offset_v = {};
-	std::transform(m_object_v.begin(), m_object_v.end(), std::back_inserter(offset_v), [](const obj_type &obj) {
-		return obj.get_offset();
-	});
-	return offset_v;
-}
