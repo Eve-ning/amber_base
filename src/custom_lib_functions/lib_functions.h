@@ -6,11 +6,11 @@
 #include <vector>
 // Here we declare all common functions that amber_base will include
 
-#ifdef AMBER_BASE_EX
-	#define AMBER_BASE __declspec(dllexport)                       
-#else
-	#define AMBER_BASE __declspec(dllimport)
-#endif
+//#ifdef AMBER_BASE_EX
+//	#define AMBER_BASE __declspec(dllexport)                       
+//#else
+//	#define AMBER_BASE __declspec(dllimport)
+//#endif
 
 /*	REPRESENTING A VECTOR OF OSU_OBJECTs
 
@@ -42,7 +42,7 @@ namespace lib_functions
 	// Note that notes on the same offset will be regarded as 1 offset
 	// This will return a vector that has a -1 size
 	template <typename T>
-	AMBER_BASE std::vector<double> get_offset_difference(std::shared_ptr<osu_object_v<T>> obj_v) {
+	std::vector<double> get_offset_difference(std::shared_ptr<osu_object_v<T>> obj_v) {
 
 		obj_v->sort_by_offset(true);
 		double offset_buffer = obj_v->get_index(0).get_offset();
@@ -61,8 +61,7 @@ namespace lib_functions
 
 	// Copies object to specified vector offsets
 	template <typename T>
-	AMBER_BASE osu_object_v<T> create_copies(T obj, std::vector<double> copy_to_v) {
-
+	osu_object_v<T> create_copies(T obj, std::vector<double> copy_to_v) {
 		osu_object_v<T> output = {};
 		// For each offset to copy to
 		for (double copy_to : copy_to_v) {
@@ -75,9 +74,8 @@ namespace lib_functions
 	// Copies objects to specified vector offsets
 	// anchor_front defines if the start/end of the vector should be on the specified copy_to offset
 	template <typename T>
-	AMBER_BASE osu_object_v<T> create_copies(
+	osu_object_v<T> create_copies(
 		osu_object_v<T> obj_v, std::vector<double> copy_to_v, bool anchor_front = true) {
-
 		osu_object_v<T> output = {};
 
 		// For each offset to copy to
@@ -92,7 +90,7 @@ namespace lib_functions
 	// The object created will be defined by the user
 	// include_with defines if the created objects exports alongside the original
 	template <typename T>
-	AMBER_BASE osu_object_v<T> create_copies_by_subdivision(
+	osu_object_v<T> create_copies_by_subdivision(
 		std::vector<double> offset_v, const T& obj_define,
 		unsigned int subdivisions, bool include_with = true) {
 
@@ -130,7 +128,7 @@ namespace lib_functions
 	// The object created will be defined by the user
 	// include_with defines if the created objects exports alongside the original
 	template <typename T>
-	AMBER_BASE std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
+	std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
 		const std::shared_ptr<osu_object_v<T>> &obj_v,
 		const std::shared_ptr<osu_object> obj_define,
 		double relativity = 0.5, bool include_with = false) {
@@ -143,24 +141,24 @@ namespace lib_functions
 	// copy_prev defines if the object created copies the previous or next object
 	// include_with defines if the created objects exports alongside the original
 	template <typename T>
-	AMBER_BASE std::shared_ptr<osu_object_v<T>> create_copies_by_subdivision(
+	std::shared_ptr<osu_object_v<T>> create_copies_by_subdivision(
 		const std::shared_ptr<osu_object_v<T>> &obj_v,
 		unsigned int subdivisions, bool copy_prev = true, bool include_with = false) {
 
 	}
 
 
-	// Creates a object in between each obj pair in obj_v, placement is determined by relativity
-	// If relativity is 0.25, the obj will be created 25% in between obj pairs, closer to the first
-	// copy_prev defines if the object created copies the previous or next object
-	// include_with defines if the created objects exports alongside the original
-	template <typename T>
-	AMBER_BASE std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
-		const std::shared_ptr<osu_object_v<T>> &obj_v,
-		double relativity = 0.5, bool copy_prev = true, bool include_with = false);
+	//// Creates a object in between each obj pair in obj_v, placement is determined by relativity
+	//// If relativity is 0.25, the obj will be created 25% in between obj pairs, closer to the first
+	//// copy_prev defines if the object created copies the previous or next object
+	//// include_with defines if the created objects exports alongside the original
+	//template <typename T>
+	//AMBER_BASE std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
+	//	const std::shared_ptr<osu_object_v<T>> &obj_v,
+	//	double relativity = 0.5, bool copy_prev = true, bool include_with = false);
 
-	// Automatically creates svs to counteract bpm line scroll speed manipulation
-	// include_with defines if the created svs exports alongside the original
-	AMBER_BASE timing_point_v create_bpm_normalize(const timing_point_v &tp_v, const double &reference, bool include_with = false);
+	//// Automatically creates svs to counteract bpm line scroll speed manipulation
+	//// include_with defines if the created svs exports alongside the original
+	//AMBER_BASE timing_point_v create_bpm_normalize(const timing_point_v &tp_v, const double &reference, bool include_with = false);
 };
 

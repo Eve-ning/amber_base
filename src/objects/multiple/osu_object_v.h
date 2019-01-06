@@ -171,7 +171,7 @@ public:
 
 	// Grabs the first osu_object, sorted by offset
 	// It will not modify the vector
-	obj_type first_object_by_offset() const {
+	obj_type get_first_object_by_offset() const {
 		return *std::min_element(begin(), end(),
 			[](const obj_type& obj1, const obj_type& obj2) {
 			return obj1.get_offset() < obj2.get_offset();
@@ -180,7 +180,7 @@ public:
 
 	// Grabs the last osu_object, sorted by offset
 	// It will not modify the vector
-	obj_type last_object_by_offset() const {
+	obj_type get_last_object_by_offset() const {
 		return *std::max_element(begin(), end(),
 			[](const obj_type& obj1, const obj_type& obj2) {
 			return obj1.get_offset() < obj2.get_offset();
@@ -188,10 +188,10 @@ public:
 	}
 
 	double get_offset_min() const {
-		return first_object_by_offset().get_offset();
+		return get_first_object_by_offset().get_offset();
 	}
 	double get_offset_max() const {
-		return last_object_by_offset().get_offset();
+		return get_last_object_by_offset().get_offset();
 	}
 
 

@@ -61,7 +61,7 @@ std::vector<std::string> hit_object_v::get_string_raw_v(int keys)
 
 // Gets column in a vector form
 
-Std::vector<unsigned int> hit_object_v::get_column_v() const {
+std::vector<unsigned int> hit_object_v::get_column_v() const {
 	std::vector<unsigned int> column_v = {};
 	std::transform(begin(), end(), std::back_inserter(column_v), [](const hit_object &ho) {
 		return ho.get_column();
