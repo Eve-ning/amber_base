@@ -11,6 +11,8 @@ class osu_object_v
 {
 public:
 
+
+
 	// Clones the vector of shared_ptrs
 	// Any template argument will work in order to access this static function
 	static std::vector<std::shared_ptr<osu_object>> clone_obj_sptr_v(
@@ -81,11 +83,18 @@ public:
 		return output;
 	}
 
-	std::vector<double> get_offset_v() const {
+	// Specify if offset_v should have duplicates in make_unique
+	std::vector<double> get_offset_v(bool make_unique = false) const {
 		std::vector<double> offset_v = {};
 		std::transform(begin(), end(), std::back_inserter(offset_v), [](const obj_type &obj) {
 			return obj.get_offset();
 		});
+		
+		if (make_unique) {
+			std::sort(offset_v.begin(), offset_v.end());
+			offset_v.erase(unique(offset_v.begin(), offset_v.end()), offset_v.end());
+		}
+		
 		return offset_v;
 	}
 
@@ -196,5 +205,6 @@ public:
 
 protected:
 	std::vector<obj_type> m_object_v;
+	osu_object_v() {}
 };
 

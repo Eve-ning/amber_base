@@ -61,12 +61,12 @@ namespace lib_functions
 
 	// Copies object to specified vector offsets
 	template <typename T>
-	osu_object_v<T> create_copies(T obj, std::vector<double> copy_to_v) {
-		osu_object_v<T> output = {};
+	std::shared_ptr<osu_object_v<T>> create_copies(T obj, std::vector<double> copy_to_v) {
+		std::shared_ptr<osu_object_v<T>> output = {};
 		// For each offset to copy to
 		for (double copy_to : copy_to_v) {
 			obj.set_offset(copy_to);
-			output.push_back(obj);
+			output->push_back(obj);
 		}
 		return output;
 	}
@@ -74,9 +74,9 @@ namespace lib_functions
 	// Copies objects to specified vector offsets
 	// anchor_front defines if the start/end of the vector should be on the specified copy_to offset
 	template <typename T>
-	osu_object_v<T> create_copies(
-		osu_object_v<T> obj_v, std::vector<double> copy_to_v, bool anchor_front = true) {
-		osu_object_v<T> output = {};
+	std::shared_ptr<osu_object_v<T>> create_copies(
+		std::shared_ptr<osu_object_v<T>> obj_v, std::vector<double> copy_to_v, bool anchor_front = true) {
+		std::shared_ptr<osu_object_v<T>> output = {};
 
 		// For each offset to copy to
 		for (double copy_to : copy_to_v) {
@@ -90,21 +90,16 @@ namespace lib_functions
 	// The object created will be defined by the user
 	// include_with defines if the created objects exports alongside the original
 	template <typename T>
-	osu_object_v<T> create_copies_by_subdivision(
+	std::shared_ptr<osu_object_v<T>> create_copies_by_subdivision(
 		std::vector<double> offset_v, const T& obj_define,
 		unsigned int subdivisions, bool include_with = true) {
 
-		// Remove any duplicates
-		std::sort(offset_v.begin(), offset_v.end());
-		auto last = std::unique(offset_v.begin(), offset_v.end());
-		offset_v.erase(last, offset_v.end());
-
 		// If we don't want to include the initial offsets with it, we will do a blank vector
 		// We create another vector of offset
-		std::vector<double> offset_v_new = include_with ? offset_v : std::vector<double>();
+		std::vector<double> offset_copy_to_v = include_with ? offset_v : std::vector<double>();
 
 		// We extract the offsets on the subdivisions
-		for (auto start = offset_v.begin(); start + 1 != offset_v.end(); start++) {
+		for (auto start = offset_v.begin(); start + 1 < offset_v.end(); start++) {
 			
 			// Eg. For 3 Subdivisions
 			//     0   1   2   3   E
@@ -115,12 +110,12 @@ namespace lib_functions
 
 			// We start on 1 and end on <= due to multiplication of slice
 			for (int slice = 1; slice <= subdivisions; slice++) {
-				offset_v_new.push_back(*start + slice_distance * slice);
+				offset_copy_to_v.push_back(*start + slice_distance * slice);
 			}
 		}
 
 		// Create copies of the obj defined on the new offset list
-		return create_copies(obj_define, offset_v_new);
+		return create_copies(obj_define, offset_copy_to_v);
 	}
 
 	// Creates a object in between each obj pair in obj_v, placement is determined by relativity
@@ -130,9 +125,17 @@ namespace lib_functions
 	template <typename T>
 	std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
 		const std::shared_ptr<osu_object_v<T>> &obj_v,
-		const std::shared_ptr<osu_object> obj_define,
+		const T obj_define,
 		double relativity = 0.5, bool include_with = false) {
+		std::vector<double> offset_unq_v = obj_v->get_offset_v(true);
+		std::vector<double> offset_copy_to_v = include_with ? offset_unq_v : std::vector<double>();
 
+		for (auto start = offset_unq_v.begin(); start + 1 < offset_unq_v.begin(); start ++) {
+			double offset_relative_delta = *(start + 1) - *start;
+			offset_copy_to_v.push_back(*start + offset_relative_delta);
+		}
+
+		return create_copies(obj_define, offset_copy_to_v);
 	}
 
 
