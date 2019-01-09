@@ -127,6 +127,9 @@ namespace lib_functions
 		const std::shared_ptr<osu_object_v<T>> &obj_v,
 		const T obj_define,
 		double relativity = 0.5, bool include_with = false) {
+		// We create a vector of doubles that we want objects to be created on, then we use
+		// create_copies function to duplicate them
+
 		std::vector<double> offset_unq_v = obj_v->get_offset_v(true);
 		std::vector<double> offset_copy_to_v = include_with ? offset_unq_v : std::vector<double>();
 
@@ -147,7 +150,42 @@ namespace lib_functions
 	std::shared_ptr<osu_object_v<T>> create_copies_by_subdivision(
 		const std::shared_ptr<osu_object_v<T>> &obj_v,
 		unsigned int subdivisions, bool copy_prev = true, bool include_with = false) {
+		std::vector<double> offset_unq_v = obj_v->get_offset_v(true);
+		std::shared_ptr<osu_object_v<T>> output;
 
+		// As multiple objects can have the same offset, we want to make sure that subdivisions 
+		// are not created in between objects of the same offset
+		// To solve this, we create a offset vector that we reference with our object vector
+		// We then create objects that take a subdivision of the next offset instead of object
+
+		auto offset_unq_v_it = offset_unq_v.begin();
+
+		while ((offset_unq_v_it + 1) != offset_unq_v.end()) {
+			for (auto obj : *obj_v) {
+
+				// This is true when there are no more objects in the offset, so we add 1 to it
+				// It is guaranteed to have an object after this, so we do not need to verify again
+				if (obj.get_offset() != *offset_unq_v_it) {
+					offset_unq_v_it++;
+				}
+
+				// We create a offset_pair to use on the other variant of create_copies_by_subdivision
+				std::vector<double> offset_pair = {
+					*offset_unq_v_it, // start 
+					*(offset_unq_v_it + 1) // end
+				};
+
+				output->push_back(
+					*create_copies_by_subdivision(offset_pair, obj, subdivisions, include_with));	
+
+				// We need to remove the last element as the next pair's first element will overlap
+				// This does not apply for the last pair
+				if (include_with && (offset_unq_v_it + 2) == offset_unq_v.end()) {
+					output->pop_back(); 
+				}
+			}
+		}
+		return output;
 	}
 
 

@@ -11,8 +11,6 @@ class osu_object_v
 {
 public:
 
-
-
 	// Clones the vector of shared_ptrs
 	// Any template argument will work in order to access this static function
 	static std::vector<std::shared_ptr<osu_object>> clone_obj_sptr_v(
@@ -160,6 +158,11 @@ public:
 		for (const obj_type& obj : obj_v) {
 			push_back(obj);
 		}
+	}
+
+	// Removes the last element of the vector
+	void pop_back() {
+		m_object_v.pop_back();
 	}
 
 	osu_object_v& operator =(std::vector<std::shared_ptr<osu_object>> obj_sptr_v) {
