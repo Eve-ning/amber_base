@@ -72,15 +72,6 @@ public:
 		m_object_v = object_v;
 	}
 
-	// Returns shared_ptr of the object_v
-	std::vector<std::shared_ptr<osu_object>> get_obj_sptr_v() const {
-		std::vector<std::shared_ptr<osu_object>> output;
-		std::transform(m_object_v.begin(), m_object_v.end(), std::back_inserter(output), [&](const obj_type &obj) {
-			return std::make_shared<obj_type>(obj);
-		});
-		return output;
-	}
-
 	// Specify if offset_v should have duplicates in make_unique
 	std::vector<double> get_offset_v(bool make_unique = false) const {
 		std::vector<double> offset_v = {};
