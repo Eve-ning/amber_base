@@ -118,30 +118,6 @@ namespace lib_functions
 		return create_copies(obj_define, offset_copy_to_v);
 	}
 
-	// Creates a object in between each obj pair in obj_v, placement is determined by relativity
-	// If relativity is 0.25, the obj will be created 25% in between obj pairs, closer to the first
-	// The object created will be defined by the user
-	// include_with defines if the created objects exports alongside the original
-	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
-		const std::shared_ptr<osu_object_v<T>> &obj_v,
-		const T obj_define,
-		double relativity = 0.5, bool include_with = false) {
-		// We create a vector of doubles that we want objects to be created on, then we use
-		// create_copies function to duplicate them
-
-		std::vector<double> offset_unq_v = obj_v->get_offset_v(true);
-		std::vector<double> offset_copy_to_v = include_with ? offset_unq_v : std::vector<double>();
-
-		for (auto start = offset_unq_v.begin(); start + 1 < offset_unq_v.begin(); start ++) {
-			double offset_relative_delta = *(start + 1) - *start;
-			offset_copy_to_v.push_back(*start + offset_relative_delta);
-		}
-
-		return create_copies(obj_define, offset_copy_to_v);
-	}
-
-
 	// Divides the space in between each obj pair in obj_v then creates objects that segment it
 	// The object created will be automatically determined by copy_before
 	// copy_prev defines if the object created copies the previous or next object
@@ -176,18 +152,85 @@ namespace lib_functions
 				};
 
 				output->push_back(
-					*create_copies_by_subdivision(offset_pair, obj, subdivisions, include_with));	
+					*create_copies_by_subdivision(offset_pair, obj, subdivisions, include_with));
 
 				// We need to remove the last element as the next pair's first element will overlap
 				// This does not apply for the last pair
 				if (include_with && (offset_unq_v_it + 2) == offset_unq_v.end()) {
-					output->pop_back(); 
+					output->pop_back();
 				}
 			}
 		}
 		return output;
 	}
 
+	// Creates a object in between each offset pair in offset_v, placement is determined by relativity
+	// If relativity is 0.25, the obj will be created 25% in between obj pairs, closer to the first
+	// The object created will be defined by the user
+	// include_with defines if the created objects exports alongside the original
+	template <typename T>
+	std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
+		const std::vector<double> offset_v,
+		const T obj_define,
+		double relativity = 0.5, bool include_with = false) {
+		// We create a vector of doubles that we want objects to be created on, then we use
+		// create_copies function to duplicate them
+
+		std::vector<double> offset_copy_to_v = include_with ? offset_v : std::vector<double>();
+
+		for (auto start = offset_v.begin(); start + 1 < offset_v.begin(); start ++) {
+			double offset_relative_delta = *(start + 1) - *start;
+			offset_copy_to_v.push_back(*start + offset_relative_delta);
+		}
+
+		return create_copies(obj_define, offset_copy_to_v);
+	}
+
+	// Creates a object in between each obj pair in obj_v, placement is determined by relativity
+	// If relativity is 0.25, the obj will be created 25% in between obj pairs, closer to the first
+	// The object created will be defined by the user
+	// include_with defines if the created objects exports alongside the original
+	template <typename T>
+	std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
+		const std::shared_ptr<osu_object_v<T>> &obj_v,
+		double relativity = 0.5, bool copy_prev = true, bool include_with = false) {
+		std::vector<double> offset_unq_v = obj_v->get_offset_v(true);
+		std::shared_ptr<osu_object_v<T>> output;
+
+		// As multiple objects can have the same offset, we want to make sure that subdivisions 
+		// are not created in between objects of the same offset
+		// To solve this, we create a offset vector that we reference with our object vector
+		// We then create objects that take a subdivision of the next offset instead of object
+
+		auto offset_unq_v_it = offset_unq_v.begin();
+
+		while ((offset_unq_v_it + 1) != offset_unq_v.end()) {
+			for (auto obj : *obj_v) {
+
+				// This is true when there are no more objects in the offset, so we add 1 to it
+				// It is guaranteed to have an object after this, so we do not need to verify again
+				if (obj.get_offset() != *offset_unq_v_it) {
+					offset_unq_v_it++;
+				}
+
+				// We create a offset_pair to use on the other variant of create_copies_by_subdivision
+				std::vector<double> offset_pair = {
+					*offset_unq_v_it, // start 
+					*(offset_unq_v_it + 1) // end
+				};
+
+				output->push_back(
+					*create_copies_by_relative_difference(offset_pair, obj, relativity, include_with));
+
+				// We need to remove the last element as the next pair's first element will overlap
+				// This does not apply for the last pair
+				if (include_with && (offset_unq_v_it + 2) == offset_unq_v.end()) {
+					output->pop_back();
+				}
+			}
+		}
+		return output;
+	}
 
 	//// Creates a object in between each obj pair in obj_v, placement is determined by relativity
 	//// If relativity is 0.25, the obj will be created 25% in between obj pairs, closer to the first
