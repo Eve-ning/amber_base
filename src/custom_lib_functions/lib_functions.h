@@ -81,8 +81,8 @@ namespace lib_functions
 
 		// For each offset to copy to
 		for (double copy_to : copy_to_v) {
-			obj_v.adjust_offset_to(copy_to, anchor_front);
-			output.push_back(obj_v);
+			obj_v->adjust_offset_to(copy_to, anchor_front);
+			output.push_back(*obj_v);
 		}
 		return std::make_shared<osu_object_v<T>>(output);
 	}
