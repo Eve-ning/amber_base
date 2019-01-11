@@ -145,8 +145,8 @@ public:
 		m_object_v.push_back(obj);
 	}
 	// Appends vector to back of vector
-	void push_back(osu_object_v obj_v) {
-		for (const obj_type& obj : obj_v) {
+	void push_back(const osu_object_v &obj_v) {
+		for (obj_type obj : obj_v) {
 			push_back(obj);
 		}
 	}
@@ -198,7 +198,10 @@ public:
 	obj_type back() const { return m_object_v.back(); }
 
 protected:
-	std::vector<obj_type> m_object_v;
+	std::vector<obj_type> m_object_v = {};
 	osu_object_v() {}
+	osu_object_v(const osu_object_v& obj_v) {
+		m_object_v = obj_v.m_object_v;
+	}
 };
 

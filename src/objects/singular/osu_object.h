@@ -40,5 +40,8 @@ protected: // only allow inherited classes use the constructor
 
     osu_object();
     osu_object(double new_offset);
+	osu_object(const osu_object &obj) {
+		m_offset = obj.m_offset;
+	}
     double m_offset; // defines the offset in ms
 };
