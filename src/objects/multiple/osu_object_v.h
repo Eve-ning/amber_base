@@ -11,6 +11,8 @@ class osu_object_v
 {
 public:
 
+	osu_object_v() : m_object_v({}) {}
+
 	// Clones the vector of shared_ptrs
 	// Any template argument will work in order to access this static function
 	static std::vector<std::shared_ptr<osu_object>> clone_obj_sptr_v(
@@ -141,7 +143,7 @@ public:
 	}
 
 	// Appends to back of vector
-	void push_back(const obj_type& obj) {
+	void push_back(const obj_type &obj) {
 		m_object_v.push_back(obj);
 	}
 	// Appends vector to back of vector
@@ -198,10 +200,7 @@ public:
 	obj_type back() const { return m_object_v.back(); }
 
 protected:
-	std::vector<obj_type> m_object_v = {};
-	osu_object_v() {}
-	osu_object_v(const osu_object_v& obj_v) {
-		m_object_v = obj_v.m_object_v;
-	}
+	std::vector<obj_type> m_object_v;
+
 };
 

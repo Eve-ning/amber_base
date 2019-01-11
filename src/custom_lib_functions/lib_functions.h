@@ -62,13 +62,14 @@ namespace lib_functions
 	// Copies object to specified vector offsets
 	template <typename T>
 	std::shared_ptr<osu_object_v<T>> create_copies(T obj, std::vector<double> copy_to_v) {
-		std::shared_ptr<osu_object_v<T>> output = {};
+		osu_object_v<T> output = osu_object_v<T>();
 		// For each offset to copy to
 		for (double copy_to : copy_to_v) {
 			obj.set_offset(copy_to);
-			output->push_back(obj);
+			output.push_back(obj);
 		}
-		return output;
+
+		return std::make_shared<osu_object_v<T>>(output);
 	}
 
 	// Copies objects to specified vector offsets
@@ -76,14 +77,14 @@ namespace lib_functions
 	template <typename T>
 	std::shared_ptr<osu_object_v<T>> create_copies(
 		std::shared_ptr<osu_object_v<T>> obj_v, std::vector<double> copy_to_v, bool anchor_front = true) {
-		std::shared_ptr<osu_object_v<T>> output = {};
+		osu_object_v<T> output = osu_object_v<T>();
 
 		// For each offset to copy to
 		for (double copy_to : copy_to_v) {
 			obj_v.adjust_offset_to(copy_to, anchor_front);
 			output.push_back(obj_v);
 		}
-		return output;
+		return std::make_shared<osu_object_v<T>>(output);
 	}
 
 	// Divides the space in between each offset pair in offset_v then creates objects that segment it
@@ -127,7 +128,7 @@ namespace lib_functions
 		const std::shared_ptr<osu_object_v<T>> &obj_v,
 		unsigned int subdivisions, bool copy_prev = true, bool include_with = false) {
 		std::vector<double> offset_unq_v = obj_v->get_offset_v(true);
-		std::shared_ptr<osu_object_v<T>> output;
+		osu_object_v<T> output = osu_object_v<T>();
 
 		// As multiple objects can have the same offset, we want to make sure that subdivisions 
 		// are not created in between objects of the same offset
@@ -161,7 +162,7 @@ namespace lib_functions
 				}
 			}
 		}
-		return output;
+		return std::make_shared<osu_object_v<T>>(output);
 	}
 
 	// Creates a object in between each offset pair in offset_v, placement is determined by relativity
@@ -195,7 +196,7 @@ namespace lib_functions
 		const std::shared_ptr<osu_object_v<T>> &obj_v,
 		double relativity = 0.5, bool copy_prev = true, bool include_with = false) {
 		std::vector<double> offset_unq_v = obj_v->get_offset_v(true);
-		std::shared_ptr<osu_object_v<T>> output;
+		osu_object_v<T> output = osu_object_v<T>();
 
 		// As multiple objects can have the same offset, we want to make sure that subdivisions 
 		// are not created in between objects of the same offset
@@ -219,17 +220,17 @@ namespace lib_functions
 					*(offset_unq_v_it + 1) // end
 				};
 
-				output->push_back(
+				output.push_back(
 					*create_copies_by_relative_difference(offset_pair, obj, relativity, include_with));
 
 				// We need to remove the last element as the next pair's first element will overlap
 				// This does not apply for the last pair
 				if (include_with && (offset_unq_v_it + 2) == offset_unq_v.end()) {
-					output->pop_back();
+					output.pop_back();
 				}
 			}
 		}
-		return output;
+		return std::make_shared<osu_object_v<T>>(output);
 	}
 
 	//// Creates a object in between each obj pair in obj_v, placement is determined by relativity
