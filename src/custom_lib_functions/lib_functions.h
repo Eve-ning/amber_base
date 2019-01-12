@@ -107,10 +107,10 @@ namespace lib_functions
 			//     O   |   |   |   O
 			//     <--->
 			//       ^ slice_distance
-			double slice_distance = ((*start + 1) - (*start)) / subdivisions;
+			double slice_distance = (*(start + 1) - *(start)) / subdivisions;
 
 			// We start on 1 and end on <= due to multiplication of slice
-			for (int slice = 1; slice <= subdivisions; slice++) {
+			for (unsigned int slice = 1; slice < subdivisions; slice++) {
 				offset_copy_to_v.push_back(*start + slice_distance * slice);
 			}
 		}
@@ -137,31 +137,35 @@ namespace lib_functions
 
 		auto offset_unq_v_it = offset_unq_v.begin();
 
-		while ((offset_unq_v_it + 1) != offset_unq_v.end()) {
-			for (auto obj : *obj_v) {
+		for (auto obj : *obj_v) {
 
-				// This is true when there are no more objects in the offset, so we add 1 to it
-				// It is guaranteed to have an object after this, so we do not need to verify again
-				if (obj.get_offset() != *offset_unq_v_it) {
-					offset_unq_v_it++;
-				}
+			// This is true when there are no more objects in the offset, so we add 1 to it
+			// It is guaranteed to have an object after this, so we do not need to verify again
+			if (obj.get_offset() != *offset_unq_v_it) {
+				offset_unq_v_it++;
 
-				// We create a offset_pair to use on the other variant of create_copies_by_subdivision
-				std::vector<double> offset_pair = {
-					*offset_unq_v_it, // start 
-					*(offset_unq_v_it + 1) // end
-				};
-
-				output->push_back(
-					*create_copies_by_subdivision(offset_pair, obj, subdivisions, include_with));
-
-				// We need to remove the last element as the next pair's first element will overlap
-				// This does not apply for the last pair
-				if (include_with && (offset_unq_v_it + 2) == offset_unq_v.end()) {
-					output->pop_back();
+				// In the case where a pair cannot happen after increment
+				if (offset_unq_v_it + 1 == offset_unq_v.end()) {
+					break;
 				}
 			}
+
+			// We create a offset_pair to use on the other variant of create_copies_by_subdivision
+			std::vector<double> offset_pair = {
+				*offset_unq_v_it, // start 
+				*(offset_unq_v_it + 1) // end
+			};
+
+			output.push_back(
+				*create_copies_by_subdivision(offset_pair, obj, subdivisions, include_with));
+
+			// We need to remove the last element as the next pair's first element will overlap
+			// This does not apply for the last pair
+			if (!include_with && (offset_unq_v_it + 1 != offset_unq_v.end())) {
+				output.pop_back();
+			}
 		}
+		
 		return std::make_shared<osu_object_v<T>>(output);
 	}
 
