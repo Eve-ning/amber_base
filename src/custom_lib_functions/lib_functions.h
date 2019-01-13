@@ -61,7 +61,7 @@ namespace lib_functions
 
 	// Copies object to specified vector offsets
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies(T obj, std::vector<double> copy_to_v) {
+	std::shared_ptr<osu_object_v<T>> create_copies(T obj, std::vector<double> copy_to_v, bool sort = true) {
 		osu_object_v<T> output = osu_object_v<T>();
 		// For each offset to copy to
 		for (double copy_to : copy_to_v) {
@@ -69,6 +69,7 @@ namespace lib_functions
 			output.push_back(obj);
 		}
 
+		std::sort(output.begin(), output.end());
 		return std::make_shared<osu_object_v<T>>(output);
 	}
 
@@ -76,7 +77,8 @@ namespace lib_functions
 	// anchor_front defines if the start/end of the vector should be on the specified copy_to offset
 	template <typename T>
 	std::shared_ptr<osu_object_v<T>> create_copies(
-		std::shared_ptr<osu_object_v<T>> obj_v, std::vector<double> copy_to_v, bool anchor_front = true) {
+		std::shared_ptr<osu_object_v<T>> obj_v, std::vector<double> copy_to_v,
+		bool anchor_front = true, bool sort = true) {
 		osu_object_v<T> output = osu_object_v<T>();
 
 		// For each offset to copy to
@@ -84,6 +86,8 @@ namespace lib_functions
 			obj_v->adjust_offset_to(copy_to, anchor_front);
 			output.push_back(*obj_v);
 		}
+
+		std::sort(output.begin(), output.end());
 		return std::make_shared<osu_object_v<T>>(output);
 	}
 
@@ -114,9 +118,11 @@ namespace lib_functions
 				offset_copy_to_v.push_back(*start + slice_distance * slice);
 			}
 		}
-
+		
 		// Create copies of the obj defined on the new offset list
-		return create_copies(obj_define, offset_copy_to_v);
+		auto output = create_copies(obj_define, offset_copy_to_v);
+
+		return output;
 	}
 
 	// Divides the space in between each obj pair in obj_v then creates objects that segment it
@@ -161,7 +167,7 @@ namespace lib_functions
 
 			// We need to remove the last element as the next pair's first element will overlap
 			// This does not apply for the last pair
-			if (!include_with && (offset_unq_v_it + 1 != offset_unq_v.end())) {
+			if (include_with && (offset_unq_v_it + 1 != offset_unq_v.end())) {
 				output.pop_back();
 			}
 		}
@@ -183,8 +189,8 @@ namespace lib_functions
 
 		std::vector<double> offset_copy_to_v = include_with ? offset_v : std::vector<double>();
 
-		for (auto start = offset_v.begin(); start + 1 < offset_v.begin(); start ++) {
-			double offset_relative_delta = *(start + 1) - *start;
+		for (auto start = offset_v.begin(); start + 1 != offset_v.end(); start ++) {
+			double offset_relative_delta = (*(start + 1) - *start) * relativity;
 			offset_copy_to_v.push_back(*start + offset_relative_delta);
 		}
 
