@@ -3,6 +3,7 @@
 #include "../objects/singular/osu_object.h"
 #include "../objects/multiple/hit_object_v.h"
 #include "../objects/multiple/timing_point_v.h"
+#include "../exceptions/reamber_exception.h"
 #include <vector>
 // Here we declare all common functions that amber_base will include
 
@@ -43,6 +44,10 @@ namespace lib_functions
 	// This will return a vector that has a -1 size
 	template <typename T>
 	std::vector<double> get_offset_difference(std::shared_ptr<osu_object_v<T>> obj_v) {
+
+		if (obj_v->size() <= 1) {
+			throw reamber_exception("obj_v size must be at least 2 for the function to work");
+		}
 
 		obj_v->sort_by_offset(true);
 		double offset_buffer = obj_v->get_index(0).get_offset();
@@ -101,6 +106,11 @@ namespace lib_functions
 
 		// If we don't want to include the initial offsets with it, we will do a blank vector
 		// We create another vector of offset
+
+		if (offset_v.size() <= 1) {
+			throw reamber_exception("offset_v size must be at least 2 for the function to work");
+		}
+
 		std::vector<double> offset_copy_to_v = include_with ? offset_v : std::vector<double>();
 
 		// We extract the offsets on the subdivisions
@@ -140,6 +150,10 @@ namespace lib_functions
 		// are not created in between objects of the same offset
 		// To solve this, we create a offset vector that we reference with our object vector
 		// We then create objects that take a subdivision of the next offset instead of object
+
+		if (obj_v->size() <= 1) {
+			throw reamber_exception("obj_v size must be at least 2 for the function to work");
+		}
 
 		auto offset_unq_v_it = offset_unq_v.begin();
 
@@ -190,6 +204,10 @@ namespace lib_functions
 		// We create a vector of doubles that we want objects to be created on, then we use
 		// create_copies function to duplicate them
 
+		if (offset_v.size() <= 1) {
+			throw reamber_exception("offset_v size must be at least 2 for the function to work");
+		}
+
 		std::vector<double> offset_copy_to_v = include_with ? offset_v : std::vector<double>();
 
 		for (auto start = offset_v.begin(); start + 1 != offset_v.end(); start ++) {
@@ -208,6 +226,11 @@ namespace lib_functions
 	std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
 		const std::shared_ptr<osu_object_v<T>> &obj_v,
 		double relativity = 0.5, bool copy_prev = true, bool include_with = false) {
+
+		if (obj_v->size() <= 1) {
+			throw reamber_exception("obj_v size must be at least 2 for the function to work");
+		}
+
 		std::vector<double> offset_unq_v = obj_v->get_offset_v(true);
 		osu_object_v<T> output = osu_object_v<T>();
 
@@ -259,6 +282,10 @@ namespace lib_functions
 		timing_point_v output = include_with ? tp_v : timing_point_v();
 		tp_v = tp_v.get_bpm_only();
 
+		if (tp_v.size() == 0) {
+			throw reamber_exception("tp_v BPM size is 0");
+		}
+
 		for (auto tp : tp_v) {
 			tp.set_value(reference / tp.get_value());
 			tp.set_is_sv(true);
@@ -267,5 +294,9 @@ namespace lib_functions
 
 		return output;
 	}
-};
 
+	// Creates a simple Act - CounterAct - Normalize movement
+	timing_point_v create_basic_stutter() {
+
+	}
+};
