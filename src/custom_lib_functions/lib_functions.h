@@ -241,7 +241,7 @@ namespace lib_functions
 			};
 
 			output.push_back(
-				*create_copies_by_relative_difference(offset_pair, obj, relativity, include_with));
+				*lib_functions::create_copies_by_relative_difference(offset_pair, obj, relativity, include_with));
 
 			// We need to remove the last element as the next pair's first element will overlap
 			// This only applies to include_with true as we utilize the overload
@@ -253,17 +253,19 @@ namespace lib_functions
 		return std::make_shared<osu_object_v<T>>(output);
 	}
 
-	//// Creates a object in between each obj pair in obj_v, placement is determined by relativity
-	//// If relativity is 0.25, the obj will be created 25% in between obj pairs, closer to the first
-	//// copy_prev defines if the object created copies the previous or next object
-	//// include_with defines if the created objects exports alongside the original
-	//template <typename T>
-	//AMBER_BASE std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
-	//	const std::shared_ptr<osu_object_v<T>> &obj_v,
-	//	double relativity = 0.5, bool copy_prev = true, bool include_with = false);
+	// Automatically creates svs to counteract bpm line scroll speed manipulation
+	// include_with defines if the created svs exports alongside the original
+	timing_point_v create_normalize(timing_point_v tp_v, const double &reference, bool include_with = false) {
+		timing_point_v output = include_with ? tp_v : timing_point_v();
+		tp_v = tp_v.get_bpm_only();
 
-	//// Automatically creates svs to counteract bpm line scroll speed manipulation
-	//// include_with defines if the created svs exports alongside the original
-	//AMBER_BASE timing_point_v create_bpm_normalize(const timing_point_v &tp_v, const double &reference, bool include_with = false);
+		for (auto tp : tp_v) {
+			tp.set_value(reference / tp.get_value());
+			tp.set_is_sv(true);
+			output.push_back(tp);
+		}
+
+		return output;
+	}
 };
 
