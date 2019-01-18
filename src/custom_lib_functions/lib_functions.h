@@ -296,7 +296,47 @@ namespace lib_functions
 	}
 
 	// Creates a simple Act - CounterAct - Normalize movement
-	timing_point_v create_basic_stutter() {
+	// Stutter creation will chain on more than 2 offsets
+	timing_point_v create_basic_stutter(const std::vector<double> &offset_v, double initial_sv,
+		double threshold, double average = 1.0, bool is_bpm = false) {
 
+		if (offset_v.size() == 0) {
+			throw reamber_exception("tp_v BPM size is 0");
+		}
+		else if (threshold > 1 || threshold < 0) {
+			throw reamber_exception("threshold must be in between 0 and 1" );
+		}
+
+		// We will do 2 create_copies calls,
+		// 1) initial_sv -> offset_v
+		// 2) threshold_sv -> offset_threshold_v
+
+		timing_point_v output = timing_point_v();
+
+		std::vector<double> offset_threshold_v = {};
+
+		for (auto it = offset_v.begin(); it + 1 < offset_v.end(); it ++) {
+			offset_threshold_v.push_back((*(it + 1) - *it) * threshold + *it);
+		}
+
+		double threshold_sv = (average - (threshold * initial_sv)) / (1 - threshold);
+
+		// 1) initial_sv -> offset_v
+
+		timing_point tp;
+		tp.set_is_bpm(is_bpm);
+		tp.set_value(initial_sv);
+
+		output.push_back(*create_copies(tp, offset_v, true));
+		
+		// 2) threshold_sv -> offset_threshold_v
+
+		tp.set_value(threshold_sv);
+
+		output.push_back(*create_copies(tp, offset_threshold_v, true));
+
+		return output;
 	}
+
+
 };
