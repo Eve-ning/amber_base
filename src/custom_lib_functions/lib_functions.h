@@ -335,6 +335,8 @@ namespace lib_functions
 
 		output.push_back(*create_copies(tp, offset_threshold_v, true));
 
+		std::sort(output.begin(), output.end());
+
 		return output;
 	}
 
