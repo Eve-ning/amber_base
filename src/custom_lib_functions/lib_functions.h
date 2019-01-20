@@ -43,17 +43,19 @@ namespace lib_functions
 	// Note that notes on the same offset will be regarded as 1 offset
 	// This will return a vector that has a -1 size
 	template <typename T>
-	std::vector<double> get_offset_difference(std::shared_ptr<osu_object_v<T>> obj_v) {
+	std::vector<double> get_offset_difference(osu_object_v<T> const* obj_v) {
 
 		if (obj_v->size() <= 1) {
 			throw reamber_exception("obj_v size must be at least 2 for the function to work");
 		}
 
-		obj_v->sort_by_offset(true);
+		auto obj_v_copy = osu_object_v<T>::clone_obj_v(obj_v);
+
+		obj_v_copy->sort_by_offset(true);
 		double offset_buffer = obj_v->get_index(0).get_offset();
 		std::vector<double> output = {};
 
-		for (const T &obj : *obj_v) {
+		for (const T &obj : *obj_v_copy) {
 			// If the offset is different, then we push the difference back to the output
 			// We also set the offset_buffer as the new offset
 			if (obj.get_offset() != offset_buffer) {
@@ -82,14 +84,16 @@ namespace lib_functions
 	// anchor_front defines if the start/end of the vector should be on the specified copy_to offset
 	template <typename T>
 	std::shared_ptr<osu_object_v<T>> create_copies(
-		std::shared_ptr<osu_object_v<T>> obj_v, std::vector<double> copy_to_v,
+		osu_object_v<T> const* obj_v, std::vector<double> copy_to_v,
 		bool anchor_front = true, bool sort = true) {
 		osu_object_v<T> output = osu_object_v<T>();
 
+		auto obj_v_copy = osu_object_v<T>::clone_obj_v(obj_v);
+
 		// For each offset to copy to
 		for (double copy_to : copy_to_v) {
-			obj_v->adjust_offset_to(copy_to, anchor_front);
-			output.push_back(*obj_v);
+			obj_v_copy->adjust_offset_to(copy_to, anchor_front);
+			output.push_back(*obj_v_copy);
 		}
 
 		std::sort(output.begin(), output.end());
@@ -141,7 +145,7 @@ namespace lib_functions
 	// include_with defines if the created objects exports alongside the original
 	template <typename T>
 	std::shared_ptr<osu_object_v<T>> create_copies_by_subdivision(
-		const std::shared_ptr<osu_object_v<T>> &obj_v,
+		osu_object_v<T> const* obj_v,
 		unsigned int subdivisions, bool copy_prev = true, bool include_with = false) {
 		std::vector<double> offset_unq_v = obj_v->get_offset_v(true);
 		osu_object_v<T> output = osu_object_v<T>();
@@ -224,7 +228,7 @@ namespace lib_functions
 	// include_with defines if the created objects exports alongside the original
 	template <typename T>
 	std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
-		const std::shared_ptr<osu_object_v<T>> &obj_v,
+		osu_object_v<T> const* obj_v,
 		double relativity = 0.5, bool copy_prev = true, bool include_with = false) {
 
 		if (obj_v->size() <= 1) {

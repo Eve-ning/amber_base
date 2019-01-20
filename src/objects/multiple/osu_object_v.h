@@ -15,20 +15,17 @@ public:
 
 	// Clones the vector of shared_ptrs
 	// Any template argument will work in order to access this static function
-	static std::vector<std::shared_ptr<osu_object>> clone_obj_sptr_v(
-		const std::vector<std::shared_ptr<osu_object>> obj_sptr_v) {
-		std::vector<std::shared_ptr<osu_object>> obj_sptr_v_copy;
+	static std::shared_ptr<osu_object_v<obj_type>> clone_obj_v(osu_object_v<obj_type> const* obj_v) {
+		osu_object_v<obj_type> obj_v_copy;
 
 		// This makes a copy of the obj_sptr_v by dereferencing every element and creating
 		// a new instance of the shared_ptr
 		// This is pushed back to the obj_sptr_v_copy
-		std::transform(obj_sptr_v.begin(), obj_sptr_v.begin(), std::back_inserter(obj_sptr_v_copy),
-			[](const std::shared_ptr<const osu_object> &obj) -> std::shared_ptr<osu_object> {
-			return obj->clone();
+		for (const auto &obj : *obj_v) {
+			obj_v_copy.push_back(*std::dynamic_pointer_cast<obj_type>(obj.clone()));
 		}
-		);
 
-		return obj_sptr_v_copy;
+		return std::make_shared<osu_object_v<obj_type>>(obj_v_copy);
 	}
 
 	//// Explicit Loading
