@@ -22,7 +22,6 @@
     <ClCompile Include="src\custom_functions\split_string.cpp" />
     <ClCompile Include="src\custom_lib_functions\lib_functions.cpp" />
     <ClCompile Include="src\exceptions\reamber_exception.cpp" />
-    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\objects\multiple\hit_object_v.cpp" />
     <ClCompile Include="src\objects\multiple\osu_object_v.cpp" />
     <ClCompile Include="src\objects\multiple\timing_point_v.cpp" />
