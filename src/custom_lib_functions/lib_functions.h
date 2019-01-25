@@ -76,7 +76,9 @@ namespace lib_functions
 			output.push_back(obj);
 		}
 
-		std::sort(output.begin(), output.end());
+		if (sort) {
+			std::sort(output.begin(), output.end());
+		}
 		return std::make_shared<osu_object_v<T>>(output);
 	}
 
@@ -90,13 +92,14 @@ namespace lib_functions
 
 		auto obj_v_copy = osu_object_v<T>::clone_obj_v(obj_v);
 
-		// For each offset to copy to
+		// For each offset to copy to 
 		for (double copy_to : copy_to_v) {
 			obj_v_copy->adjust_offset_to(copy_to, anchor_front);
 			output.push_back(*obj_v_copy);
 		}
-
-		std::sort(output.begin(), output.end());
+		if (sort) {
+			std::sort(output.begin(), output.end());
+		}
 		return std::make_shared<osu_object_v<T>>(output);
 	}
 
@@ -299,6 +302,57 @@ namespace lib_functions
 		return output;
 	}
 
+	// Used to find the limits of create_basic_stutter
+	// [0] is min, [1] is max
+	std::vector<double> create_basic_stutter_threshold_limits(
+		double initial_sv, double average, double threshold_min = 0.1, double threshold_max = 10.0) {
+
+		// initsv * thr + thr_sv * ( 1 - thr ) = ave
+		// initsv * thr + thr_sv - thr * thr_sv = ave
+		// initsv * thr - thr * thr_sv = ave - thr_sv
+		// thr * ( initsv - thr_sv ) = ave - thr_sv
+		// thr = ( ave - thr_sv ) / ( initsv - thr_sv )
+
+		double thr_1 = (average - threshold_min) / (initial_sv - threshold_min);
+		double thr_2 = (average - threshold_max) / (initial_sv - threshold_max);
+
+		std::vector<double> output;
+		if (thr_1 < thr_2) {
+			output.push_back(thr_1);
+			output.push_back(thr_2);
+		}
+		else {
+			output.push_back(thr_2);
+			output.push_back(thr_1);
+		}
+		return output;
+	}
+
+	// Used to find the limits of create_basic_stutter
+	// [0] is min, [1] is max
+	std::vector<double> create_basic_stutter_initial_sv_limits(
+		double threshold, double average, double threshold_min = 0.1, double threshold_max = 10.0) {
+
+		// initsv * thr + thr_sv * ( 1 - thr ) = ave
+		// initsv * thr + thr_sv - thr * thr_sv = ave
+		// initsv * thr = ave - thr_sv + thr * thr_sv
+		// initsv = thr_sv + [( ave - thr_sv ) / thr] 
+		
+		double init_1 = threshold_min + ((average - threshold_min) / threshold);
+		double init_2 = threshold_max + ((average - threshold_max) / threshold);
+
+		std::vector<double> output;
+		if (init_1 < init_2) {
+			output.push_back(init_1);
+			output.push_back(init_2);
+		}
+		else {
+			output.push_back(init_2);
+			output.push_back(init_1);
+		}
+		return output;
+	}
+
 	// Creates a simple Act - CounterAct - Normalize movement
 	// Stutter creation will chain on more than 2 offsets
 	timing_point_v create_basic_stutter(const std::vector<double> &offset_v, double initial_sv,
@@ -332,6 +386,8 @@ namespace lib_functions
 		tp.set_value(initial_sv);
 
 		output.push_back(*create_copies(tp, offset_v, true));
+
+		output[offset_v.size() - 1].set_value(average); // We use the last offset as a normalizer
 		
 		// 2) threshold_sv -> offset_threshold_v
 

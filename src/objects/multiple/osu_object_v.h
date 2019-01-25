@@ -61,6 +61,18 @@ public:
 		});
 		return output;
 	}
+	
+	// Get the string compatible to .osu format, joined by a delimeter
+	// hit_object_v this will fail if keys = 0
+	std::string get_string_raw(std::string delimeter = "\n") const {
+		auto string_v = get_string_raw_v();
+		std::string str = "";
+		for (const std::string &string : string_v) {
+			str.append(string);
+			str.append(delimeter);
+		}
+		return str;
+	}
 
 	// Gets the object vector
 	std::vector<obj_type> get_object_v() const {
@@ -111,7 +123,7 @@ public:
 	// Adjusts the offset of all objects in the vector TO a value
 	void adjust_offset_to(double adjust_to, bool anchor_front = true) {
 		adjust_offset_to_zero(); // Zero then move by the value
-		adjust_offset_by(adjust_to);
+                adjust_offset_by(adjust_to);
 	}
 
 	// Grabs the first osu_object, sorted by offset
