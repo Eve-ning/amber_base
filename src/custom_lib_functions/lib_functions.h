@@ -283,8 +283,8 @@ namespace lib_functions
 		return std::make_shared<osu_object_v<T>>(output);
 	}
 
-	// Automatically creates svs to counteract bpm line scroll speed manipulation
-	// include_with defines if the created svs exports alongside the original
+	// Automatically creates tps to counteract bpm line scroll speed manipulation
+	// include_with defines if the created tps exports alongside the original
 	timing_point_v create_normalize(timing_point_v tp_v, const double &reference, bool include_with = false) {
 		timing_point_v output = include_with ? tp_v : timing_point_v();
 		tp_v = tp_v.get_bpm_only();
@@ -305,16 +305,16 @@ namespace lib_functions
 	// Used to find the limits of create_basic_stutter
 	// [0] is min, [1] is max
 	std::vector<double> create_basic_stutter_threshold_limits(
-		double initial_sv, double average, double threshold_min = 0.1, double threshold_max = 10.0) {
+		double initial, double average, double threshold_min = 0.1, double threshold_max = 10.0) {
 
-		// initsv * thr + thr_sv * ( 1 - thr ) = ave
-		// initsv * thr + thr_sv - thr * thr_sv = ave
-		// initsv * thr - thr * thr_sv = ave - thr_sv
-		// thr * ( initsv - thr_sv ) = ave - thr_sv
-		// thr = ( ave - thr_sv ) / ( initsv - thr_sv )
+		// init * thr + thr_ * ( 1 - thr ) = ave
+		// init * thr + thr_ - thr * thr_ = ave
+		// init * thr - thr * thr_ = ave - thr_
+		// thr * ( init - thr_ ) = ave - thr_
+		// thr = ( ave - thr_ ) / ( init - thr_ )
 
-		double thr_1 = (average - threshold_min) / (initial_sv - threshold_min);
-		double thr_2 = (average - threshold_max) / (initial_sv - threshold_max);
+		double thr_1 = (average - threshold_min) / (initial - threshold_min);
+		double thr_2 = (average - threshold_max) / (initial - threshold_max);
 
 		std::vector<double> output;
 		if (thr_1 < thr_2) {
@@ -330,13 +330,13 @@ namespace lib_functions
 
 	// Used to find the limits of create_basic_stutter
 	// [0] is min, [1] is max
-	std::vector<double> create_basic_stutter_initial_sv_limits(
+	std::vector<double> create_basic_stutter_init_limits(
 		double threshold, double average, double threshold_min = 0.1, double threshold_max = 10.0) {
 
-		// initsv * thr + thr_sv * ( 1 - thr ) = ave
-		// initsv * thr + thr_sv - thr * thr_sv = ave
-		// initsv * thr = ave - thr_sv + thr * thr_sv
-		// initsv = thr_sv + [( ave - thr_sv ) / thr] 
+		// init * thr + thr_ * ( 1 - thr ) = ave
+		// init * thr + thr_ - thr * thr_ = ave
+		// init * thr = ave - thr_ + thr * thr_
+		// init = thr_ + [( ave - thr_ ) / thr] 
 		
 		double init_1 = threshold_min + ((average - threshold_min) / threshold);
 		double init_2 = threshold_max + ((average - threshold_max) / threshold);
@@ -355,19 +355,19 @@ namespace lib_functions
 
 	// Creates a simple Act - CounterAct - Normalize movement
 	// Stutter creation will chain on more than 2 offsets
-	timing_point_v create_basic_stutter(const std::vector<double> &offset_v, double initial_sv,
+	timing_point_v create_basic_stutter(const std::vector<double> &offset_v, double initial,
 		double threshold, double average = 1.0, bool is_bpm = false) {
 
 		if (offset_v.size() == 0) {
-			throw reamber_exception("tp_v BPM size is 0");
+			throw reamber_exception("tp_v size is 0");
 		}
 		else if (threshold > 1 || threshold < 0) {
 			throw reamber_exception("threshold must be in between 0 and 1" );
 		}
 
 		// We will do 2 create_copies calls,
-		// 1) initial_sv -> offset_v
-		// 2) threshold_sv -> offset_threshold_v
+		// 1) initial -> offset_v
+		// 2) threshold_tp -> offset_threshold_v
 
 		timing_point_v output = timing_point_v();
 
@@ -377,21 +377,21 @@ namespace lib_functions
 			offset_threshold_v.push_back((*(it + 1) - *it) * threshold + *it);
 		}
 
-		double threshold_sv = (average - (threshold * initial_sv)) / (1 - threshold);
+		double threshold_tp = (average - (threshold * initial)) / (1 - threshold);
 
-		// 1) initial_sv -> offset_v
+		// 1) initial -> offset_v
 
 		timing_point tp;
 		tp.set_is_bpm(is_bpm);
-		tp.set_value(initial_sv);
+		tp.set_value(initial);
 
 		output.push_back(*create_copies(tp, offset_v, true));
 
 		output[offset_v.size() - 1].set_value(average); // We use the last offset as a normalizer
 		
-		// 2) threshold_sv -> offset_threshold_v
+		// 2) threshold_tp -> offset_threshold_v
 
-		tp.set_value(threshold_sv);
+		tp.set_value(threshold_tp);
 
 		output.push_back(*create_copies(tp, offset_threshold_v, true));
 
