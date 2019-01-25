@@ -1,2 +1,5 @@
 # A simple and flexible osu!mania library
-[Test Unit/Documentation](https://github.com/Eve-ning/reamber_base_test)
+
+# other parts of the project
+- [reamber](https://github.com/Eve-ning/reamber)
+- [reamber_base_test_unit](https://github.com/Eve-ning/reamber_base_test)
