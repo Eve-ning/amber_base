@@ -33,7 +33,7 @@ public:
 
 	// Gets sv only in a vector form
 	timing_point_v get_sv_only() const;
-
+			
 	// Gets bpm only in a vector form
 	timing_point_v get_bpm_only() const;
 
@@ -41,7 +41,18 @@ public:
 	std::vector<double> get_value_v() const;
 
 	// Cross multiplies the tp_vs
-	// This will automatically sort the current tp_v
-	void multiply_with(timing_point_v eff_tp_v);
+	void cross_effect_multiply(timing_point_v eff_tp_v) {
+		cross_effect(eff_tp_v, [](timing_point self, timing_point eff) {
+			self.set_value(self.get_value() * eff.get_value());
+			return self;
+		});
+	}
+	// Cross add the tp_vs
+	void cross_effect_add(timing_point_v eff_tp_v) {
+		cross_effect(eff_tp_v, [](timing_point self, timing_point eff) {
+			self.set_value(self.get_value() + eff.get_value());
+			return self;
+		});
+	}
 
 };

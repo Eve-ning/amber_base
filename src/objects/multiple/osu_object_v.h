@@ -3,6 +3,7 @@
 // This acts as a middleman between the vector objects and the lib_functions
 // All vectors will inherit from this, so polymorphism on vectors will be possible
 #include "../singular/osu_object.h"
+#include "../singular/hit_object.h"
 #include <vector>
 #include <algorithm>
 
@@ -198,6 +199,44 @@ public:
 
 	obj_type operator [](unsigned int i) const { return get_index(i); }
 	obj_type & operator [](unsigned int i) { return get_index(i); }
+
+	void cross_effect(osu_object_v eff_obj_v, obj_type (*effect)(obj_type self, obj_type eff)) {
+		if (eff_obj_v.size() == 0 || size() == 0) {
+			return; // Do not execute if empty
+		}
+
+		// Make sure it's sorted
+		sort_by_offset(true);
+		eff_obj_v.sort_by_offset(true);
+
+		auto self_it = begin();
+		auto eff_it = eff_obj_v.begin();
+
+		while (self_it != end() && eff_it != eff_obj_v.end()) {
+
+			// Case: self < eff
+			// Do: self ++
+			if (self_it->get_offset() < eff_it->get_offset()) {
+				self_it++;
+				continue;
+			}
+			// Case: self >= eff_next > eff
+			// Pre-condition of checking eff_next is if it is in range
+			// Do: eff ++
+			else if (eff_it != --eff_obj_v.end() && // Make sure it isn't the last element
+				self_it->get_offset() >= (eff_it + 1)->get_offset()) { // self >= eff_next
+				eff_it++;
+				continue;
+			}
+			// Case: eff_next > self >= eff
+			// Do: self * eff
+			else {
+				*self_it = effect(*self_it, *eff_it);
+				self_it++;
+				continue;
+			}
+		}
+	}
 
 	// Direct all iterator functions to the vector
 	typename std::vector<obj_type>::iterator begin() { return m_object_v.begin(); }
