@@ -21,6 +21,11 @@ hit_object::hit_object() {
 
 void hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsigned int index)
 {
+	// Reject loading of empty string
+	if (str == "") {
+		return; // Don't throw an error as an empty str just means load nothing
+	}
+
 	// Remove the brackets
 	str = trim_editor_hit_object(str);
 	m_keys = keys;

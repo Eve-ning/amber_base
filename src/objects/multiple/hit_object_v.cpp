@@ -15,6 +15,11 @@ hit_object_v::hit_object_v(unsigned int amount) {
 
 void hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
 
+	// Reject loading of empty string
+	if (str == "") {
+		return; // Don't throw an error as an empty str just means load nothing
+	}
+
 	str = hit_object::trim_editor_hit_object(str); // Shed the brackets
 
 	std::vector<std::string> str_comma_v = split_string::by_delimeter(str, ','); // Split by comma
