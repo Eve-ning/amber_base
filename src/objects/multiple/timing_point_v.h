@@ -36,4 +36,12 @@ public:
 
 	// Gets bpm only in a vector form
 	timing_point_v get_bpm_only() const;
+
+	// Gets all values
+	std::vector<double> get_value_v() const;
+
+	// Cross multiplies the tp_vs
+	// This will automatically sort the current tp_v
+	void multiply_with(timing_point_v eff_tp_v);
+
 };
