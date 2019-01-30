@@ -315,10 +315,6 @@ std::string hit_object::trim_editor_hit_object(std::string str)
 		throw reamber_exception("This is not a valid Editor Hit Object string.");
 	}
 
-	if (str.find(',') != std::string::npos) {
-		std::cout << "Only one hit_object will be loaded.";
-	}
-
 	// Remove the ( AND ) brackets
 	return str.substr(str.find('(') + 1, str.find(')') - str.find('(') - 1);
 }
