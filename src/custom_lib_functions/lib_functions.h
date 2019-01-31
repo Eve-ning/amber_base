@@ -45,19 +45,28 @@ namespace lib_functions
 	template <typename T>
 	std::vector<double> get_offset_difference(osu_object_v<T> const* obj_v) {
 
+		// [0] REJECT
 		if (obj_v->size() <= 1) {
 			throw reamber_exception("obj_v size must be at least 2 for the function to work");
 		}
 
+		// const [0][1][2] ---> [0][1][2]
 		auto obj_v_copy = osu_object_v<T>::clone_obj_v(obj_v);
 
+		// [0][2][1] ---> [0][1][2]
 		obj_v_copy->sort_by_offset(true);
+
 		double offset_buffer = obj_v->get_index(0).get_offset();
 		std::vector<double> output = {};
 
+		
 		for (const T &obj : *obj_v_copy) {
-			// If the offset is different, then we push the difference back to the output
-			// We also set the offset_buffer as the new offset
+
+			// BUF			   BUF   		         BUF		         BUF
+			// [0][0][1][2] -> [0][0][1][2] -> [0][0][1][2] ->	[0][0][1][2]
+			//  ^  ^  			^     ^  	          ^  ^  	          ^  
+			// REJECT			 ACCEPT	             ACCEPT		      REJECT
+
 			if (obj.get_offset() != offset_buffer) {
 				output.push_back(obj.get_offset() - offset_buffer);
 				offset_buffer = obj.get_offset();
@@ -70,13 +79,19 @@ namespace lib_functions
 	template <typename T>
 	std::shared_ptr<osu_object_v<T>> create_copies(T obj, const std::vector<double>& copy_to_v, bool sort = true) {
 		osu_object_v<T> output = osu_object_v<T>();
-		// For each offset to copy to
+
+		// [0][2][1][3]
 		for (double copy_to : copy_to_v) {
+			// FOR [0]
+			// <OBJ[X]> ---> <OBJ[0]>
 			obj.set_offset(copy_to);
+			// [<OBJ[0]>, <OBJ[2]>, <OBJ[1]>, <OBJ[3]>]
 			output.push_back(obj);
 		}
 
 		if (sort) {
+			// [<OBJ[0]>, <OBJ[1]>, <OBJ[2]>, <OBJ[3]>]
+			//                 ^---------^
 			std::sort(output.begin(), output.end());
 		}
 		return std::make_shared<osu_object_v<T>>(output);
@@ -90,14 +105,21 @@ namespace lib_functions
 		bool anchor_front = true, bool sort = true) {
 		osu_object_v<T> output = osu_object_v<T>();
 
+		// const [0][1][2] ---> [0][1][2]
 		auto obj_v_copy = osu_object_v<T>::clone_obj_v(obj_v);
 
-		// For each offset to copy to 
+		// [0][4][2]
 		for (double copy_to : copy_to_v) {
+			// FOR [0]
+			// [<OBJ[X]>,<OBJ[X+1]>] ---> [<OBJ[0]>,<OBJ[1]>]
 			obj_v_copy->adjust_offset_to(copy_to, anchor_front);
+
+			// [<OBJ[0]>, <OBJ[1]>, <OBJ[4]>, <OBJ[5]>, <OBJ[2]>, <OBJ[3]>]
 			output.push_back(*obj_v_copy);
 		}
 		if (sort) {
+			// [<OBJ[0]>, <OBJ[1]>, <OBJ[2]>, <OBJ[3]>, <OBJ[4]>, <OBJ[5]>]
+			//                           ^---------^---------^---------^
 			std::sort(output.begin(), output.end());
 		}
 		return std::make_shared<osu_object_v<T>>(output);
@@ -111,32 +133,39 @@ namespace lib_functions
 		std::vector<double> offset_v, const T& obj_define,
 		unsigned int subdivisions, bool include_with = true) {
 
-		// If we don't want to include the initial offsets with it, we will do a blank vector
-		// We create another vector of offset
-
+		// [0] REJECT
 		if (offset_v.size() <= 1) {
 			throw reamber_exception("offset_v size must be at least 2 for the function to work");
 		}
 
+		// OFFSET_V [0][1]		   
+		// INCLUDE  [0][_]...[_][1] 
+		// EXCLUDE     [_]...[_]	   
 		std::vector<double> offset_copy_to_v = include_with ? offset_v : std::vector<double>();
 
-		// We extract the offsets on the subdivisions
+		// [0][1][2][3]
+		// <-------> 
 		for (auto start = offset_v.begin(); start + 1 < offset_v.end(); start++) {
 			
-			// Eg. For 3 Subdivisions
+			// EG. 3 SUBDIVISIONS
 			//     0   1   2   3   E
 			//     O   |   |   |   O
 			//     <--->
 			//       ^ slice_distance
-			double slice_distance = (*(start + 1) - *(start)) / subdivisions;
+			double slice_distance = (*(start + 1) - *(start)) / (subdivisions + 1);
 
-			// We start on 1 and end on <= due to multiplication of slice
-			for (unsigned int slice = 1; slice < subdivisions; slice++) {
+			//     0   1   2   3   E
+			//     O   |   |   |   O
+			//     <-1->
+			//     <---2--->
+			//     <-----3----->
+			for (unsigned int slice = 1; slice <= subdivisions; slice++) {
 				offset_copy_to_v.push_back(*start + slice_distance * slice);
 			}
 		}
 		
-		// Create copies of the obj defined on the new offset list
+		//     [0]      [1]	     [2] 
+		// <OBJ[0]> <OBJ[1]> <OBJ[2]>
 		auto output = create_copies(obj_define, offset_copy_to_v);
 
 		return output;
@@ -158,43 +187,69 @@ namespace lib_functions
 		// To solve this, we create a offset vector that we reference with our object vector
 		// We then create objects that take a subdivision of the next offset instead of object
 
+		// [0] REJECT
 		if (obj_v->size() <= 1) {
 			throw reamber_exception("obj_v size must be at least 2 for the function to work");
 		}
 
 		auto offset_unq_v_it = offset_unq_v.begin();
 
-		for (auto obj : *obj_v) {
+		//	[ ][ ][ ][D] | 2  >>  [ ][ ][ ][D] | 2
+		// 	[ ][ ][C][ ] | 1  >>  [ ][ ][C][ ] | 1
+		//	[A][B][ ][ ] | 0  >>  [A][B][^][ ] | 0
+		//   ^	FIRST		  >>   	  LAST    			
 
-			// This is true when there are no more objects in the offset, so we add 1 to it
-			// It is guaranteed to have an object after this, so we do not need to verify again
-			if (obj.get_offset() != *offset_unq_v_it) {
+		for (auto obj_it = obj_v->begin(); obj_it + 1 < obj_v->end(); obj_it++) {
+
+			//	[ ][ ][ ][D] | 2	 >>  [ ][ ][ ][D] | 2
+			// 	[ ][ ][C][ ] | 1 	 >>  [ ][ ][C][ ] | 1 <-
+			//	[A][B][^][ ] | 0 <-	 >>  [A][B][^][ ] | 0 
+			if (obj_it->get_offset() != *offset_unq_v_it) {
 				offset_unq_v_it++;
-
-				// In the case where a pair cannot happen after increment
-				if (offset_unq_v_it + 1 == offset_unq_v.end()) {
-					if (include_with) {
-						output.push_back(obj_v->back());
-					}
-					break;
-				}
 			}
 
-			// We create a offset_pair to use on the other variant of create_copies_by_subdivision
+			//	[ ][ ][ ][D] | 2
+			// 	[ ][ ][C][ ] | 1 <-
+			//	[A][B][ ][ ] | 0 <-
 			std::vector<double> offset_pair = {
 				*offset_unq_v_it, // start 
 				*(offset_unq_v_it + 1) // end
 			};
 
+			//	[ ][ ][ ][D] | 2	  >>  [ ][ ][ ][D] | 2	 
+			//  [ ][ ][ ][ ] | 1.5	  >>  [ ][ ][ ][ ] | 1.5	 
+			// 	[ ][ ][C][ ] | 1   <- >>  [A][ ][C][ ] | 1   <-
+			//  [ ][ ][ ][ ] | 0.5	  >>  [A][ ][ ][ ] | 0.5	 
+			//	[A][B][ ][ ] | 0   <- >>  [A][B][ ][ ] | 0   <-
+			//   ^					  
 			output.push_back(
-				*create_copies_by_subdivision(offset_pair, obj, subdivisions, include_with));
+				*create_copies_by_subdivision(offset_pair, copy_prev ? *obj_it : *(obj_it + 1), subdivisions, include_with));
 
-			// We need to remove the last element as the next pair's first element will overlap
-			// This only applies to include_with true as we utilize the overload
+			// INCLUDE WITH FALSE
+			//	[ ][ ][ ][D] | 2	  >>  [ ][ ][ ][ ] | 2	 
+			//  [ ][ ][ ][ ] | 1.5	  >>  [ ][ ][C][ ] | 1.5	 
+			// 	[A][ ][C][ ] | 1   <- >>  [ ][ ][ ][ ] | 1   
+			//  [A][ ][ ][ ] | 0.5	  >>  [A][B][ ][ ] | 0.5 
+			//	[A][B][ ][ ] | 0   <- >>  [ ][ ][ ][ ] | 0   
+			//   ^			
+
+			// INCLUDE WITH TRUE
+			//	[ ][ ][ ][D] | 2	  >>  [ ][ ][ ][D] | 2	 
+			//  [ ][ ][ ][ ] | 1.5	  >>  [ ][ ][ ][ ] | 1.5	 
+			// 	[A][ ][C][ ] | 1   <- >>  [ ][ ][C][ ] | 1   <-
+			//  [A][ ][ ][ ] | 0.5	  >>  [A][ ][ ][ ] | 0.5	 
+			//	[A][B][ ][ ] | 0   <- >>  [A][B][ ][ ] | 0   <-
+			//   ^			
 			if (include_with) {
 				output.pop_back();
 			}
 		}
+
+		//	[ ][ ][ ][D] | 2
+		//  [ ][ ][C][ ] | 1.5 
+		// 	[ ][ ][C][ ] | 1   
+		//  [A][B][ ][ ] | 0.5 
+		//	[A][B][ ][ ] | 0   	  
 		
 		return std::make_shared<osu_object_v<T>>(output);
 	}
