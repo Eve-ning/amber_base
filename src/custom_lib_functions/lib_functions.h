@@ -265,17 +265,33 @@ namespace lib_functions
 		// We create a vector of doubles that we want objects to be created on, then we use
 		// create_copies function to duplicate them
 
+		// [0] REJECT
 		if (offset_v.size() <= 1) {
 			throw reamber_exception("offset_v size must be at least 2 for the function to work");
 		}
 
+		// OFFSET_V [0][1]		   
+		// INCLUDE  [0][_]...[_][1] 
+		// EXCLUDE     [_]...[_]	  
 		std::vector<double> offset_copy_to_v = include_with ? offset_v : std::vector<double>();
 
+		//	[0][1][2][3]
+		//  <------->
 		for (auto start = offset_v.begin(); start + 1 != offset_v.end(); start ++) {
+			//     v           v
+			// [0][1][___|___][2][3]
+			//     <----->
+			//       REL
 			double offset_relative_delta = (*(start + 1) - *start) * relativity;
+			//        v           v		>>
+			// [0][|][1][___|___][2][3] >> [0][|][1][|][2][|][3]
+			//        <----->			>>
+			//  <----->     +   		>>
 			offset_copy_to_v.push_back(*start + offset_relative_delta);
 		}
 
+		// [0][|][1][|][2][|][3]
+		// [<OBJ[0]>, <OBJ[|]>, <OBJ[1], ...]
 		return create_copies(obj_define, offset_copy_to_v);
 	}
 
