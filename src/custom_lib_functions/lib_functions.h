@@ -68,7 +68,7 @@ namespace lib_functions
 
 	// Copies object to specified vector offsets
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies(T obj, std::vector<double> copy_to_v, bool sort = true) {
+	std::shared_ptr<osu_object_v<T>> create_copies(T obj, const std::vector<double>& copy_to_v, bool sort = true) {
 		osu_object_v<T> output = osu_object_v<T>();
 		// For each offset to copy to
 		for (double copy_to : copy_to_v) {
@@ -386,7 +386,6 @@ namespace lib_functions
 		return std::make_shared<osu_object_v<T>>(output);
 	}
 
-
 	// Automatically creates tps to counteract bpm line scroll speed manipulation
 	// include_with defines if the created tps exports alongside the original
 	timing_point_v create_normalize(timing_point_v tp_v, const double &reference, bool include_with = false) {
@@ -408,7 +407,7 @@ namespace lib_functions
 
 	// Used to find the limits of create_basic_stutter
 	// [0] is min, [1] is max
-	std::vector<double> create_basic_stutter_threshold_limits(
+	std::vector<double> create_stutter_rel_threshold_limits(
 		double initial, double average, double threshold_min = 0.1, double threshold_max = 10.0) {
 
 		// init * thr + thr_ * ( 1 - thr ) = ave
@@ -434,7 +433,7 @@ namespace lib_functions
 
 	// Used to find the limits of create_basic_stutter
 	// [0] is min, [1] is max
-	std::vector<double> create_basic_stutter_init_limits(
+	std::vector<double> create_stutter_rel_init_limits(
 		double threshold, double average, double threshold_min = 0.1, double threshold_max = 10.0) {
 
 		// init * thr + thr_ * ( 1 - thr ) = ave
@@ -459,29 +458,29 @@ namespace lib_functions
 
 	// Creates a simple Act - CounterAct - Normalize movement
 	// Stutter creation will chain on more than 2 offsets
-	timing_point_v create_basic_stutter(const std::vector<double> &offset_v, double initial,
-		double threshold, double average = 1.0, bool is_bpm = false) {
+	timing_point_v create_stutter_relative(const std::vector<double> &offset_v, double initial,
+		double threshold_rel, double average = 1.0, bool is_bpm = false) {
 
-		if (offset_v.size() == 0) {
-			throw reamber_exception("tp_v size is 0");
+		if (offset_v.size() <= 1) {
+			throw reamber_exception("tp_v size must be more than 1");
 		}
-		else if (threshold > 1 || threshold < 0) {
+		else if (threshold_rel > 1 || threshold_rel < 0) {
 			throw reamber_exception("threshold must be in between 0 and 1" );
 		}
 
 		// We will do 2 create_copies calls,
 		// 1) initial -> offset_v
-		// 2) threshold_tp -> offset_threshold_v
+		// 2) threshold_tp -> threshold_offset_v
 
 		timing_point_v output = timing_point_v();
 
-		std::vector<double> offset_threshold_v = {};
+		std::vector<double> threshold_offset_v = {};
 
 		for (auto it = offset_v.begin(); it + 1 < offset_v.end(); it ++) {
-			offset_threshold_v.push_back((*(it + 1) - *it) * threshold + *it);
+			threshold_offset_v.push_back((*(it + 1) - *it) * threshold_rel + *it);
 		}
 
-		double threshold_tp = (average - (threshold * initial)) / (1 - threshold);
+		double threshold_tp = (average - (threshold_rel * initial)) / (1 - threshold_rel);
 
 		// 1) initial -> offset_v
 
@@ -493,13 +492,52 @@ namespace lib_functions
 
 		output[offset_v.size() - 1].set_value(average); // We use the last offset as a normalizer
 		
-		// 2) threshold_tp -> offset_threshold_v
+		// 2) threshold_tp -> threshold_offset_v
 
 		tp.set_value(threshold_tp);
 
-		output.push_back(*create_copies(tp, offset_threshold_v, true));
+		output.push_back(*create_copies(tp, threshold_offset_v, true));
 
 		std::sort(output.begin(), output.end());
+
+		return output;
+	}
+
+	// Creates a simple Act - CounterAct - Normalize movement
+	// Stutter creation will chain on more than 2 offsets
+	timing_point_v create_stutter_absolute(const std::vector<double> &offset_v, double initial,
+		double threshold_abs, double average = 1.0, bool is_bpm = false) {
+
+		if (offset_v.size() <= 1) {
+			throw reamber_exception("tp_v size must be more than 1");
+		}
+		else if (threshold_abs < 0) {
+			throw reamber_exception("threshold must be non-zero and positive");
+		}
+
+		timing_point_v output;
+
+		// Settle the initial tp first via copying
+		timing_point initial_tp;
+
+		initial_tp.load_parameters(0, initial, is_bpm);
+		output.push_back(*create_copies<timing_point>(initial_tp, offset_v, false));
+
+		output[offset_v.size() - 1].set_value(average); // We use the last offset as a normalizer
+
+		// We will have to individually fix the threshold_tp due to varying offsets
+
+		// For each offset_v pair, we will find the appropriate initial and threshold_tp
+		for (auto it = offset_v.begin(); it + 1 < offset_v.end(); it++) {
+			double threshold_offset = threshold_abs + *it;
+			double threshold_value = // (AVE * LENGTH - INIT * LENGTH_INIT) / LENGTH_THR
+				((average * (*(it + 1) - *it)) - (initial * (threshold_offset - *it))) / (*(it + 1) - threshold_offset);
+			timing_point threshold_tp;
+			threshold_tp.load_parameters(threshold_offset, threshold_value, is_bpm);
+			output.push_back(threshold_tp);
+		}
+
+		output.sort_by_offset(true);
 
 		return output;
 	}
