@@ -39,6 +39,10 @@
 
 namespace lib_functions 
 {
+	// NOTATION
+	// [0] OFFSET on 0ms
+	// <0> OBJECT 0/ OBJECT with 0ms
+
 	// Gets the difference in all offset difference in a vector form
 	// Note that notes on the same offset will be regarded as 1 offset
 	// This will return a vector that has a -1 size
@@ -83,15 +87,15 @@ namespace lib_functions
 		// [0][2][1][3]
 		for (double copy_to : copy_to_v) {
 			// FOR [0]
-			// <OBJ[X]> ---> <OBJ[0]>
+			// <X> ---> <0>
 			obj.set_offset(copy_to);
-			// [<OBJ[0]>, <OBJ[2]>, <OBJ[1]>, <OBJ[3]>]
+			// [<0>, <2>, <1>, <3>]
 			output.push_back(obj);
 		}
 
 		if (sort) {
-			// [<OBJ[0]>, <OBJ[1]>, <OBJ[2]>, <OBJ[3]>]
-			//                 ^---------^
+			// [<0>, <1>, <2>, <3>]
+			//        ^----^
 			std::sort(output.begin(), output.end());
 		}
 		return std::make_shared<osu_object_v<T>>(output);
@@ -111,15 +115,15 @@ namespace lib_functions
 		// [0][4][2]
 		for (double copy_to : copy_to_v) {
 			// FOR [0]
-			// [<OBJ[X]>,<OBJ[X+1]>] ---> [<OBJ[0]>,<OBJ[1]>]
+			// [<X>,<X+1> ---> <0>,<1>]
 			obj_v_copy->adjust_offset_to(copy_to, anchor_front);
 
-			// [<OBJ[0]>, <OBJ[1]>, <OBJ[4]>, <OBJ[5]>, <OBJ[2]>, <OBJ[3]>]
+			// [<0>, <1>, <4>, <5>, <2>, <3>]
 			output.push_back(*obj_v_copy);
 		}
 		if (sort) {
-			// [<OBJ[0]>, <OBJ[1]>, <OBJ[2]>, <OBJ[3]>, <OBJ[4]>, <OBJ[5]>]
-			//                           ^---------^---------^---------^
+			// [<0>, <1>, <2>, <3>, <4>, <5>]
+			//		       ^----^----^----^
 			std::sort(output.begin(), output.end());
 		}
 		return std::make_shared<osu_object_v<T>>(output);
@@ -131,17 +135,14 @@ namespace lib_functions
 	template <typename T>
 	std::shared_ptr<osu_object_v<T>> create_copies_by_subdivision(
 		std::vector<double> offset_v, const T& obj_define,
-		unsigned int subdivisions, bool include_with = true) {
+		unsigned int subdivisions) {
 
 		// [0] REJECT
 		if (offset_v.size() <= 1) {
 			throw reamber_exception("offset_v size must be at least 2 for the function to work");
 		}
 
-		// OFFSET_V [0][1]		   
-		// INCLUDE  [0][_]...[_][1] 
-		// EXCLUDE     [_]...[_]	   
-		std::vector<double> offset_copy_to_v = include_with ? offset_v : std::vector<double>();
+		std::vector<double> offset_copy_to_v;
 
 		// [0][1][2][3]
 		// <-------> 
@@ -164,8 +165,8 @@ namespace lib_functions
 			}
 		}
 		
-		//     [0]      [1]	     [2] 
-		// <OBJ[0]> <OBJ[1]> <OBJ[2]>
+		// [0] [1] [2] 
+		// <0> <1> <2>
 		auto output = create_copies(obj_define, offset_copy_to_v);
 
 		return output;
@@ -178,7 +179,7 @@ namespace lib_functions
 	template <typename T>
 	std::shared_ptr<osu_object_v<T>> create_copies_by_subdivision(
 		osu_object_v<T> const* obj_v,
-		unsigned int subdivisions, bool copy_prev = true, bool include_with = false) {
+		unsigned int subdivisions, bool copy_prev = true) {
 		std::vector<double> offset_unq_v = obj_v->get_offset_v(true);
 		osu_object_v<T> output = osu_object_v<T>();
 
@@ -194,62 +195,42 @@ namespace lib_functions
 
 		auto offset_unq_v_it = offset_unq_v.begin();
 
-		//	[ ][ ][ ][D] | 2  >>  [ ][ ][ ][D] | 2
-		// 	[ ][ ][C][ ] | 1  >>  [ ][ ][C][ ] | 1
-		//	[A][B][ ][ ] | 0  >>  [A][B][^][ ] | 0
+		//	< >< >< ><D> | 2  >>  < >< >< ><D> | 2
+		// 	< >< ><C>< > | 1  >>  < >< ><C>< > | 1
+		//	<A><B>< >< > | 0  >>  <A><B><^>< > | 0
 		//   ^	FIRST		  >>   	  LAST    			
-
 		for (auto obj_it = obj_v->begin(); obj_it + 1 < obj_v->end(); obj_it++) {
 
-			//	[ ][ ][ ][D] | 2	 >>  [ ][ ][ ][D] | 2
-			// 	[ ][ ][C][ ] | 1 	 >>  [ ][ ][C][ ] | 1 <-
-			//	[A][B][^][ ] | 0 <-	 >>  [A][B][^][ ] | 0 
+			//	< >< >< ><D> | 2	 >>  < >< >< ><D> | 2
+			// 	< >< ><C>< > | 1 	 >>  < >< ><C>< > | 1 <-
+			//	<A><B><^>< > | 0 <-	 >>  <A><B><^>< > | 0 
 			if (obj_it->get_offset() != *offset_unq_v_it) {
 				offset_unq_v_it++;
 			}
 
-			//	[ ][ ][ ][D] | 2
-			// 	[ ][ ][C][ ] | 1 <-
-			//	[A][B][ ][ ] | 0 <-
+			//	< >< >< ><D> | 2
+			// 	< >< ><C>< > | 1 <-
+			//	<A><B>< >< > | 0 <-
 			std::vector<double> offset_pair = {
 				*offset_unq_v_it, // start 
 				*(offset_unq_v_it + 1) // end
 			};
 
-			//	[ ][ ][ ][D] | 2	  >>  [ ][ ][ ][D] | 2	 
-			//  [ ][ ][ ][ ] | 1.5	  >>  [ ][ ][ ][ ] | 1.5	 
-			// 	[ ][ ][C][ ] | 1   <- >>  [A][ ][C][ ] | 1   <-
-			//  [ ][ ][ ][ ] | 0.5	  >>  [A][ ][ ][ ] | 0.5	 
-			//	[A][B][ ][ ] | 0   <- >>  [A][B][ ][ ] | 0   <-
+			//	< >< >< ><D> | 2	  >>  < >< >< ><D> | 2	 
+			//  < >< >< >< > | 1.5	  >>  < >< >< >< > | 1.5	 
+			// 	< >< ><C>< > | 1   <- >>  <A>< ><C>< > | 1   <-
+			//  < >< >< >< > | 0.5	  >>  <A>< >< >< > | 0.5	 
+			//	<A><B>< >< > | 0   <- >>  <A><B>< >< > | 0   <-
 			//   ^					  
 			output.push_back(
-				*create_copies_by_subdivision(offset_pair, copy_prev ? *obj_it : *(obj_it + 1), subdivisions, include_with));
-
-			// INCLUDE WITH FALSE
-			//	[ ][ ][ ][D] | 2	  >>  [ ][ ][ ][ ] | 2	 
-			//  [ ][ ][ ][ ] | 1.5	  >>  [ ][ ][C][ ] | 1.5	 
-			// 	[A][ ][C][ ] | 1   <- >>  [ ][ ][ ][ ] | 1   
-			//  [A][ ][ ][ ] | 0.5	  >>  [A][B][ ][ ] | 0.5 
-			//	[A][B][ ][ ] | 0   <- >>  [ ][ ][ ][ ] | 0   
-			//   ^			
-
-			// INCLUDE WITH TRUE
-			//	[ ][ ][ ][D] | 2	  >>  [ ][ ][ ][D] | 2	 
-			//  [ ][ ][ ][ ] | 1.5	  >>  [ ][ ][ ][ ] | 1.5	 
-			// 	[A][ ][C][ ] | 1   <- >>  [ ][ ][C][ ] | 1   <-
-			//  [A][ ][ ][ ] | 0.5	  >>  [A][ ][ ][ ] | 0.5	 
-			//	[A][B][ ][ ] | 0   <- >>  [A][B][ ][ ] | 0   <-
-			//   ^			
-			if (include_with) {
-				output.pop_back();
-			}
+				*create_copies_by_subdivision(offset_pair, copy_prev ? *obj_it : *(obj_it + 1), subdivisions));
 		}
 
-		//	[ ][ ][ ][D] | 2
-		//  [ ][ ][C][ ] | 1.5 
-		// 	[ ][ ][C][ ] | 1   
-		//  [A][B][ ][ ] | 0.5 
-		//	[A][B][ ][ ] | 0   	  
+		//	< >< >< ><D> | 2
+		//  < >< ><C>< > | 1.5 
+		// 	< >< ><C>< > | 1   
+		//  <A><B>< >< > | 0.5 
+		//	<A><B>< >< > | 0   	  
 		
 		return std::make_shared<osu_object_v<T>>(output);
 	}
@@ -261,7 +242,7 @@ namespace lib_functions
 	template <typename T>
 	std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
 		const std::vector<double> offset_v, const T obj_define,
-		double relativity = 0.5, bool include_with = false) {
+		double relativity = 0.5) {
 		// We create a vector of doubles that we want objects to be created on, then we use
 		// create_copies function to duplicate them
 
@@ -273,7 +254,7 @@ namespace lib_functions
 		// OFFSET_V [0][1]		   
 		// INCLUDE  [0][_]...[_][1] 
 		// EXCLUDE     [_]...[_]	  
-		std::vector<double> offset_copy_to_v = include_with ? offset_v : std::vector<double>();
+		std::vector<double> offset_copy_to_v;
 
 		//	[0][1][2][3]
 		//  <------->
@@ -291,7 +272,7 @@ namespace lib_functions
 		}
 
 		// [0][|][1][|][2][|][3]
-		// [<OBJ[0]>, <OBJ[|]>, <OBJ[1], ...]
+		// [<0>, <|>, <1>, ...]
 		return create_copies(obj_define, offset_copy_to_v);
 	}
 
@@ -301,9 +282,9 @@ namespace lib_functions
 	// include_with defines if the created objects exports alongside the original
 	template <typename T>
 	std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
-		osu_object_v<T> const* obj_v,
-		double relativity = 0.5, bool copy_prev = true, bool include_with = false) {
+		osu_object_v<T> const* obj_v, double relativity = 0.5, bool copy_prev = true) {
 
+		// [0] REJECT
 		if (obj_v->size() <= 1) {
 			throw reamber_exception("obj_v size must be at least 2 for the function to work");
 		}
@@ -311,6 +292,8 @@ namespace lib_functions
 			throw reamber_exception("relativity must be non-zero and positive");
 		}
 
+		// <0><0><1><2><2> 
+		// [0][1][2]
 		std::vector<double> offset_unq_v = obj_v->get_offset_v(true);
 		osu_object_v<T> output = osu_object_v<T>();
 
@@ -319,39 +302,50 @@ namespace lib_functions
 		// To solve this, we create a offset vector that we reference with our object vector
 		// We then create objects that take a subdivision of the next offset instead of object
 
+		//	< >< >< ><D> | 2  >>  < >< >< ><D> | 2
+		// 	< >< ><C>< > | 1  >>  < >< ><C>< > | 1
+		//	<A><B>< >< > | 0  >>  <A><B><^>< > | 0
+		//   ^	FIRST		  >>   	  LAST    		
 		auto offset_unq_v_it = offset_unq_v.begin();
 
-		for (auto obj : *obj_v) {
+		for (auto obj_it = obj_v->begin(); obj_it + 1 < obj_v->end(); obj_it++) {
 
-			// This is true when there are no more objects in the offset, so we add 1 to it
-			// It is guaranteed to have an object after this, so we do not need to verify again
-			if (obj.get_offset() != *offset_unq_v_it) {
+			//	< >< >< ><D> | 2	 >>  < >< >< ><D> | 2
+			// 	< >< ><C>< > | 1 	 >>  < >< ><C>< > | 1 <-
+			//	<A><B><^>< > | 0 <-	 >>  <A><B><^>< > | 0 
+			if (obj_it->get_offset() != *offset_unq_v_it) {
 				offset_unq_v_it++;
 
 				// In the case where a pair cannot happen after increment
 				if (offset_unq_v_it + 1 == offset_unq_v.end()) {
-					if (include_with) {
-						output.push_back(obj_v->back());
-					}
 					break;
 				}
 			}
 
-			// We create a offset_pair to use on the other variant of create_copies_by_subdivision
+			//	< >< >< ><D> | 2
+			// 	< >< ><C>< > | 1 <-
+			//	<A><B>< >< > | 0 <-
 			std::vector<double> offset_pair = {
 				*offset_unq_v_it, // start 
 				*(offset_unq_v_it + 1) // end
 			};
 
+			//	< >< >< ><D> | 2	  >>  < >< >< ><D> | 2	 
+			//  < >< >< >< > | 1-2	  >>  < >< >< >< > | 1-2	 
+			// 	< >< ><C>< > | 1   <- >>  <A>< ><C>< > | 1   <-
+			//  < >< >< >< > | 0-1	  >>  <A>< >< >< > | 0-1 
+			//	<A><B>< >< > | 0   <- >>  <A><B>< >< > | 0   <-
+			//   ^		
 			output.push_back(
-				*lib_functions::create_copies_by_relative_difference(offset_pair, obj, relativity, include_with));
-
-			// We need to remove the last element as the next pair's first element will overlap
-			// This only applies to include_with true as we utilize the overload
-			if (include_with) {
-				output.pop_back();
-			}
+				*create_copies_by_relative_difference(
+					offset_pair, copy_prev ? *obj_it : *(obj_it + 1), relativity));
 		}
+
+		//	< >< >< ><D> | 2
+		//  < >< ><C>< > | 1-2
+		// 	< >< ><C>< > | 1   
+		//  <A><B>< >< > | 0-1
+		//	<A><B>< >< > | 0   
 		
 		return std::make_shared<osu_object_v<T>>(output);
 	}
@@ -364,11 +358,11 @@ namespace lib_functions
 	template <typename T>
 	std::shared_ptr<osu_object_v<T>> create_copies_by_absolute_difference(
 		const std::vector<double> offset_v, const T obj_define,
-		double relativity, bool include_with = false,
-		bool relative_from_front = true, bool exclude_overlap = true) {
+		double relativity, bool relative_from_front = true, bool exclude_overlap = true) {
 		// We create a vector of doubles that we want objects to be created on, then we use
 		// create_copies function to duplicate them
 
+		// [0] REJECT
 		if (offset_v.size() <= 1) {
 			throw reamber_exception("offset_v size must be at least 2 for the function to work");
 		}
@@ -376,14 +370,27 @@ namespace lib_functions
 			throw reamber_exception("relativity must be non-zero and positive");
 		}
 
-		std::vector<double> offset_copy_to_v = include_with ? offset_v : std::vector<double>();
+		// <0><0><1><2><2> 
+		// [0][1][2]
+		std::vector<double> offset_copy_to_v;
 
+		// [0][1][2][3]
+		//  <----->
 		for (auto start = offset_v.begin(); start + 1 != offset_v.end(); start++) {
 
-			// We will calculate a different offset for different relative_from_front
+			// RELATIVE FROM FRONT
+			// [0]___[X]_______[1][...]
+			//  |----->
+
+			// RELATIVE FROM BACK
+			// [0]_______[X]___[1][...]
+			//            <-----|
 			double offset = relative_from_front ? (*start + relativity) : (*(start + 1) - relativity);
 			
-			// Check only if we want to exclude
+			// EXCLUDE OVERLAP
+			// [0]____[1]__[X]
+			//  |------!---->
+			//         REJECT & CONTINUE
 			if (exclude_overlap) {
 				if (offset >= *(start + 1)) {
 					continue;
@@ -393,6 +400,8 @@ namespace lib_functions
 			offset_copy_to_v.push_back(offset);
 		}
 
+		// [X][Y][Z]
+		// <X><Y><Z>
 		return create_copies(obj_define, offset_copy_to_v);
 	}
 
@@ -403,55 +412,57 @@ namespace lib_functions
 	// include_with defines if the created objects exports alongside the original
 	template <typename T>
 	std::shared_ptr<osu_object_v<T>> create_copies_by_absolute_difference(
-		osu_object_v<T> const* obj_v,
-		double relativity, bool copy_prev = true, bool include_with = false,
+		osu_object_v<T> const* obj_v, double relativity, bool copy_prev = true, 
 		bool relative_from_front = true, bool exclude_overlap = true) {
 
+		// [0] REJECT
 		if (obj_v->size() <= 1) {
 			throw reamber_exception("obj_v size must be at least 2 for the function to work");
 		}
 
+		// <0><0><1><2><2> 
+		// [0][1][2]
 		std::vector<double> offset_unq_v = obj_v->get_offset_v(true);
 		osu_object_v<T> output = osu_object_v<T>();
 
-		// As multiple objects can have the same offset, we want to make sure that subdivisions 
-		// are not created in between objects of the same offset
-		// To solve this, we create a offset vector that we reference with our object vector
-		// We then create objects that take a subdivision of the next offset instead of object
-
+		//	< >< >< ><D> | 2  >>  < >< >< ><D> | 2
+		// 	< >< ><C>< > | 1  >>  < >< ><C>< > | 1
+		//	<A><B>< >< > | 0  >>  <A><B><^>< > | 0
+		//   ^	FIRST		  >>   	  LAST    		
 		auto offset_unq_v_it = offset_unq_v.begin();
 
 		for (auto obj : *obj_v) {
 
-			// This is true when there are no more objects in the offset, so we add 1 to it
-			// It is guaranteed to have an object after this, so we do not need to verify again
+			//	< >< >< ><D> | 2	 >>  < >< >< ><D> | 2
+			// 	< >< ><C>< > | 1 	 >>  < >< ><C>< > | 1 <-
+			//	<A><B><^>< > | 0 <-	 >>  <A><B><^>< > | 0 
 			if (obj.get_offset() != *offset_unq_v_it) {
 				offset_unq_v_it++;
 
 				// In the case where a pair cannot happen after increment
 				if (offset_unq_v_it + 1 == offset_unq_v.end()) {
-					if (include_with) {
-						output.push_back(obj_v->back());
-					}
 					break;
 				}
 			}
 
-			// We create a offset_pair to use on the other variant of create_copies_by_subdivision
+			//	< >< >< ><D> | 2
+			// 	< >< ><C>< > | 1 <-
+			//	<A><B>< >< > | 0 <-
 			std::vector<double> offset_pair = {
 				*offset_unq_v_it, // start 
 				*(offset_unq_v_it + 1) // end
 			};
 
+			//	< >< >< ><D> | 2	  >>  < >< >< ><D> | 2	 
+			//  < >< >< >< > | 1-2	  >>  < >< >< >< > | 1-2	 
+			// 	< >< ><C>< > | 1   <- >>  <A>< ><C>< > | 1   <-
+			//  < >< >< >< > | 0-1	  >>  <A>< >< >< > | 0-1 
+			//	<A><B>< >< > | 0   <- >>  <A><B>< >< > | 0   <-
+			//   ^		
 			output.push_back(
 				*lib_functions::create_copies_by_absolute_difference(
-					offset_pair, obj, relativity, include_with, relative_from_front, exclude_overlap));
+					offset_pair, obj, relativity, relative_from_front, exclude_overlap));
 
-			// We need to remove the last element as the next pair's first element will overlap
-			// This only applies to include_with true as we utilize the overload
-			if (include_with) {
-				output.pop_back();
-			}
 		}
 
 		return std::make_shared<osu_object_v<T>>(output);
@@ -461,6 +472,7 @@ namespace lib_functions
 	// include_with defines if the created tps exports alongside the original
 	timing_point_v create_normalize(timing_point_v tp_v, const double &reference, bool include_with = false) {
 		timing_point_v output = include_with ? tp_v : timing_point_v();
+
 		tp_v = tp_v.get_bpm_only();
 
 		if (tp_v.size() == 0) {
