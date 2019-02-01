@@ -129,14 +129,8 @@ namespace lib_functions
 		return std::make_shared<osu_object_v<T>>(output);
 	}
 
-	// Divides the space in between each offset pair in offset_v then creates objects that segment it
-	// The object created will be defined by the user
-	// include_with defines if the created objects exports alongside the original
-	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies_by_subdivision(
-		std::vector<double> offset_v, const T& obj_define,
-		unsigned int subdivisions) {
-
+	std::vector<double> create_copies_subdivision(
+		std::vector<double> offset_v, unsigned int subdivisions) {
 		// [0] REJECT
 		if (offset_v.size() <= 1) {
 			throw reamber_exception("offset_v size must be at least 2 for the function to work");
@@ -147,7 +141,7 @@ namespace lib_functions
 		// [0][1][2][3]
 		// <-------> 
 		for (auto start = offset_v.begin(); start + 1 < offset_v.end(); start++) {
-			
+
 			// EG. 3 SUBDIVISIONS
 			//     0   1   2   3   E
 			//     O   |   |   |   O
@@ -164,12 +158,16 @@ namespace lib_functions
 				offset_copy_to_v.push_back(*start + slice_distance * slice);
 			}
 		}
-		
-		// [0] [1] [2] 
-		// <0> <1> <2>
-		auto output = create_copies(obj_define, offset_copy_to_v);
+	}
 
-		return output;
+	// Divides the space in between each offset pair in offset_v then creates objects that segment it
+	// The object created will be defined by the user
+	// include_with defines if the created objects exports alongside the original
+	template <typename T>
+	std::shared_ptr<osu_object_v<T>> create_copies_subdivision(
+		std::vector<double> offset_v, const T& obj_define,
+		unsigned int subdivisions) {
+		return create_copies(obj_define, create_copies_subdivision(offset_v, subdivisions));
 	}
 
 	// Divides the space in between each obj pair in obj_v then creates objects that segment it
@@ -177,61 +175,66 @@ namespace lib_functions
 	// copy_prev defines if the object created copies the previous or next object
 	// include_with defines if the created objects exports alongside the original
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies_by_subdivision(
+	std::shared_ptr<osu_object_v<T>> create_copies_subdivision(
 		osu_object_v<T> const* obj_v,
 		unsigned int subdivisions, bool copy_prev = true) {
-		std::vector<double> offset_unq_v = obj_v->get_offset_v(true);
-		osu_object_v<T> output = osu_object_v<T>();
 
-		// As multiple objects can have the same offset, we want to make sure that subdivisions 
-		// are not created in between objects of the same offset
-		// To solve this, we create a offset vector that we reference with our object vector
-		// We then create objects that take a subdivision of the next offset instead of object
+		// <0>   <2>   <4>
+		// [0][1][2][3][4]
+		auto offset_v = create_copies_subdivision(obj_v->get_offset_v(true), subdivisions);
+		
+		// <0>   <2>   <4>
+		// [0][1][2][3][4]
+		// <0><0><2><2><4>
+		auto output = create_copies_obj_delay(obj_v, offset_v);
 
-		// [0] REJECT
-		if (obj_v->size() <= 1) {
-			throw reamber_exception("obj_v size must be at least 2 for the function to work");
-		}
+		return std::make_shared<osu_object_v<T>>(output);
+	}
 
-		auto offset_unq_v_it = offset_unq_v.begin();
+	// <0>   <2>   <4>
+	// [0][1][2][3][4]
+	// <0><0><2><2><4>
+	template <typename T>
+	std::shared_ptr<osu_object_v<T>> create_copies_obj_delay(
+		osu_object_v<T> const* obj_v, std::vector<double> offset_v) {
 
-		//	< >< >< ><D> | 2  >>  < >< >< ><D> | 2
-		// 	< >< ><C>< > | 1  >>  < >< ><C>< > | 1
-		//	<A><B>< >< > | 0  >>  <A><B><^>< > | 0
-		//   ^	FIRST		  >>   	  LAST    			
-		for (auto obj_it = obj_v->begin(); obj_it + 1 < obj_v->end(); obj_it++) {
+		auto offset_v_it = offset_v.begin();
+		auto obj_v_it = obj_v->begin();
 
-			//	< >< >< ><D> | 2	 >>  < >< >< ><D> | 2
-			// 	< >< ><C>< > | 1 	 >>  < >< ><C>< > | 1 <-
-			//	<A><B><^>< > | 0 <-	 >>  <A><B><^>< > | 0 
-			if (obj_it->get_offset() != *offset_unq_v_it) {
-				offset_unq_v_it++;
+		osu_object_v<T> output; 
+		
+		while (true) {
+
+			// [0][1][2][3][4]
+			//              v
+			// <0><0><2><2><4>
+			// BREAK
+			if (offset_v_it == (offset_v.end() - 1)) {
+				break;
 			}
 
-			//	< >< >< ><D> | 2
-			// 	< >< ><C>< > | 1 <-
-			//	<A><B>< >< > | 0 <-
-			std::vector<double> offset_pair = {
-				*offset_unq_v_it, // start 
-				*(offset_unq_v_it + 1) // end
-			};
+			// <0><0><2><2>
+			//              v
+			// [0][1][2][3][4]
+			//        v
+			// <0>   <2>   <4>
+			// MOVE OBJ_IT
+			if (*offset_v_it == (obj_v_it + 1)->get_offset()) {
+				obj_v_it++;
+			}
 
-			//	< >< >< ><D> | 2	  >>  < >< >< ><D> | 2	 
-			//  < >< >< >< > | 1.5	  >>  < >< >< >< > | 1.5	 
-			// 	< >< ><C>< > | 1   <- >>  <A>< ><C>< > | 1   <-
-			//  < >< >< >< > | 0.5	  >>  <A>< >< >< > | 0.5	 
-			//	<A><B>< >< > | 0   <- >>  <A><B>< >< > | 0   <-
-			//   ^					  
-			output.push_back(
-				*create_copies_by_subdivision(offset_pair, copy_prev ? *obj_it : *(obj_it + 1), subdivisions));
+			// <0>
+			//     v        
+			// [0][1][2][3][4]
+			//  v     
+			// <0>   <2>   <4>
+			T obj = *obj_v_it;
+			obj.set_offset(*offset_v_it);
+			output.push_back(obj);
+
+			offset_v_it++;
 		}
 
-		//	< >< >< ><D> | 2
-		//  < >< ><C>< > | 1.5 
-		// 	< >< ><C>< > | 1   
-		//  <A><B>< >< > | 0.5 
-		//	<A><B>< >< > | 0   	  
-		
 		return std::make_shared<osu_object_v<T>>(output);
 	}
 
@@ -240,7 +243,7 @@ namespace lib_functions
 	// The object created will be defined by the user
 	// include_with defines if the created objects exports alongside the original
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
+	std::shared_ptr<osu_object_v<T>> create_copies_rel_diff(
 		const std::vector<double> offset_v, const T obj_define,
 		double relativity = 0.5) {
 		// We create a vector of doubles that we want objects to be created on, then we use
@@ -281,7 +284,7 @@ namespace lib_functions
 	// The object created will be defined by the user
 	// include_with defines if the created objects exports alongside the original
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies_by_relative_difference(
+	std::shared_ptr<osu_object_v<T>> create_copies_rel_diff(
 		osu_object_v<T> const* obj_v, double relativity = 0.5, bool copy_prev = true) {
 
 		// [0] REJECT
@@ -337,7 +340,7 @@ namespace lib_functions
 			//	<A><B>< >< > | 0   <- >>  <A><B>< >< > | 0   <-
 			//   ^		
 			output.push_back(
-				*create_copies_by_relative_difference(
+				*create_copies_rel_diff(
 					offset_pair, copy_prev ? *obj_it : *(obj_it + 1), relativity));
 		}
 
@@ -356,7 +359,7 @@ namespace lib_functions
 	// The object created will be defined by the user
 	// include_with defines if the created objects exports alongside the original
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies_by_absolute_difference(
+	std::shared_ptr<osu_object_v<T>> create_copies_abs_diff(
 		const std::vector<double> offset_v, const T obj_define,
 		double relativity, bool relative_from_front = true, bool exclude_overlap = true) {
 		// We create a vector of doubles that we want objects to be created on, then we use
@@ -411,7 +414,7 @@ namespace lib_functions
 	// The object created will be defined by the user
 	// include_with defines if the created objects exports alongside the original
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies_by_absolute_difference(
+	std::shared_ptr<osu_object_v<T>> create_copies_abs_diff(
 		osu_object_v<T> const* obj_v, double relativity, bool copy_prev = true, 
 		bool relative_from_front = true, bool exclude_overlap = true) {
 
@@ -460,7 +463,7 @@ namespace lib_functions
 			//	<A><B>< >< > | 0   <- >>  <A><B>< >< > | 0   <-
 			//   ^		
 			output.push_back(
-				*lib_functions::create_copies_by_absolute_difference(
+				*lib_functions::create_copies_abs_diff(
 					offset_pair, obj, relativity, relative_from_front, exclude_overlap));
 
 		}
@@ -544,46 +547,46 @@ namespace lib_functions
 	timing_point_v create_stutter_relative(const std::vector<double> &offset_v, double initial,
 		double threshold_rel, double average = 1.0, bool is_bpm = false) {
 
-		if (offset_v.size() <= 1) {
-			throw reamber_exception("tp_v size must be more than 1");
-		}
-		else if (threshold_rel > 1 || threshold_rel < 0) {
-			throw reamber_exception("threshold must be in between 0 and 1" );
-		}
+		//if (offset_v.size() <= 1) {
+		//	throw reamber_exception("tp_v size must be more than 1");
+		//}
+		//else if (threshold_rel > 1 || threshold_rel < 0) {
+		//	throw reamber_exception("threshold must be in between 0 and 1" );
+		//}
 
-		// We will do 2 create_copies calls,
-		// 1) initial -> offset_v
-		// 2) threshold_tp -> threshold_offset_v
+		//// We will do 2 create_copies calls,
+		//// 1) initial -> offset_v
+		//// 2) threshold_tp -> threshold_offset_v
 
-		timing_point_v output = timing_point_v();
+		//timing_point_v output = timing_point_v();
 
-		std::vector<double> threshold_offset_v = {};
+		//std::vector<double> threshold_offset_v = {};
 
-		for (auto it = offset_v.begin(); it + 1 < offset_v.end(); it ++) {
-			threshold_offset_v.push_back((*(it + 1) - *it) * threshold_rel + *it);
-		}
+		//for (auto it = offset_v.begin(); it + 1 < offset_v.end(); it ++) {
+		//	threshold_offset_v.push_back((*(it + 1) - *it) * threshold_rel + *it);
+		//}
 
-		double threshold_tp = (average - (threshold_rel * initial)) / (1 - threshold_rel);
+		//double threshold_tp = (average - (threshold_rel * initial)) / (1 - threshold_rel);
 
-		// 1) initial -> offset_v
+		//// 1) initial -> offset_v
 
-		timing_point tp;
-		tp.set_is_bpm(is_bpm);
-		tp.set_value(initial);
+		//timing_point tp;
+		//tp.set_is_bpm(is_bpm);
+		//tp.set_value(initial);
 
-		output.push_back(*create_copies(tp, offset_v, true));
+		//output.push_back(*create_copies(tp, offset_v, true));
 
-		output[offset_v.size() - 1].set_value(average); // We use the last offset as a normalizer
-		
-		// 2) threshold_tp -> threshold_offset_v
+		//output[offset_v.size() - 1].set_value(average); // We use the last offset as a normalizer
+		//
+		//// 2) threshold_tp -> threshold_offset_v
 
-		tp.set_value(threshold_tp);
+		//tp.set_value(threshold_tp);
 
-		output.push_back(*create_copies(tp, threshold_offset_v, true));
+		//output.push_back(*create_copies(tp, threshold_offset_v, true));
 
-		std::sort(output.begin(), output.end());
+		//std::sort(output.begin(), output.end());
 
-		return output;
+		//return output;
 	}
 
 	// Creates a simple Act - CounterAct - Normalize movement
@@ -629,7 +632,7 @@ namespace lib_functions
 	timing_point_v create_stutter_from_offset(const std::vector<double> &offset_v, double initial,
 		double average = 1.0, bool is_bpm = false, bool skip_on_invalid = true) {
 
-		if (offset_v.size % 2 != 1) {
+		if (offset_v.size() % 2 != 1) {
 			// only works on odd
 			throw reamber_exception("stutter can only be done on odd number of offset");
 		}
@@ -646,15 +649,7 @@ namespace lib_functions
 		//	START  <F  T  E> |	|  |  |
 		//          ---> <F  T  E> |  |
 		//	END           ---> <F  T  E>
-		while (offset_it_end != offset_v.end()) {
-			if (offset_it_end != offset_v.end() - 1) {
-				// indicates it's the last pair
-				timing_point end_tp;
-				end_tp.load_parameters(*offset_it_end, average, is_bpm);
-
-				tp_v.push_back(end_tp);
-			}
-
+		while (true) {
 			gap = *offset_it_end - *offset_it_begin;
 
 			// thr = (ave * gap - init * init_gap) / thr_gap
@@ -662,7 +657,9 @@ namespace lib_functions
 				((*offset_it_end) - (*offset_it_threshold));
 
 			// threshold cannot be negative or 0
+			// we won't restrict it if the user really wants the invalid value
 			if (threshold > 0 || !skip_on_invalid) {
+				
 				timing_point begin_tp, threshold_tp;
 
 				begin_tp.load_parameters(*offset_it_begin, initial, is_bpm);
@@ -670,6 +667,15 @@ namespace lib_functions
 
 				tp_v.push_back(begin_tp);
 				tp_v.push_back(threshold_tp);
+			}
+
+			if (offset_it_end == (offset_v.end() - 1)) {
+				// indicates it's the last pair
+				timing_point end_tp;
+				end_tp.load_parameters(*offset_it_end, average, is_bpm);
+
+				tp_v.push_back(end_tp);
+				break;
 			}
 
 			// We move through pairs by 2
