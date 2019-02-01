@@ -625,4 +625,59 @@ namespace lib_functions
 		return output;
 	}
 
+	// this will generate appropriate stutters from offset_v
+	timing_point_v create_stutter_from_offset(const std::vector<double> &offset_v, double initial,
+		double average = 1.0, bool is_bpm = false, bool skip_on_invalid = true) {
+
+		if (offset_v.size % 2 != 1) {
+			// only works on odd
+			throw reamber_exception("stutter can only be done on odd number of offset");
+		}
+
+		timing_point_v tp_v;
+		double gap; // defined as end - front
+		double threshold; // value of the threshold
+
+		auto offset_it_begin = offset_v.begin();
+		auto offset_it_threshold = offset_v.begin() + 1;
+		auto offset_it_end = offset_v.begin() + 2;
+
+		//	OFFSET [0][1][2][3][4][5][6]
+		//	START  <F  T  E> |	|  |  |
+		//          ---> <F  T  E> |  |
+		//	END           ---> <F  T  E>
+		while (offset_it_end != offset_v.end()) {
+			if (offset_it_end != offset_v.end() - 1) {
+				// indicates it's the last pair
+				timing_point end_tp;
+				end_tp.load_parameters(*offset_it_end, average, is_bpm);
+
+				tp_v.push_back(end_tp);
+			}
+
+			gap = *offset_it_end - *offset_it_begin;
+
+			// thr = (ave * gap - init * init_gap) / thr_gap
+			threshold = ((average * gap) - (initial * ((*offset_it_threshold) - (*offset_it_begin)))) /
+				((*offset_it_end) - (*offset_it_threshold));
+
+			// threshold cannot be negative or 0
+			if (threshold > 0 || !skip_on_invalid) {
+				timing_point begin_tp, threshold_tp;
+
+				begin_tp.load_parameters(*offset_it_begin, initial, is_bpm);
+				threshold_tp.load_parameters(*offset_it_threshold, threshold, is_bpm);
+
+				tp_v.push_back(begin_tp);
+				tp_v.push_back(threshold_tp);
+			}
+
+			// We move through pairs by 2
+			offset_it_begin += 2;
+			offset_it_threshold += 2;
+			offset_it_end += 2;
+		}
+
+		return tp_v;
+	}
 };
