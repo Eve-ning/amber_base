@@ -560,18 +560,20 @@ namespace lib_functions
 	// Creates a simple Act - CounterAct - Normalize movement
 	// Stutter creation will chain on more than 2 offsets
 	timing_point_v create_stutter_relative(const std::vector<double> &offset_v, double initial,
-		double relativity, double average = 1.0, bool is_bpm = false) {
-		// MAGIC BOOL
+		double relativity, double average = 1.0, bool is_bpm = false, bool skip_on_invalid = true) {
+		// force inclusion of inits
 		auto offset_v_c = create_copies_rel_diff(offset_v, relativity, true);
-		return create_stutter_from_offset(offset_v_c, initial, average, is_bpm, true);
+		return create_stutter_from_offset(offset_v_c, initial, average, is_bpm, skip_on_invalid);
 	}
 
 	// Creates a simple Act - CounterAct - Normalize movement
 	// Stutter creation will chain on more than 2 offsets
 	timing_point_v create_stutter_absolute(const std::vector<double> &offset_v, double initial,
-		double relativity, double average = 1.0, bool is_bpm = false) {
-		auto offset_v_c = create_copies_abs_diff(offset_v, relativity, true);
-		return create_stutter_from_offset(offset_v_c, initial, average, is_bpm, true);
+		double relativity, double average = 1.0, bool is_bpm = false, bool relative_from_front = true,
+		bool skip_on_invalid = true) {
+		// force inclusion of inits
+		auto offset_v_c = create_copies_abs_diff(offset_v, relativity, true, relative_from_front, skip_on_invalid);
+		return create_stutter_from_offset(offset_v_c, initial, average, is_bpm, skip_on_invalid);
 	}
 
 
