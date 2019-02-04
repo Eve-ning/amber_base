@@ -41,18 +41,63 @@ public:
 	std::vector<double> get_value_v() const;
 
 	// Cross multiplies the tp_vs
-	void cross_effect_multiply(timing_point_v eff_tp_v) {
-		cross_effect(eff_tp_v, [](timing_point self, timing_point eff) {
-			self.set_value(self.get_value() * eff.get_value());
-			return self;
+	void cross_effect_multiply(timing_point_v eff_tp_v);
+	// Cross add the tp_vs
+	void cross_effect_add(timing_point_v eff_tp_v);
+
+	timing_point_v operator *(double par) {
+		return arithmetic(par, [](double value, double parameter) {
+			return value * parameter;
 		});
 	}
-	// Cross add the tp_vs
-	void cross_effect_add(timing_point_v eff_tp_v) {
-		cross_effect(eff_tp_v, [](timing_point self, timing_point eff) {
-			self.set_value(self.get_value() + eff.get_value());
-			return self;
+	timing_point_v operator /(double par) {
+		return arithmetic(par, [](double value, double parameter) {
+			return value / parameter;
 		});
+	}
+	timing_point_v operator +(double par) {
+		return arithmetic(par, [](double value, double parameter) {
+			return value + parameter;
+		});
+	}
+	timing_point_v operator -(double par) {
+		return arithmetic(par, [](double value, double parameter) {
+			return value - parameter;
+		});
+	}
+
+	timing_point_v& operator *=(double par) {
+		return arithmetic(par, [](double value, double parameter) {
+			return value * parameter;
+		});
+	}
+	timing_point_v& operator /=(double par) {
+		return arithmetic(par, [](double value, double parameter) {
+			return value / parameter;
+		});
+	}
+	timing_point_v& operator +=(double par) {
+		return arithmetic(par, [](double value, double parameter) {
+			return value + parameter;
+		});
+	}
+	timing_point_v& operator -=(double par) {
+		return arithmetic(par, [](double value, double parameter) {
+			return value - parameter;
+		});
+	}
+
+
+
+
+
+private:
+	timing_point_v arithmetic(double parameter,double(*oper)(double value, double parameter)) {
+		auto tp_v = *this;
+		for (auto &tp : tp_v) {
+			tp.set_value(oper(tp.get_value(), parameter));
+		}
+		return tp_v;
 	}
 
 };
