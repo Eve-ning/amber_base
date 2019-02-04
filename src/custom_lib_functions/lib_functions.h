@@ -505,36 +505,10 @@ namespace lib_functions
 
 		return tp_v;
 	}
-	
-	// Used to find the limits of create_basic_stutter
-	// [0] is min, [1] is max
-	std::vector<double> create_stutter_rel_threshold_limits(
-		double initial, double average, double threshold_min = 0.1, double threshold_max = 10.0) {
-
-		// init * thr + thr_ * ( 1 - thr ) = ave
-		// init * thr + thr_ - thr * thr_ = ave
-		// init * thr - thr * thr_ = ave - thr_
-		// thr * ( init - thr_ ) = ave - thr_
-		// thr = ( ave - thr_ ) / ( init - thr_ )
-
-		double thr_1 = (average - threshold_min) / (initial - threshold_min);
-		double thr_2 = (average - threshold_max) / (initial - threshold_max);
-
-		std::vector<double> output;
-		if (thr_1 < thr_2) {
-			output.push_back(thr_1);
-			output.push_back(thr_2);
-		}
-		else {
-			output.push_back(thr_2);
-			output.push_back(thr_1);
-		}
-		return output;
-	}
 
 	// Used to find the limits of create_basic_stutter
 	// [0] is min, [1] is max
-	std::vector<double> create_stutter_rel_init_limits(
+	std::vector<double> get_stutter_rel_init_limits(
 		double threshold, double average, double threshold_min = 0.1, double threshold_max = 10.0) {
 
 		// init * thr + thr_ * ( 1 - thr ) = ave
@@ -557,6 +531,14 @@ namespace lib_functions
 		return output;
 	}
 
+
+	// Used to find the limits of create_basic_stutter
+	// [0] is min, [1] is max
+	std::vector<double> get_stutter_abs_init_limits(
+		double threshold, double average, double distance, double threshold_min = 0.1, double threshold_max = 10.0) {
+		return get_stutter_rel_init_limits(threshold / distance, average, threshold_min, threshold_max);
+	}
+
 	// Creates a simple Act - CounterAct - Normalize movement
 	// Stutter creation will chain on more than 2 offsets
 	timing_point_v create_stutter_relative(const std::vector<double> &offset_v, double initial,
@@ -576,5 +558,48 @@ namespace lib_functions
 		return create_stutter_from_offset(offset_v_c, initial, average, is_bpm, skip_on_invalid);
 	}
 
+	timing_point_v stutter_swap(timing_point_v tp_v) {
 
+		if (tp_v.size() % 2 != 1) {
+			// only works on odd
+			throw reamber_exception("stutter can only be done on odd number of offset");
+		}
+
+		auto tp_v_1 = tp_v.begin();
+		auto tp_v_2 = tp_v.begin() + 1;
+
+
+		// [0][1][2][3][4][E]	
+		timing_point_v output;
+		while (tp_v_2 < tp_v.end()) {
+
+			//       [0]   [1]           [2]
+			// <--C--><--A--><--M--><--A--> 
+			// <--C--><---------B--------->
+			// B - 2A = to_move
+			double to_move = ((tp_v_2 + 1)->get_offset() - tp_v_2->get_offset()) - (tp_v_2->get_offset() - tp_v_1->get_offset());
+			tp_v_2->set_offset(tp_v_2->get_offset() + to_move);
+
+			// Swap offsets
+			double offset_buffer;
+			offset_buffer = tp_v_2->get_offset();
+			tp_v_2->set_offset(tp_v_1->get_offset());
+			tp_v_1->set_offset(offset_buffer);
+
+			output.push_back(*tp_v_1);
+			output.push_back(*tp_v_2);
+			tp_v_1 += 2;
+			tp_v_2 += 2;
+		}
+
+		// ...[3][4][5][E]
+		//     ^  ^ 
+		//     ----> ^  ^ BREAK
+		// Need to push back [5]
+		if (tp_v_2 == tp_v.end()) {
+			output.push_back(*tp_v_1);
+		}
+
+		return output;
+	}
 };
