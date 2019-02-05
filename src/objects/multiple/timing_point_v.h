@@ -46,53 +46,49 @@ public:
 	void cross_effect_add(timing_point_v eff_tp_v);
 
 	timing_point_v operator *(double par) {
-		return arithmetic(par, [](double value, double parameter) {
+		return value_arithmetic(par, [](double value, double parameter) {
 			return value * parameter;
 		});
 	}
 	timing_point_v operator /(double par) {
-		return arithmetic(par, [](double value, double parameter) {
+		return value_arithmetic(par, [](double value, double parameter) {
 			return value / parameter;
 		});
 	}
 	timing_point_v operator +(double par) {
-		return arithmetic(par, [](double value, double parameter) {
+		return value_arithmetic(par, [](double value, double parameter) {
 			return value + parameter;
 		});
 	}
 	timing_point_v operator -(double par) {
-		return arithmetic(par, [](double value, double parameter) {
+		return value_arithmetic(par, [](double value, double parameter) {
 			return value - parameter;
 		});
 	}
 
-	timing_point_v& operator *=(double par) {
-		return arithmetic(par, [](double value, double parameter) {
-			return value * parameter;
-		});
-	}
-	timing_point_v& operator /=(double par) {
-		return arithmetic(par, [](double value, double parameter) {
-			return value / parameter;
-		});
-	}
-	timing_point_v& operator +=(double par) {
-		return arithmetic(par, [](double value, double parameter) {
-			return value + parameter;
-		});
-	}
-	timing_point_v& operator -=(double par) {
-		return arithmetic(par, [](double value, double parameter) {
-			return value - parameter;
-		});
-	}
+    timing_point_v operator *=(double par) {
+            return value_arithmetic(par, [](double value, double parameter) {
+                    return value * parameter;
+            });
+    }
+    timing_point_v operator /=(double par) {
+            return value_arithmetic(par, [](double value, double parameter) {
+                    return value / parameter;
+            });
+    }
+    timing_point_v operator +=(double par) {
+            return value_arithmetic(par, [](double value, double parameter) {
+                    return value + parameter;
+            });
+    }
+    timing_point_v operator -=(double par) {
+            return value_arithmetic(par, [](double value, double parameter) {
+                    return value - parameter;
+            });
+    }
 
-
-
-
-
-private:
-	timing_point_v arithmetic(double parameter,double(*oper)(double value, double parameter)) {
+protected:
+	timing_point_v value_arithmetic(double parameter,double(*oper)(double value, double parameter)) {
 		auto tp_v = *this;
 		for (auto &tp : tp_v) {
 			tp.set_value(oper(tp.get_value(), parameter));

@@ -107,7 +107,7 @@ public:
 		});
 	}
 
-	// Adjusts the offset of all objects in the vector BY a value
+	// Adjusts the offset of all objects in the vector BY a offset
 	void adjust_offset_by(double adjust_by) {
 		for (obj_type &obj : m_object_v) {
 			obj.set_offset(obj.get_offset() + adjust_by);
@@ -121,9 +121,9 @@ public:
 			adjust_offset_by(-get_offset_max());  // Minus off the largest offset
 	}
 
-	// Adjusts the offset of all objects in the vector TO a value
+	// Adjusts the offset of all objects in the vector TO a offset
 	void adjust_offset_to(double adjust_to, bool anchor_front = true) {
-		adjust_offset_to_zero(); // Zero then move by the value
+		adjust_offset_to_zero(); // Zero then move by the offset
                 adjust_offset_by(adjust_to);
 	}
 
@@ -247,7 +247,16 @@ public:
 	obj_type front() const { return m_object_v.front(); }
 	obj_type back() const { return m_object_v.back(); }
 
+	osu_object_v offset_arithmetic(double parameter, double(*oper)(double offset, double parameter)) {
+		auto obj_v = *this;
+		for (auto &obj : obj_v) {
+			obj.set_offset(oper(obj.get_offset(), parameter));
+		}
+		return obj_v;
+	}
+
 protected:
+	
 	std::vector<obj_type> m_object_v;
 
 };
