@@ -602,4 +602,42 @@ namespace lib_functions
 
 		return output;
 	}
+
+	template <typename T>
+	std::shared_ptr<osu_object_v<T>> extract_nth(osu_object_v<T> const* obj_v, int n, int offset = 0) {
+
+		if (n <= 0) {
+			throw reamber_exception("n cannot be less than or equal to 0");
+		}
+
+		osu_object_v<T> obj_v_c;
+
+		for (size_t i = offset; i < obj_v->size(); i += n) {
+			obj_v_c.push_back(obj_v->get_index(i));
+		}
+
+		return std::make_shared<osu_object_v<T>>(obj_v_c);
+	}
+	template <typename T>
+	std::shared_ptr<osu_object_v<T>> delete_nth(osu_object_v<T> const* obj_v, int n, int offset = 0) {
+
+		if (n <= 0) {
+			throw reamber_exception("n cannot be less than or equal to 0");
+		}
+
+		osu_object_v<T> obj_v_c;
+
+		// [0][1][2][3][4][5]
+		//     ^        ^
+		// off = 1
+		// n = 3
+
+		for (size_t i = offset; i < obj_v->size(); i ++) {
+			if ((i - offset) % n != 0) { // Only push back those not in the nth sequence
+				obj_v_c.push_back(obj_v->get_index(i));
+			}
+		}
+
+		return std::make_shared<osu_object_v<T>>(obj_v_c);
+	}
 };

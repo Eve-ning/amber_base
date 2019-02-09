@@ -66,7 +66,7 @@ public:
 		});
 	}
 
-    timing_point_v operator *=(double par) {
+    timing_point_v operator *=(double par) {	
             return value_arithmetic(par, [](double value, double parameter) {
                     return value * parameter;
             });
