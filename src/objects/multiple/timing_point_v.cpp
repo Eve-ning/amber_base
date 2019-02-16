@@ -76,3 +76,26 @@ void timing_point_v::cross_effect_add(timing_point_v eff_tp_v) {
 	});
 }
 
+double timing_point_v::get_average_value(bool is_bpm) const {
+
+	timing_point_v tp_v = is_bpm ? get_bpm_only() : get_sv_only();
+	if (tp_v.size() <= 0) {
+		return 0;
+	}
+	else if (tp_v.size() == 1) {
+		return tp_v[0].get_value();
+	}
+
+	double offset = 0;
+	double distance = 0;
+
+	tp_v.sort_by_offset(true);
+
+	// Loop through all pairs excluding the last invalid pair
+	for (auto tp_it = tp_v.begin(); tp_it != tp_v.end() - 1; tp_it++) {
+		offset += (tp_it + 1)->get_offset() - tp_it->get_offset();
+		distance += ((tp_it + 1)->get_offset() - tp_it->get_offset()) * tp_it->get_value();
+	}
+	return distance / offset;
+}
+

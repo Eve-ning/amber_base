@@ -39,6 +39,12 @@ public:
 
 	// Gets all values
 	std::vector<double> get_value_v() const;
+	double get_average_sv_value() const {
+		return get_average_value(false);
+	}
+	double get_average_bpm_value() const {
+		return get_average_value(true);
+	}
 
 	// Cross multiplies the tp_vs
 	void cross_effect_multiply(timing_point_v eff_tp_v);
@@ -88,6 +94,7 @@ public:
     }
 
 protected:
+
 	timing_point_v value_arithmetic(double parameter,double(*oper)(double value, double parameter)) {
 		auto tp_v = *this;
 		for (auto &tp : tp_v) {
@@ -95,5 +102,6 @@ protected:
 		}
 		return tp_v;
 	}
-
+private:
+	double get_average_value(bool is_bpm) const;
 };
