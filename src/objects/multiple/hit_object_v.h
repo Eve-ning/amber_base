@@ -27,15 +27,15 @@ public:
 
 	// Loads from data from the editor
 	// Do not skip keys if you want to export to .osu
-	void load_editor_hit_object(const char* c_str, unsigned int keys = 0);
+	void load_editor_hit_object(std::string str, unsigned int keys = 0);
 
 	// Loads from data from the .osu file as one whole string
 	// Key count is required for conversion to columns
-	void load_raw_hit_object(const char* c_str, unsigned int keys, char delimeter = '\n');
+	void load_raw_hit_object(std::string str, unsigned int keys, char delimeter = '\n');
 
 	// Loads from data from the .osu file as a vector
 	// Key count is required for conversion to columns
-    void load_raw_hit_object(std::vector<const char*> c_str_v, unsigned int keys);
+    void load_raw_hit_object(std::vector<std::string> str_v, unsigned int keys);
 
 	//// Exporting
 

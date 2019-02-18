@@ -27,11 +27,11 @@ public:
 	// Loads from data from the editor
 	// Do not skip keys if you want to export to .osu
 	// Specify index to use if you are inputting multiple editor hit objects
-    void load_editor_hit_object(const char* c_str, unsigned int keys = 0, unsigned int index = 0);
+    void load_editor_hit_object(std::string str, unsigned int keys = 0, unsigned int index = 0);
 
 	// Loads from data from the .osu file
 	// Key count is required for conversion to columns
-    void load_raw_hit_object(const char* c_str, unsigned int keys);
+    void load_raw_hit_object(std::string str, unsigned int keys);
 
 	// Loads parameters manually (Simple)
 	// Column starts from 0
@@ -56,7 +56,7 @@ public:
 						 sample_set addition_set,
 						 sample_set custom_set,
 						 unsigned int volume,
-						 const char* hitsound_file,
+						 std::string hitsound_file,
 						 unsigned int keys);
 
 	// Checks if all variables match
@@ -98,8 +98,13 @@ public:
     unsigned int get_volume() const;
     void set_volume(unsigned int volume);
 
+<<<<<<< HEAD
 	std::string get_hitsound_file() const;
     void set_hitsound_file(const char* &hitsound_file);
+=======
+    std::string get_hitsound_file() const;
+    void set_hitsound_file(const std::string &hitsound_file);
+>>>>>>> parent of efa1cb7... Convert ho for c_str conversion #11
 
     unsigned int get_keys() const;
     void set_keys(unsigned int keys);
@@ -114,7 +119,11 @@ public:
 	static unsigned int convert_x_axis_to_column(unsigned int x_axis, unsigned int keys);
 
 	// Removes the brackets on the editor hitobject
+<<<<<<< HEAD
 	static std::string trim_editor_hit_object(const char* c_str);
+=======
+	static std::string trim_editor_hit_object(std::string str);
+>>>>>>> parent of efa1cb7... Convert ho for c_str conversion #11
 
 	// Clones the object
 	virtual std::shared_ptr<osu_object> clone() const;
@@ -130,7 +139,11 @@ private:
     sample_set m_addition_set;
     sample_set m_custom_set;
     unsigned int m_volume;
+<<<<<<< HEAD
 	std::string m_hitsound_file;
+=======
+    std::string m_hitsound_file;
+>>>>>>> parent of efa1cb7... Convert ho for c_str conversion #11
     unsigned int m_keys;
 
 };

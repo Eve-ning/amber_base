@@ -56,6 +56,7 @@ public:
 	// hit_object_v this will fail if keys = 0
 	std::vector<std::string> get_string_raw_v() const {
 		std::vector<std::string> output = {};
+<<<<<<< HEAD
 		//std::transform(m_object_v.begin(), m_object_v.end(),
 		//	std::back_inserter(output), [&](const obj_type &obj) {
 		//	return obj.get_string_rraw();
@@ -65,12 +66,22 @@ public:
 			auto str = m_object.get_string_raw();
 			output.push_back(str);
 		}
+=======
+		std::transform(m_object_v.begin(), m_object_v.end(),
+			std::back_inserter(output), [&](const obj_type &obj) {
+			return obj.get_string_raw();
+		});
+>>>>>>> parent of efa1cb7... Convert ho for c_str conversion #11
 		return output;
 	}
 	
 	// Get the string compatible to .osu format, joined by a delimeter
 	// hit_object_v this will fail if keys = 0
+<<<<<<< HEAD
 	std::string get_string_raw(const char* delimeter = "\n") const {
+=======
+	std::string get_string_raw(std::string delimeter = "\n") const {
+>>>>>>> parent of efa1cb7... Convert ho for c_str conversion #11
 		auto string_v = get_string_raw_v();
 		std::string str = "";
 		for (const std::string &string : string_v) {

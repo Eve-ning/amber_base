@@ -13,16 +13,14 @@ hit_object_v::hit_object_v(unsigned int amount) {
 	load_defaults(amount);
 }
 
-void hit_object_v::load_editor_hit_object(const char* c_str, unsigned int keys) {
-
-	std::string str = std::string(c_str);
+void hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
 
 	// Reject loading of empty string
 	if (str == "") {
 		return; // Don't throw an error as an empty str just means load nothing
 	}
 
-	str = hit_object::trim_editor_hit_object(str.c_str()); // Shed the brackets
+	str = hit_object::trim_editor_hit_object(str); // Shed the brackets
 
 	std::vector<std::string> str_comma_v = split_string::by_delimeter(str, ','); // Split by comma
 	std::vector<std::string> str_bar_v = {};
@@ -43,6 +41,7 @@ void hit_object_v::load_editor_hit_object(const char* c_str, unsigned int keys) 
 
 // Where if the user loads in the whole thing as a string
 
+<<<<<<< HEAD
 void hit_object_v::load_raw_hit_object(const char* c_str, unsigned int keys, char delimeter) {
 	// Use the private variant of this function
 	load_raw_hit_object_str(split_string::by_delimeter(std::string(c_str)), keys); 
@@ -58,10 +57,17 @@ void hit_object_v::load_raw_hit_object(std::vector<const char*> c_str_v, unsigne
 }
 
 void hit_object_v::load_raw_hit_object_str(std::vector<std::string> str_v, unsigned int keys)
+=======
+void hit_object_v::load_raw_hit_object(std::string str, unsigned int keys, char delimeter) {
+	load_raw_hit_object(split_string::by_delimeter(str, '\n'), keys); // Use the vector variant of this function
+}
+
+void hit_object_v::load_raw_hit_object(std::vector<std::string> str_v, unsigned int keys)
+>>>>>>> parent of efa1cb7... Convert ho for c_str conversion #11
 {
 	for (std::string str : str_v) { // For each str in the string vector
 		hit_object ho;
-		ho.load_raw_hit_object(str.c_str(), keys);
+		ho.load_raw_hit_object(str, keys);
 
 		m_object_v.push_back(ho); // Append to our private hit_object vector
 	}
