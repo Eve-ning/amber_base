@@ -14,8 +14,12 @@ timing_point_v::timing_point_v(unsigned int amount) {
 
 void timing_point_v::load_raw_timing_point(const char* c_str, char delimeter)
 {
-	// Use the private variant of this function
-	load_raw_timing_point_str(split_string::by_delimeter(std::string(c_str)));
+	auto spl_str_v = split_string::by_delimeter(std::string(c_str));
+	std::vector<const char*> spl_c_str_v = {};
+	for (auto spl_str : spl_str_v) {
+		spl_c_str_v.push_back(spl_str.c_str());
+	}
+	load_raw_timing_point(spl_c_str_v);
 }
 
 void timing_point_v::load_raw_timing_point(std::vector<const char*> c_str_v)
@@ -24,16 +28,6 @@ void timing_point_v::load_raw_timing_point(std::vector<const char*> c_str_v)
 		timing_point tp;
 		tp.load_raw_timing_point(str.c_str()); // Load by string
 		m_object_v.push_back(tp); // Push back to private member
-	}
-}
-
-void timing_point_v::load_raw_timing_point_str(std::vector<std::string> str_v)
-{
-	for (std::string str : str_v) { // For each str in the string vector
-		timing_point tp;
-		tp.load_raw_timing_point(str.c_str());
-
-		m_object_v.push_back(tp); // Append to our private hit_object vector
 	}
 }
 

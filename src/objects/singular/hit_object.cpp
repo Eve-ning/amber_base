@@ -36,13 +36,13 @@ void hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsi
     std::string note = "";
 
 	// We first split it by comma
-	std::vector<std::string> str_comma_v = split_string::by_delimeter(str, ',', false);
+	std::vector<std::string> str_comma_v = split_string::by_delimeter(str.c_str(), ',', false);
 
 	// Then for each element split by comma
 	for (std::string str_comma : str_comma_v) {
 
 		// We split by bar
-		std::vector<std::string> str_bar_v = split_string::by_delimeter(str_comma, '|', false);
+		std::vector<std::string> str_bar_v = split_string::by_delimeter(str_comma.c_str(), '|', false);
 
 		// We push back the data after conversion
 		try {
@@ -165,7 +165,7 @@ bool hit_object::operator ==(const hit_object & ho) const {
 		);
 }
 
-std::string hit_object::get_string_raw() const
+const char* hit_object::get_string_raw() const
 {
 	std::string output =
 		std::to_string(convert_column_to_x_axis(m_column, m_keys)) + "," +
@@ -180,10 +180,10 @@ std::string hit_object::get_string_raw() const
 		std::to_string(m_volume) + ":" +
 		m_hitsound_file;
 	
-	return output;
+	return output.c_str();
 }
 
-std::string hit_object::get_string_raw(int keys)
+const char* hit_object::get_string_raw(int keys)
 {
 	m_keys = keys;
 	return get_string_raw(); // Call no-arg function
@@ -259,18 +259,22 @@ void hit_object::set_volume(unsigned int volume)
     m_volume = volume;
 }
 
-std::string hit_object::get_hitsound_file() const
+const char* hit_object::get_hitsound_file() const
 {
     return m_hitsound_file;
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 void hit_object::set_hitsound_file(const char* &hitsound_file)
 =======
 void hit_object::set_hitsound_file(const std::string &hitsound_file)
 >>>>>>> parent of efa1cb7... Convert ho for c_str conversion #11
+=======
+void hit_object::set_hitsound_file(const const char* &hitsound_file)
+>>>>>>> parent of 9a1a790... Fix issue with c_str going out of scope and more...
 {
-    m_hitsound_file = std::string(hitsound_file);
+    m_hitsound_file = hitsound_file;
 }
 
 unsigned int hit_object::get_keys() const
@@ -310,10 +314,14 @@ unsigned int hit_object::convert_x_axis_to_column(unsigned int x_axis, unsigned 
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 std::string hit_object::trim_editor_hit_object(const char* c_str)
 =======
 std::string hit_object::trim_editor_hit_object(std::string str)
 >>>>>>> parent of efa1cb7... Convert ho for c_str conversion #11
+=======
+const char* hit_object::trim_editor_hit_object(const char* c_str)
+>>>>>>> parent of 9a1a790... Fix issue with c_str going out of scope and more...
 {
 	// Validate the str
 	// If either of these characters are not found, it's not valid
@@ -324,7 +332,7 @@ std::string hit_object::trim_editor_hit_object(std::string str)
 	}
 
 	// Remove the ( AND ) brackets
-	return str.substr(str.find('(') + 1, str.find(')') - str.find('(') - 1);
+	return str.substr(str.find('(') + 1, str.find(')') - str.find('(') - 1).c_str();
 }
 
 // Clones the object

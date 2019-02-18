@@ -54,6 +54,7 @@ public:
 
 	// Get the vector of strings compatible to .osu format
 	// hit_object_v this will fail if keys = 0
+<<<<<<< HEAD
 	std::vector<std::string> get_string_raw_v() const {
 		std::vector<std::string> output = {};
 <<<<<<< HEAD
@@ -67,28 +68,39 @@ public:
 			output.push_back(str);
 		}
 =======
+=======
+	std::vector<const char*> get_string_raw_v() const {
+		std::vector<const char*> output = {};
+>>>>>>> parent of 9a1a790... Fix issue with c_str going out of scope and more...
 		std::transform(m_object_v.begin(), m_object_v.end(),
 			std::back_inserter(output), [&](const obj_type &obj) {
 			return obj.get_string_raw();
 		});
+<<<<<<< HEAD
 >>>>>>> parent of efa1cb7... Convert ho for c_str conversion #11
+=======
+>>>>>>> parent of 9a1a790... Fix issue with c_str going out of scope and more...
 		return output;
 	}
 	
 	// Get the string compatible to .osu format, joined by a delimeter
 	// hit_object_v this will fail if keys = 0
 <<<<<<< HEAD
+<<<<<<< HEAD
 	std::string get_string_raw(const char* delimeter = "\n") const {
 =======
 	std::string get_string_raw(std::string delimeter = "\n") const {
 >>>>>>> parent of efa1cb7... Convert ho for c_str conversion #11
+=======
+	const char* get_string_raw(const char* delimeter = "\n") const {
+>>>>>>> parent of 9a1a790... Fix issue with c_str going out of scope and more...
 		auto string_v = get_string_raw_v();
 		std::string str = "";
 		for (const std::string &string : string_v) {
 			str.append(string);
 			str.append(delimeter);
 		}
-		return str;
+		return str.c_str();
 	}
 
 	// Gets the object vector

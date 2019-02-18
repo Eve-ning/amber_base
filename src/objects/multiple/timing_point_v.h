@@ -104,9 +104,4 @@ protected:
 	}
 private:
 	double get_average_value(bool is_bpm) const;
-
-	// We have a private loader because of how c_str goes out of scope if 
-	//	<void load_raw_timing_point(const char* c_str, unsigned int keys, char delimeter = '\n')>
-	// calls another loader
-	void load_raw_timing_point_str(std::vector<std::string> str_v);
 };
