@@ -19,15 +19,17 @@ hit_object::hit_object() {
 	m_keys = 4;
 }
 
-void hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsigned int index)
+void hit_object::load_editor_hit_object(const char* c_str, unsigned int keys, unsigned int index)
 {
+	std::string str = std::string(c_str);
+
 	// Reject loading of empty string
 	if (str == "") {
 		return; // Don't throw an error as an empty str just means load nothing
 	}
 
 	// Remove the brackets
-	str = trim_editor_hit_object(str);
+	str = trim_editor_hit_object(str.c_str());
 	m_keys = keys;
 
     // Now we are just left with the contents
@@ -59,8 +61,10 @@ void hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsi
     m_column = column_v[index];
 }
 
-void hit_object::load_raw_hit_object(std::string str, unsigned int keys)
+void hit_object::load_raw_hit_object(const char* c_str, unsigned int keys)
 {
+	std::string str = std::string(c_str);
+
     // We find out if it's an long note or a note
     int count_colon = 0;
     for (char c: str) {
@@ -98,7 +102,7 @@ void hit_object::load_raw_hit_object(std::string str, unsigned int keys)
         m_addition_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_v[1]));
         m_custom_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_v[2]));
         m_volume = static_cast<unsigned int>(std::stoi(hit_object_colon_v[3]));
-        m_hitsound_file = hit_object_colon_v[4];
+        m_hitsound_file = hit_object_colon_v[4].c_str();
 
         // m_ln_end is 0 as by constructor
         break;
@@ -113,7 +117,7 @@ void hit_object::load_raw_hit_object(std::string str, unsigned int keys)
         m_addition_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_v[2]));
         m_custom_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_v[3]));
         m_volume = static_cast<unsigned int>(std::stoi(hit_object_colon_v[4]));
-        m_hitsound_file = hit_object_colon_v[5];
+        m_hitsound_file = hit_object_colon_v[5].c_str();
 
         break;
     default:
@@ -134,7 +138,7 @@ void hit_object::load_parameters(unsigned int column, double offset, unsigned in
     m_keys = keys;
 }
 
-void hit_object::load_parameters(unsigned int column, unsigned int y_axis, double offset, unsigned int note_type, sample_set hitsound_set, double ln_end, sample_set sample_set_, sample_set addition_set, sample_set custom_set, unsigned int volume, std::string hitsound_file, unsigned int keys) {
+void hit_object::load_parameters(unsigned int column, unsigned int y_axis, double offset, unsigned int note_type, sample_set hitsound_set, double ln_end, sample_set sample_set_, sample_set addition_set, sample_set custom_set, unsigned int volume, const char* hitsound_file, unsigned int keys) {
 	m_column = column;
 	m_y_axis = y_axis;
 	m_offset = offset;
@@ -165,7 +169,7 @@ bool hit_object::operator ==(const hit_object & ho) const {
 		);
 }
 
-std::string hit_object::get_string_raw() const
+const char* hit_object::get_string_raw() const
 {
 	std::string output =
 		std::to_string(convert_column_to_x_axis(m_column, m_keys)) + "," +
@@ -180,10 +184,10 @@ std::string hit_object::get_string_raw() const
 		std::to_string(m_volume) + ":" +
 		m_hitsound_file;
 	
-	return output;
+	return output.c_str();
 }
 
-std::string hit_object::get_string_raw(int keys)
+const char* hit_object::get_string_raw(int keys)
 {
 	m_keys = keys;
 	return get_string_raw(); // Call no-arg function
@@ -259,12 +263,12 @@ void hit_object::set_volume(unsigned int volume)
     m_volume = volume;
 }
 
-std::string hit_object::get_hitsound_file() const
+const char* hit_object::get_hitsound_file() const
 {
     return m_hitsound_file;
 }
 
-void hit_object::set_hitsound_file(const std::string &hitsound_file)
+void hit_object::set_hitsound_file(const const char* &hitsound_file)
 {
     m_hitsound_file = hitsound_file;
 }
@@ -305,8 +309,10 @@ unsigned int hit_object::convert_x_axis_to_column(unsigned int x_axis, unsigned 
 	return static_cast<unsigned int>(round((x_axis * keys - 256) / 512));
 }
 
-std::string hit_object::trim_editor_hit_object(std::string str)
+const char* hit_object::trim_editor_hit_object(const char* c_str)
 {
+	std::string str = std::string(c_str);
+
 	// Validate the str
 	// If either of these characters are not found, it's not valid
 	if (str.find('(') == std::string::npos || // == npos means not found
@@ -316,7 +322,7 @@ std::string hit_object::trim_editor_hit_object(std::string str)
 	}
 
 	// Remove the ( AND ) brackets
-	return str.substr(str.find('(') + 1, str.find(')') - str.find('(') - 1);
+	return str.substr(str.find('(') + 1, str.find(')') - str.find('(') - 1).c_str();
 }
 
 // Clones the object

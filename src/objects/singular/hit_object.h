@@ -27,11 +27,11 @@ public:
 	// Loads from data from the editor
 	// Do not skip keys if you want to export to .osu
 	// Specify index to use if you are inputting multiple editor hit objects
-    void load_editor_hit_object(std::string str, unsigned int keys = 0, unsigned int index = 0);
+    void load_editor_hit_object(const char* c_str, unsigned int keys = 0, unsigned int index = 0);
 
 	// Loads from data from the .osu file
 	// Key count is required for conversion to columns
-    void load_raw_hit_object(std::string str, unsigned int keys);
+    void load_raw_hit_object(const char* c_str, unsigned int keys);
 
 	// Loads parameters manually (Simple)
 	// Column starts from 0
@@ -56,7 +56,7 @@ public:
 						 sample_set addition_set,
 						 sample_set custom_set,
 						 unsigned int volume,
-						 std::string hitsound_file,
+						 const char* hitsound_file,
 						 unsigned int keys);
 
 	// Checks if all variables match
@@ -66,11 +66,11 @@ public:
 
 	// Get the string compatible to .osu format
     // This will fail if keys = 0
-    virtual std::string get_string_raw() const;
+    virtual const char* get_string_raw() const;
 
 	// Get the string compatible to .osu format
     // This variant is to override and set the current keys if user failed the other variant
-	virtual std::string get_string_raw(int keys);
+	virtual const char* get_string_raw(int keys);
 
     //// Getter and Setters
 
@@ -98,8 +98,8 @@ public:
     unsigned int get_volume() const;
     void set_volume(unsigned int volume);
 
-    std::string get_hitsound_file() const;
-    void set_hitsound_file(const std::string &hitsound_file);
+	const char* get_hitsound_file() const;
+    void set_hitsound_file(const const char* &hitsound_file);
 
     unsigned int get_keys() const;
     void set_keys(unsigned int keys);
@@ -114,7 +114,7 @@ public:
 	static unsigned int convert_x_axis_to_column(unsigned int x_axis, unsigned int keys);
 
 	// Removes the brackets on the editor hitobject
-	static std::string trim_editor_hit_object(std::string str);
+	static const char* trim_editor_hit_object(const char* c_str);
 
 	// Clones the object
 	virtual std::shared_ptr<osu_object> clone() const;
@@ -130,7 +130,7 @@ private:
     sample_set m_addition_set;
     sample_set m_custom_set;
     unsigned int m_volume;
-    std::string m_hitsound_file;
+	const char* m_hitsound_file;
     unsigned int m_keys;
 
 };
