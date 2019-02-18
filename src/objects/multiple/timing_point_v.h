@@ -26,10 +26,10 @@ public:
 	//// Explicit Loading
 
 	// Loads from data from the .osu file as one whole string
-	void load_raw_timing_point(const char* c_str, char delimeter = '\n');
+	void load_raw_timing_point(std::string str, char delimeter = '\n');
 
 	// Loads from data from the .osu file as a vector
-	void load_raw_timing_point(std::vector<const char*> c_str_v);
+	void load_raw_timing_point(std::vector<std::string> str_v);
 
 	// Gets sv only in a vector form
 	timing_point_v get_sv_only() const;

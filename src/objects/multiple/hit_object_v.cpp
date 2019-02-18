@@ -42,6 +42,7 @@ void hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
 // Where if the user loads in the whole thing as a string
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 void hit_object_v::load_raw_hit_object(const char* c_str, unsigned int keys, char delimeter) {
 	auto spl_str_v = split_string::by_delimeter(std::string(c_str));
 	std::vector<const char*> spl_c_str_v = {};
@@ -49,6 +50,10 @@ void hit_object_v::load_raw_hit_object(const char* c_str, unsigned int keys, cha
 		spl_c_str_v.push_back(spl_str.c_str());
 	}
 	load_raw_hit_object(spl_c_str_v, keys); // Use the vector variant of this function
+=======
+void hit_object_v::load_raw_hit_object(const char* str, unsigned int keys, char delimeter) {
+	load_raw_hit_object(split_string::by_delimeter(str, '\n'), keys); // Use the vector variant of this function
+>>>>>>> parent of 2c0675e... Convert rest for c_str conversion #11
 }
 
 <<<<<<< HEAD

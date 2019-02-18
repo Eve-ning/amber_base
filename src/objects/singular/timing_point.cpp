@@ -15,10 +15,8 @@ timing_point::timing_point()
     m_is_kiai = false;
 }
 
-void timing_point::load_raw_timing_point(const char* c_str)
+void timing_point::load_raw_timing_point(std::string str)
 {
-	std::string str = std::string(c_str);
-
     // Validate the str
     // If either of these characters are not found, it's not valid
     if (str.find(',') == std::string::npos) { // == npos means not found
@@ -77,7 +75,7 @@ bool timing_point::operator ==(const timing_point & tp) const {
 		);
 }
 
-const char* timing_point::get_string_raw() const
+std::string timing_point::get_string_raw() const
 {
 	std::string output =
 		std::to_string(m_offset) + "," +
@@ -89,7 +87,7 @@ const char* timing_point::get_string_raw() const
 		(m_is_bpm ? "1" : "0") + "," +
 		(m_is_kiai ? "1" : "0");
 
-	return output.c_str();
+	return output;
 }
 
 

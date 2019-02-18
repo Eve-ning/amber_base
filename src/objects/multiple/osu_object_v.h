@@ -74,7 +74,7 @@ public:
 >>>>>>> parent of 9a1a790... Fix issue with c_str going out of scope and more...
 		std::transform(m_object_v.begin(), m_object_v.end(),
 			std::back_inserter(output), [&](const obj_type &obj) {
-			return obj.get_string_raw();
+			return obj.get_string_raw().c_str();
 		});
 <<<<<<< HEAD
 >>>>>>> parent of efa1cb7... Convert ho for c_str conversion #11
