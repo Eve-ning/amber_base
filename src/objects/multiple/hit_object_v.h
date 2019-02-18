@@ -42,7 +42,7 @@ public:
 	// Get the vector of strings compatible to .osu format
 	// This variant is to override and set the current keys if user failed the other variant
 	// Note that this will override all keys set initially
-	std::vector<const char*> get_string_raw_v(int keys);
+	std::vector<std::string> get_string_raw_v(int keys);
 
 	// Gets column in a vector form
 	std::vector<unsigned int> get_column_v() const;
@@ -52,4 +52,10 @@ public:
 
 	// Gets long notes only in a vector form
 	hit_object_v get_long_notes_only() const;
+
+private:
+	// We have a private loader because of how c_str goes out of scope if 
+	//	<void load_raw_hit_object(const char* c_str, unsigned int keys, char delimeter = '\n')>
+	// calls another loader
+	void load_raw_hit_object_str(std::vector<std::string> str_v, unsigned int keys);
 };

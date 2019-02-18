@@ -66,11 +66,11 @@ public:
 
 	// Get the string compatible to .osu format
     // This will fail if keys = 0
-    virtual const char* get_string_raw() const;
+    virtual std::string get_string_raw() const;
 
 	// Get the string compatible to .osu format
     // This variant is to override and set the current keys if user failed the other variant
-	virtual const char* get_string_raw(int keys);
+	virtual std::string get_string_raw(int keys);
 
     //// Getter and Setters
 
@@ -98,8 +98,8 @@ public:
     unsigned int get_volume() const;
     void set_volume(unsigned int volume);
 
-	const char* get_hitsound_file() const;
-    void set_hitsound_file(const const char* &hitsound_file);
+	std::string get_hitsound_file() const;
+    void set_hitsound_file(const char* &hitsound_file);
 
     unsigned int get_keys() const;
     void set_keys(unsigned int keys);
@@ -114,7 +114,7 @@ public:
 	static unsigned int convert_x_axis_to_column(unsigned int x_axis, unsigned int keys);
 
 	// Removes the brackets on the editor hitobject
-	static const char* trim_editor_hit_object(const char* c_str);
+	static std::string trim_editor_hit_object(const char* c_str);
 
 	// Clones the object
 	virtual std::shared_ptr<osu_object> clone() const;
@@ -130,7 +130,7 @@ private:
     sample_set m_addition_set;
     sample_set m_custom_set;
     unsigned int m_volume;
-	const char* m_hitsound_file;
+	std::string m_hitsound_file;
     unsigned int m_keys;
 
 };

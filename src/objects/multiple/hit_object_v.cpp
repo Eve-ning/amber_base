@@ -44,15 +44,20 @@ void hit_object_v::load_editor_hit_object(const char* c_str, unsigned int keys) 
 // Where if the user loads in the whole thing as a string
 
 void hit_object_v::load_raw_hit_object(const char* c_str, unsigned int keys, char delimeter) {
-	auto spl_str_v = split_string::by_delimeter(std::string(c_str));
-	std::vector<const char*> spl_c_str_v = {};
-	for (auto spl_str : spl_str_v) {
-		spl_c_str_v.push_back(spl_str.c_str());
-	}
-	load_raw_hit_object(spl_c_str_v, keys); // Use the vector variant of this function
+	// Use the private variant of this function
+	load_raw_hit_object_str(split_string::by_delimeter(std::string(c_str)), keys); 
 }
 
-void hit_object_v::load_raw_hit_object(std::vector<const char*> str_v, unsigned int keys)
+void hit_object_v::load_raw_hit_object(std::vector<const char*> c_str_v, unsigned int keys)
+{
+	std::vector<std::string> str_v;
+	for (auto c_str : c_str_v) { // For each str in the string vector
+		str_v.push_back(std::string(c_str));
+	}
+	load_raw_hit_object_str(str_v, keys);
+}
+
+void hit_object_v::load_raw_hit_object_str(std::vector<std::string> str_v, unsigned int keys)
 {
 	for (std::string str : str_v) { // For each str in the string vector
 		hit_object ho;
@@ -62,9 +67,9 @@ void hit_object_v::load_raw_hit_object(std::vector<const char*> str_v, unsigned 
 	}
 }
 
-std::vector<const char*> hit_object_v::get_string_raw_v(int keys)
+std::vector<std::string> hit_object_v::get_string_raw_v(int keys)
 {
-	std::vector<const char*> output = {};
+	std::vector<std::string> output = {};
 	std::transform(m_object_v.begin(), m_object_v.end(), std::back_inserter(output), [&](hit_object &ho) {
 		return ho.get_string_raw(keys);
 	});

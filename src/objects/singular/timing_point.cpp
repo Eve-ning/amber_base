@@ -77,7 +77,7 @@ bool timing_point::operator ==(const timing_point & tp) const {
 		);
 }
 
-const char* timing_point::get_string_raw() const
+std::string timing_point::get_string_raw() const
 {
 	std::string output =
 		std::to_string(m_offset) + "," +
@@ -89,7 +89,7 @@ const char* timing_point::get_string_raw() const
 		(m_is_bpm ? "1" : "0") + "," +
 		(m_is_kiai ? "1" : "0");
 
-	return output.c_str();
+	return output;
 }
 
 

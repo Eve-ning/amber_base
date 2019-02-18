@@ -49,7 +49,7 @@ public:
     //// Exporting
 
 	// Get the string compatible to .osu format
-	virtual const char* get_string_raw() const;
+	virtual std::string get_string_raw() const;
 
     //// Getters & Setters
 
