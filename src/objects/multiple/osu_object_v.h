@@ -58,7 +58,7 @@ public:
 		std::vector<const char*> output = {};
 		std::transform(m_object_v.begin(), m_object_v.end(),
 			std::back_inserter(output), [&](const obj_type &obj) {
-			return obj.get_string_raw().c_str();
+			return obj.get_string_raw();
 		});
 		return output;
 	}

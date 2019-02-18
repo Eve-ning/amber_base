@@ -38,13 +38,13 @@ void hit_object::load_editor_hit_object(const char* c_str, unsigned int keys, un
     std::string note = "";
 
 	// We first split it by comma
-	std::vector<std::string> str_comma_v = split_string::by_delimeter(str, ',', false);
+	std::vector<std::string> str_comma_v = split_string::by_delimeter(str.c_str(), ',', false);
 
 	// Then for each element split by comma
 	for (std::string str_comma : str_comma_v) {
 
 		// We split by bar
-		std::vector<std::string> str_bar_v = split_string::by_delimeter(str_comma, '|', false);
+		std::vector<std::string> str_bar_v = split_string::by_delimeter(str_comma.c_str(), '|', false);
 
 		// We push back the data after conversion
 		try {
