@@ -61,6 +61,14 @@ std::vector<double> timing_point_v::get_value_v() const {
 	return value_v;
 }
 
+double timing_point_v::get_average_sv_value() const {
+    return get_average_value(false);
+}
+
+double timing_point_v::get_average_bpm_value() const {
+    return get_average_value(true);
+}
+
 // Cross multiplies the tp_vs
 void timing_point_v::cross_effect_multiply(timing_point_v eff_tp_v) {
 	cross_effect(eff_tp_v, [](timing_point self, timing_point eff) {
@@ -76,13 +84,61 @@ void timing_point_v::cross_effect_add(timing_point_v eff_tp_v) {
 	});
 }
 
+timing_point_v timing_point_v::operator *(double par) {
+    return value_arithmetic(par, [](double value, double parameter) {
+        return value * parameter;
+    });
+}
+
+timing_point_v timing_point_v::operator /(double par) {
+    return value_arithmetic(par, [](double value, double parameter) {
+        return value / parameter;
+    });
+}
+
+timing_point_v timing_point_v::operator +(double par) {
+    return value_arithmetic(par, [](double value, double parameter) {
+        return value + parameter;
+    });
+}
+
+timing_point_v timing_point_v::operator -(double par) {
+    return value_arithmetic(par, [](double value, double parameter) {
+        return value - parameter;
+    });
+}
+
+timing_point_v timing_point_v::operator *=(double par) {
+    return value_arithmetic(par, [](double value, double parameter) {
+        return value * parameter;
+    });
+}
+
+timing_point_v timing_point_v::operator /=(double par) {
+    return value_arithmetic(par, [](double value, double parameter) {
+        return value / parameter;
+    });
+}
+
+timing_point_v timing_point_v::operator +=(double par) {
+    return value_arithmetic(par, [](double value, double parameter) {
+        return value + parameter;
+    });
+}
+
+timing_point_v timing_point_v::operator -=(double par) {
+    return value_arithmetic(par, [](double value, double parameter) {
+        return value - parameter;
+    });
+}
+
 double timing_point_v::get_average_value(bool is_bpm) const {
 
-	timing_point_v tp_v = is_bpm ? get_bpm_only() : get_sv_only();
-	if (tp_v.size() <= 0) {
-		return 0;
-	}
-	else if (tp_v.size() == 1) {
+    timing_point_v tp_v = is_bpm ? get_bpm_only() : get_sv_only();
+    if (tp_v.size() <= 0) {
+        return 0;
+    }
+    else if (tp_v.size() == 1) {
 		return tp_v[0].get_value();
 	}
 

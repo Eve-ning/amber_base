@@ -18,7 +18,7 @@ public:
 
 	// Create a blank object
 	// Load in via the load_<functions>
-	timing_point_v();
+    timing_point_v();
 
 	// Create an object with a designated amount of default constructed timing_points 
 	timing_point_v(unsigned int amount);
@@ -39,59 +39,23 @@ public:
 
 	// Gets all values
 	std::vector<double> get_value_v() const;
-	double get_average_sv_value() const {
-		return get_average_value(false);
-	}
-	double get_average_bpm_value() const {
-		return get_average_value(true);
-	}
+    double get_average_sv_value() const;
+    double get_average_bpm_value() const;
 
 	// Cross multiplies the tp_vs
 	void cross_effect_multiply(timing_point_v eff_tp_v);
 	// Cross add the tp_vs
 	void cross_effect_add(timing_point_v eff_tp_v);
 
-	timing_point_v operator *(double par) {
-		return value_arithmetic(par, [](double value, double parameter) {
-			return value * parameter;
-		});
-	}
-	timing_point_v operator /(double par) {
-		return value_arithmetic(par, [](double value, double parameter) {
-			return value / parameter;
-		});
-	}
-	timing_point_v operator +(double par) {
-		return value_arithmetic(par, [](double value, double parameter) {
-			return value + parameter;
-		});
-	}
-	timing_point_v operator -(double par) {
-		return value_arithmetic(par, [](double value, double parameter) {
-			return value - parameter;
-		});
-	}
+    timing_point_v operator *(double par);
+    timing_point_v operator /(double par);
+    timing_point_v operator +(double par);
+    timing_point_v operator -(double par);
 
-    timing_point_v operator *=(double par) {	
-            return value_arithmetic(par, [](double value, double parameter) {
-                    return value * parameter;
-            });
-    }
-    timing_point_v operator /=(double par) {
-            return value_arithmetic(par, [](double value, double parameter) {
-                    return value / parameter;
-            });
-    }
-    timing_point_v operator +=(double par) {
-            return value_arithmetic(par, [](double value, double parameter) {
-                    return value + parameter;
-            });
-    }
-    timing_point_v operator -=(double par) {
-            return value_arithmetic(par, [](double value, double parameter) {
-                    return value - parameter;
-            });
-    }
+    timing_point_v operator *=(double par);
+    timing_point_v operator /=(double par);
+    timing_point_v operator +=(double par);
+    timing_point_v operator -=(double par);
 
 protected:
 
