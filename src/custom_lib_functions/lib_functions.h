@@ -293,15 +293,14 @@ namespace lib_functions
             //     <------->
             //         ^ SUBDIV_LEN
 
-            unsigned int subdivisions =
-                    static_cast<unsigned int>(floor((*(start + 1) - *start) / subdivision_len));
-
             //     0   1   2   3   4   E
             //     O   |   |   |   |   O
             //     <---1--->
             //     <-------2------->
             //     <-----------3-----------> // REJECT by FLOOR
-            for (unsigned int slice = 1; slice < subdivisions; slice++) {
+            for (unsigned int slice = 1;
+                 ((*start) + subdivision_len * slice) < *(start + 1);
+                 slice++) {
                 offset_v_c.push_back((*start) + subdivision_len * slice);
             }
         }
