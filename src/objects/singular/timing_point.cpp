@@ -29,7 +29,7 @@ void timing_point::load_raw_timing_point(std::string str)
     std::vector<std::string> timing_point_comma_v = {};
 
 	// Split string by comma
-	timing_point_comma_v = split_string::by_delimeter(str, ',', false);
+    timing_point_comma_v = split_string::by_delimeter(str, ',');
 
     m_offset = std::stod(timing_point_comma_v[0]);
     m_metronome = static_cast<unsigned int>(std::stoi(timing_point_comma_v[2]));

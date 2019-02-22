@@ -123,8 +123,8 @@ public:
 
 	// Adjusts the offset of all objects in the vector TO a offset
 	void adjust_offset_to(double adjust_to, bool anchor_front = true) {
-		adjust_offset_to_zero(); // Zero then move by the offset
-                adjust_offset_by(adjust_to);
+        adjust_offset_to_zero(anchor_front); // Zero then move by the offset
+        adjust_offset_by(adjust_to);
 	}
 
 	// Grabs the first osu_object, sorted by offset

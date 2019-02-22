@@ -36,13 +36,13 @@ void hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsi
     std::string note = "";
 
 	// We first split it by comma
-	std::vector<std::string> str_comma_v = split_string::by_delimeter(str, ',', false);
+    std::vector<std::string> str_comma_v = split_string::by_delimeter(str, ',');
 
 	// Then for each element split by comma
 	for (std::string str_comma : str_comma_v) {
 
 		// We split by bar
-		std::vector<std::string> str_bar_v = split_string::by_delimeter(str_comma, '|', false);
+        std::vector<std::string> str_bar_v = split_string::by_delimeter(str_comma, '|');
 
 		// We push back the data after conversion
 		try {
@@ -155,7 +155,7 @@ bool hit_object::operator ==(const hit_object & ho) const {
 		m_y_axis == ho.m_y_axis &&
 		m_note_type == ho.m_note_type &&
 		m_hitsound_set == ho.m_hitsound_set &&
-		m_ln_end == ho.m_ln_end &&
+        m_ln_end == ho.m_ln_end &&
 		m_sample_set == ho.m_sample_set &&
 		m_addition_set == ho.m_addition_set &&
 		m_custom_set == ho.m_custom_set &&

@@ -322,19 +322,19 @@ namespace lib_functions
 	//  0  %  2  %  4
 	template <typename T>
 	std::shared_ptr<osu_object_v<T>> create_copies_rel_diff(
-		osu_object_v<T> const* obj_v, double relativity, bool include, bool copy_prev = true) {
+        osu_object_v<T> const* obj_v, double relativity, bool include) {
 
 		// <0>   <1>   <2>
 		//  0     2     4
 		// [0][%][2][%][4]
-		auto offset_v = create_copies_rel_diff(obj_v->get_offset_v(true), relativity, true);
+        auto offset_v = create_copies_rel_diff(obj_v->get_offset_v(true), relativity, true);
 
 		// <0>   <2>   <4>
 		//  0     2     4
 		// [0][%][2][%][4]
 		// <0><0><2><2><4>
 		//  0  %  2  %  4
-		auto output = create_copies_delay(obj_v, offset_v, include);
+        auto output = create_copies_delay(obj_v, offset_v, include);
 
 		return output;
 	}
@@ -403,13 +403,13 @@ namespace lib_functions
 	//  0  +  2  +  4
 	template <typename T>
 	std::shared_ptr<osu_object_v<T>> create_copies_abs_diff(
-		osu_object_v<T> const* obj_v, double relativity, bool include, bool copy_prev = true, 
+        osu_object_v<T> const* obj_v, double relativity, bool include,
 		bool relative_from_front = true, bool exclude_overlap = true) {
 
 		// <0>   <2>   <4>
 		//  0     2     4
 		// [0][+][2][+][4]
-		auto offset_v = create_copies_abs_diff(obj_v->get_offset_v(), relativity, true, relative_from_front, exclude_overlap);
+        auto offset_v = create_copies_abs_diff(obj_v->get_offset_v(), relativity, true, relative_from_front, exclude_overlap);
 
 		// <0>   <2>   <4>
 		//  0     2     4
