@@ -108,28 +108,27 @@ timing_point_v timing_point_v::operator -(double par) {
     });
 }
 
-timing_point_v timing_point_v::operator *=(double par) {
-    return value_arithmetic(par, [](double value, double parameter) {
+void timing_point_v::operator *=(double par) {
+    m_object_v = value_arithmetic(par, [](double value, double parameter) {
         return value * parameter;
-    });
+    }).get_object_v();
 }
 
-timing_point_v timing_point_v::operator /=(double par) {
-    return value_arithmetic(par, [](double value, double parameter) {
+void timing_point_v::operator /=(double par) {
+    m_object_v = value_arithmetic(par, [](double value, double parameter) {
         return value / parameter;
-    });
+    }).get_object_v();
 }
-
-timing_point_v timing_point_v::operator +=(double par) {
-    return value_arithmetic(par, [](double value, double parameter) {
+void timing_point_v::operator +=(double par) {
+    m_object_v = value_arithmetic(par, [](double value, double parameter) {
         return value + parameter;
-    });
+    }).get_object_v();
 }
 
-timing_point_v timing_point_v::operator -=(double par) {
-    return value_arithmetic(par, [](double value, double parameter) {
+void timing_point_v::operator -=(double par) {
+    m_object_v = value_arithmetic(par, [](double value, double parameter) {
         return value - parameter;
-    });
+    }).get_object_v();
 }
 
 double timing_point_v::get_average_value(bool is_bpm) const {

@@ -52,10 +52,10 @@ public:
     timing_point_v operator +(double par);
     timing_point_v operator -(double par);
 
-    timing_point_v operator *=(double par);
-    timing_point_v operator /=(double par);
-    timing_point_v operator +=(double par);
-    timing_point_v operator -=(double par);
+    void operator *=(double par);
+    void operator /=(double par);
+    void operator +=(double par);
+    void operator -=(double par);
 
 protected:
 
