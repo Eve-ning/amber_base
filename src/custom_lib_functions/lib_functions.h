@@ -204,7 +204,7 @@ namespace lib_functions
 
 	// [0]   [2]   [4] IN 
 	// [0][1][2][3][4] OUT
-	std::vector<double> create_copies_subdivision(
+    std::vector<double> create_copies_subdivision_by(
 		std::vector<double> offset_v, unsigned int subdivisions, bool include) {
 		// [0] REJECT
 		if (offset_v.size() <= 1) {
@@ -242,10 +242,10 @@ namespace lib_functions
 	// <0><0><0><0><0> OUT
 	//  0  1  2  3  4
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies_subdivision(
+    std::shared_ptr<osu_object_v<T>> create_copies_subdivision_by(
 		std::vector<double> offset_v, const T& obj_define,
 		unsigned int subdivisions, bool include) {
-		return create_copies(obj_define, create_copies_subdivision(offset_v, subdivisions, include));
+        return create_copies(obj_define, create_copies_subdivision_by(offset_v, subdivisions, include));
 	}
 
 	// <0>   <1>   <2> IN 
@@ -253,13 +253,13 @@ namespace lib_functions
 	// <0><0><1><1><2> OUT
 	//  0  1  2  3  4
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies_subdivision(
+    std::shared_ptr<osu_object_v<T>> create_copies_subdivision_by(
 		osu_object_v<T> const* obj_v, unsigned int subdivisions, bool include) {
 
 		// <0>   <1>   <2>
 		//  0     2     4
 		// [0][1][2][3][4]
-		auto offset_v = create_copies_subdivision(obj_v->get_offset_v(true), subdivisions, true);
+        auto offset_v = create_copies_subdivision_by(obj_v->get_offset_v(true), subdivisions, true);
 		
 		// <0>   <2>   <4>
 		//  0     2     4
@@ -270,6 +270,79 @@ namespace lib_functions
 
 		return output;
 	}
+
+    // [0]            [5] IN
+    // SUBDIV_LEN 2
+    // [0]   [2]   [4][5] OUT
+    std::vector<double> create_copies_subdivision_to(
+        std::vector<double> offset_v, unsigned int subdivision_len, bool include) {
+        // [0] REJECT
+        if (offset_v.size() <= 1) {
+            throw reamber_exception("offset_v size must be at least 2 for the function to work");
+        }
+
+        std::vector<double> offset_v_c = include ? offset_v : std::vector<double>();
+
+        // [0][1][2][3]
+        // <------->
+        for (auto start = offset_v.begin(); start != (offset_v.end() - 1); start++) {
+
+            // EG. 2 SUBDIV_LEN
+            //     0   1   2   3   4   E
+            //     O   |   |   |   |   O
+            //     <------->
+            //         ^ SUBDIV_LEN
+
+            unsigned int subdivisions =
+                    static_cast<unsigned int>(floor((*(start + 1) - *start) / subdivision_len));
+
+            //     0   1   2   3   4   E
+            //     O   |   |   |   |   O
+            //     <---1--->
+            //     <-------2------->
+            //     <-----------3-----------> // REJECT by FLOOR
+            for (unsigned int slice = 1; slice < subdivisions; slice++) {
+                offset_v_c.push_back((*start) + subdivision_len * slice);
+            }
+        }
+        return offset_v_c;
+    }
+
+
+    // [0]   [2]   [4] IN
+    // <0>             IN
+    //  0
+    // <0><0><0><0><0> OUT
+    //  0  1  2  3  4
+    template <typename T>
+    std::shared_ptr<osu_object_v<T>> create_copies_subdivision_to(
+        std::vector<double> offset_v, const T& obj_define,
+        unsigned int subdivision_len, bool include) {
+        return create_copies(obj_define, create_copies_subdivision_to(offset_v, subdivision_len, include));
+    }
+
+    // <0>   <1>   <2> IN
+    //  0     2     4
+    // <0><0><1><1><2> OUT
+    //  0  1  2  3  4
+    template <typename T>
+    std::shared_ptr<osu_object_v<T>> create_copies_subdivision_to(
+        osu_object_v<T> const* obj_v, unsigned int subdivision_len, bool include) {
+
+        // <0>   <1>   <2>
+        //  0     2     4
+        // [0][1][2][3][4]
+        auto offset_v = create_copies_subdivision_to(obj_v->get_offset_v(true), subdivision_len, true);
+
+        // <0>   <2>   <4>
+        //  0     2     4
+        // [0][1][2][3][4]
+        // <0><0><2><2><4>
+        //  0  1  2  3  4
+        auto output = create_copies_delay(obj_v, offset_v, include);
+
+        return output;
+    }
 
 	// [0]   [2]   [4] IN 
 	// [0][%][2][%][4] OUT
@@ -604,7 +677,7 @@ namespace lib_functions
 	}
 
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> extract_nth(osu_object_v<T> const* obj_v, int n, int offset = 0) {
+    std::shared_ptr<osu_object_v<T>> extract_nth(osu_object_v<T> const* obj_v, unsigned int n, unsigned int offset = 0) {
 
 		if (n <= 0) {
 			throw reamber_exception("n cannot be less than or equal to 0");
@@ -612,14 +685,14 @@ namespace lib_functions
 
 		osu_object_v<T> obj_v_c;
 
-        for (int i = offset; i < obj_v->size(); i += n) {
+        for (unsigned int i = offset; i < obj_v->size(); i += n) {
 			obj_v_c.push_back(obj_v->get_index(i));
 		}
 
 		return std::make_shared<osu_object_v<T>>(obj_v_c);
 	}
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> delete_nth(osu_object_v<T> const* obj_v, int n, int offset = 0) {
+    std::shared_ptr<osu_object_v<T>> delete_nth(osu_object_v<T> const* obj_v, unsigned int n, unsigned int offset = 0) {
 
 		if (n <= 0) {
 			throw reamber_exception("n cannot be less than or equal to 0");
@@ -632,7 +705,7 @@ namespace lib_functions
 		// off = 1
 		// n = 3
 
-        for (int i = offset; i < obj_v->size(); i ++) {
+        for (unsigned int i = offset; i < obj_v->size(); i ++) {
 			if ((i - offset) % n != 0) { // Only push back those not in the nth sequence
 				obj_v_c.push_back(obj_v->get_index(i));
 			}
