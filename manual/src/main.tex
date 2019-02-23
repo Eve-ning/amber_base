@@ -1,0 +1,89 @@
+\documentclass{article}
+
+\title{A brief guide on reamber\_base}
+\date{23/2/2019}
+\author{Eve-ning}
+
+\usepackage[margin=1.0in]{geometry}
+
+\begin{document}
+
+\maketitle
+\newpage
+\part{Common Concepts}
+
+\begin{table}[ht]
+  \begin{center}
+    \caption{Input Abbreviations}
+    \label{tab:tbl_abbr}
+    \begin{tabular}{l|l|l}
+    
+		\textbf{Abbr} & \textbf{Expanded} & \textbf{Eg.}\\
+		\hline
+		$ TP $      & Timing Point                    & 150,200,4,2,0,20,1,0\\
+		$ TP_{SV} $ & Timing Point (Slider Velocity)  & 150,-200,4,2,0,20,0,0\\
+		$ TP_{BPM} $& Timing Point (Beats Per Minute) & 150,200,4,2,0,20,1,0\\
+		\hline
+		$ HO $      & Hit Object                      & 448,192,150,1,0,0:0:0:0:\\
+		$ HO_{NN} $ & Hit Object (Normal Note)        & 448,192,150,1,0,0:0:0:0:\\
+		$ HO_{LN} $ & Hit Object (Long Note)          & 448,192,150,128,0,200:0:0:0:0:\\
+		$ EHO $     & Editor Hit Object               & 00:00:150 (150$|$3,200$|$3) - \\
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[ht]
+	\begin{center}
+    \caption{Timing Point Deconstructed}
+    \label{tab:tbl_tp_dec}
+    \begin{tabular}{r	|l|l}
+		\multicolumn{3}{c}{\textbf{Example}} \\
+		\hline
+		\textbf{$TP_{SV}$}  & \multicolumn{2}{c}{100,-200,4,2,1,20,0,1} \\
+		\textbf{$TP_{BPM}$} & \multicolumn{2}{c}{100,200,4,2,1,20,1,1} \\
+		\hline
+		\textbf{Label} & \textbf{Code} & \textbf{Remarks}\\
+		\hline
+		$ 100 $  & Offset              & Unit in ms\\
+		$ -200 $ & Code $ (TP_{SV}) $  & Actual Value: $-100 / Code$\\
+		$ 200 $  & Code $ (TP_{BPM}) $ & Actual Value: $60000 / Code$\\
+		$ 4 $    & Metronome           & {}\\
+		$ 2 $    & Sample Set          & \textit{Reference: Sample Set}\\
+		$ 1 $    & Sample Set Index    & {}\\
+		$ 20 $   & Volume              & Set local volume for note\\
+		$ 0 $    & Type                & $0|1 := SV|BPM$ \\	
+		$ 1 $    & Kiai                & $0|1 := Off|On$\\		
+	\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[ht]
+	\begin{center}
+    \caption{Hit Object Deconstructed}
+    \label{tab:tbl_ho_dec}
+    \begin{tabular}{r|l|l}
+		\multicolumn{3}{c}{\textbf{Example}} \\
+		\hline
+		\textbf{$HO_{NN}$} & \multicolumn{2}{c}{448,192,150,1,0,1:2:3:40:} \\
+		\textbf{$HO_{LN}$} & \multicolumn{2}{c}{448,192,150,128,0,200:1:2:3:40:} \\
+		\hline
+		\textbf{Label} & \textbf{Code} & \textbf{Remarks}\\
+		\hline
+		$ 448 $ & Column Code/X-Axis & Column: $round((code * keys - 256) / 512)$\\
+		$ 192 $ & Y-Axis             & No Effect\\
+		$ 150 $ & Offset             & Unit in ms\\
+		$ 1 $   & Type               & $1|5|128 := NN|NN|LN$\\
+		\hline
+		$ 0 $   & Hitsound           & \textit{Reference: Sample Set}\\
+		$ 200 $ & Long Note End      & $ (OPTIONAL) Only for HO_{LN} $ \\
+		$ 1 $   & Sample Set         & \textit{Reference: Sample Set} \\	
+		$ 2 $   & Addition Set       & \textit{Reference: Sample Set} \\	
+		$ 3 $   & Custom Set Index   & Set hitsound file index to reference\\
+		$ 40 $  & Volume             & Set local volume for note\\		
+	\end{tabular}
+	\end{center}
+\end{table}
+
+
+
+\end{document}
