@@ -42,7 +42,7 @@ public:
 	// Get the vector of strings compatible to .osu format
 	// This variant is to override and set the current keys if user failed the other variant
 	// Note that this will override all keys set initially
-    std::vector<std::string> get_string_raw_v(unsigned int keys);
+	std::vector<std::string> get_string_raw_v(int keys);
 
 	// Gets column in a vector form
 	std::vector<unsigned int> get_column_v() const;

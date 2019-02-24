@@ -30,7 +30,7 @@ void hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
 		str_bar_v = split_string::by_delimeter(str_comma, '|'); // Split each comma token by bar
 
 		ho.load_parameters( // Load in by parameter
-            static_cast<unsigned int>(std::stoi(str_bar_v[1])),  // Column
+			std::stoi(str_bar_v[1]),  // Column
 			std::stod(str_bar_v[0]),  // Offset
 			0,                        // LN End (default to 0)
 			keys);                    // Keys
@@ -42,7 +42,7 @@ void hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
 // Where if the user loads in the whole thing as a string
 
 void hit_object_v::load_raw_hit_object(std::string str, unsigned int keys, char delimeter) {
-    load_raw_hit_object(split_string::by_delimeter(str, delimeter), keys); // Use the vector variant of this function
+	load_raw_hit_object(split_string::by_delimeter(str, '\n'), keys); // Use the vector variant of this function
 }
 
 void hit_object_v::load_raw_hit_object(std::vector<std::string> str_v, unsigned int keys)
@@ -55,7 +55,7 @@ void hit_object_v::load_raw_hit_object(std::vector<std::string> str_v, unsigned 
 	}
 }
 
-std::vector<std::string> hit_object_v::get_string_raw_v(unsigned int keys)
+std::vector<std::string> hit_object_v::get_string_raw_v(int keys)
 {
 	std::vector<std::string> output = {};
 	std::transform(m_object_v.begin(), m_object_v.end(), std::back_inserter(output), [&](hit_object &ho) {

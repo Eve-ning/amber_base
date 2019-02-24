@@ -70,7 +70,7 @@ public:
 
 	// Get the string compatible to .osu format
     // This variant is to override and set the current keys if user failed the other variant
-    virtual std::string get_string_raw(unsigned int keys);
+	virtual std::string get_string_raw(int keys);
 
     //// Getter and Setters
 
@@ -118,10 +118,6 @@ public:
 
 	// Clones the object
 	virtual std::shared_ptr<osu_object> clone() const;
-
-    // Validates string is valid
-    static bool validate_editor_hit_object(const std::string& str);
-    static bool validate_hit_object(const std::string& str);
 
 private:
 

@@ -68,7 +68,7 @@ void hit_object::load_raw_hit_object(std::string str, unsigned int keys)
     }
 
     // If it's invalid we throw
-    if (!validate_hit_object(str)) {
+    if (count_colon < 4 || count_colon > 5) {
         throw reamber_exception("Raw Hit Object is not valid.");
     }
 
@@ -173,7 +173,7 @@ std::string hit_object::get_string_raw() const
 		std::to_string(m_offset) + "," +
 		std::to_string(m_note_type) + "," +
 		std::to_string(static_cast<unsigned int>(m_hitsound_set)) + "," +
-        (m_ln_end == 0.0 ? "" : (std::to_string(m_ln_end) + ":")) + // If it's a note, m_ln_end == 0
+		(m_ln_end == 0 ? "" : (std::to_string(m_ln_end) + ":")) + // If it's a note, m_ln_end == 0
 		std::to_string(static_cast<unsigned int>(m_sample_set)) + ":" +
 		std::to_string(static_cast<unsigned int>(m_addition_set)) + ":" +
 		std::to_string(static_cast<unsigned int>(m_custom_set)) + ":" +
@@ -183,7 +183,7 @@ std::string hit_object::get_string_raw() const
 	return output;
 }
 
-std::string hit_object::get_string_raw(unsigned int keys)
+std::string hit_object::get_string_raw(int keys)
 {
 	m_keys = keys;
 	return get_string_raw(); // Call no-arg function
@@ -290,7 +290,7 @@ void hit_object::set_ln_end(double ln_end)
 }
 
 bool hit_object::get_is_note() const {
-    return (m_ln_end == 0.0);
+	return (m_ln_end == 0);
 }
 
 bool hit_object::get_is_long_note() const {
@@ -307,9 +307,13 @@ unsigned int hit_object::convert_x_axis_to_column(unsigned int x_axis, unsigned 
 
 std::string hit_object::trim_editor_hit_object(std::string str)
 {
-    if (!validate_editor_hit_object(str)) {
-        throw reamber_exception("This is not a valid Editor Hit Object string.");
-    }
+	// Validate the str
+	// If either of these characters are not found, it's not valid
+	if (str.find('(') == std::string::npos || // == npos means not found
+		str.find(')') == std::string::npos || // means if any are not found, it's True
+		str.find('-') == std::string::npos) {
+		throw reamber_exception("This is not a valid Editor Hit Object string.");
+	}
 
 	// Remove the ( AND ) brackets
 	return str.substr(str.find('(') + 1, str.find(')') - str.find('(') - 1);
@@ -320,33 +324,7 @@ std::string hit_object::trim_editor_hit_object(std::string str)
 std::shared_ptr<osu_object> hit_object::clone() const {
 	hit_object ho;
 	ho = *this;
-    return std::make_shared<hit_object>(ho);
-}
-
-bool hit_object::validate_editor_hit_object(const std::string &str)
-{
-    // Validate the str
-    // If either of these characters are not found, it's not valid
-    if (str.find('(') == std::string::npos || // == npos means not found
-        str.find(')') == std::string::npos || // means if any are not found, it's True
-        str.find('-') == std::string::npos) {
-        return false;
-    }
-    return true;
-}
-
-bool hit_object::validate_hit_object(const std::string &str)
-{
-    int count_colon = 0;
-    for (char c: str) {
-        if (c == ':') { count_colon++; }
-    }
-
-    // If it's invalid we throw
-    if (count_colon < 4 || count_colon > 5) {
-        return false;
-    }
-    return true;
+	return std::make_shared<hit_object>(ho);
 }
 
 osu_object::sample_set hit_object::get_hitsound_set() const
