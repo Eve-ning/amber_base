@@ -83,6 +83,9 @@ public:
 	// Clones the object
 	virtual std::shared_ptr<osu_object> clone() const;
 
+    // Validates string is valid
+    static bool validate_timing_point(const std::string& str);
+
 private:
 
     double m_value; // Usually it's a positive value for the SV/BPM variant

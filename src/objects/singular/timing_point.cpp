@@ -17,10 +17,8 @@ timing_point::timing_point()
 
 void timing_point::load_raw_timing_point(std::string str)
 {
-    // Validate the str
-    // If either of these characters are not found, it's not valid
-    if (str.find(',') == std::string::npos) { // == npos means not found
-        throw reamber_exception("This is not a valid Editor Hit Object string.");
+    if (!validate_timing_point(str)) {
+        throw reamber_exception("This is not a valid Timing Point string.");
     }
 
     // We append this so that the while loop continues till the end
@@ -192,5 +190,15 @@ double timing_point::convert_value_to_code(double value, bool is_bpm) {
 std::shared_ptr<osu_object> timing_point::clone() const {
 	timing_point tp;
 	tp = *this;
-	return std::make_shared<timing_point>(tp);
+    return std::make_shared<timing_point>(tp);
+}
+
+bool timing_point::validate_timing_point(const std::string &str)
+{
+    // Validate the str
+    // If either of these characters are not found, it's not valid
+    if (str.find(',') == std::string::npos) { // == npos means not found
+        return false;
+    }
+    return true;
 }
