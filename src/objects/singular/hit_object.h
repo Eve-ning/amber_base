@@ -114,7 +114,7 @@ public:
 	static unsigned int convert_x_axis_to_column(unsigned int x_axis, unsigned int keys);
 
 	// Removes the brackets on the editor hitobject
-	static std::string trim_editor_hit_object(std::string str);
+    static bool trim_editor_hit_object(std::string& str);
 
 	// Clones the object
 	virtual std::shared_ptr<osu_object> clone() const;

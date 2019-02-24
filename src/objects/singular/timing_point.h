@@ -22,11 +22,11 @@ public:
     //// Explicit Loading
 
 	// Loads from data from the .osu file
-    void load_raw_timing_point(std::string str);
+    bool load_raw_timing_point(std::string str);
 
 	// Loads parameters manually (Simple)
 	// value is dependent on is_bpm
-    void load_parameters(double offset,
+    bool load_parameters(double offset,
 						 double value,
                          bool is_bpm,
                          bool is_kiai = false,
@@ -34,7 +34,7 @@ public:
 
 	// Loads parameters manually (Advanced)
 	// value is dependent on is_bpm
-	void load_parameters(double offset,
+    bool load_parameters(double offset,
 						 double value,
 						 unsigned int metronome,
 						 sample_set sample_set_,

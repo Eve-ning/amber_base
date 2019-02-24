@@ -12,18 +12,21 @@ timing_point_v::timing_point_v(unsigned int amount) {
 	load_defaults(amount);
 }
 
-void timing_point_v::load_raw_timing_point(std::string str, char delimeter)
+bool timing_point_v::load_raw_timing_point(std::string str, char delimeter)
 {
-	load_raw_timing_point(split_string::by_delimeter(str, delimeter));
+    return load_raw_timing_point(split_string::by_delimeter(str, delimeter));
 }
 
-void timing_point_v::load_raw_timing_point(std::vector<std::string> str_v)
+bool timing_point_v::load_raw_timing_point(std::vector<std::string> str_v)
 {
 	for (std::string str : str_v) {
 		timing_point tp;
-		tp.load_raw_timing_point(str); // Load by string
+        if (!tp.load_raw_timing_point(str)) {
+            return false;
+        }; // Load by string
 		m_object_v.push_back(tp); // Push back to private member
-	}
+    }
+    return true;
 }
 
 // Gets sv only in a vector form

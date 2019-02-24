@@ -21,16 +21,10 @@ hit_object::hit_object() {
 
 bool hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsigned int index)
 {
-	// Reject loading of empty string
-	if (str == "") {
-        return false; // Don't throw an error as an empty str just means load nothing
-	}
-
 	// Remove the brackets
-    try {
-        str = trim_editor_hit_object(str);
-    } catch (...) {
-        throw reamber_exception("This is not a valid Editor Hit Object string.");
+    if (!trim_editor_hit_object(str)){
+        std::cout << "This is not a valid Editor Hit Object string.";
+        return false;
     }
 
 	m_keys = keys;
@@ -55,7 +49,8 @@ bool hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsi
             column_v.push_back(static_cast<unsigned int>(std::stoi(str_bar_v[1])));
 		}
 		catch (...) {
-			throw reamber_exception(str_comma_v[0].c_str());
+            std::cout << "Editor Hit Object content is corrupt.";
+            return false;
 		}
 	}
 
@@ -81,7 +76,8 @@ bool hit_object::load_raw_hit_object(std::string str, unsigned int keys)
 
     // If it's invalid we throw
     if (count_colon < 4 || count_colon > 5 || count_comma != 5) {
-        throw reamber_exception("Raw Hit Object is not valid.");
+        std::cout << "Raw Hit Object is not valid.";
+        return false;
     }
 
     m_keys = keys;
@@ -320,18 +316,19 @@ unsigned int hit_object::convert_x_axis_to_column(unsigned int x_axis, unsigned 
 	return static_cast<unsigned int>(round((x_axis * keys - 256) / 512));
 }
 
-std::string hit_object::trim_editor_hit_object(std::string str)
+bool hit_object::trim_editor_hit_object(std::string& str)
 {
 	// Validate the str
 	// If either of these characters are not found, it's not valid
 	if (str.find('(') == std::string::npos || // == npos means not found
 		str.find(')') == std::string::npos || // means if any are not found, it's True
-		str.find('-') == std::string::npos) {
-		throw reamber_exception("This is not a valid Editor Hit Object string.");
+        str.find('-') == std::string::npos) {
+        return false;
 	}
 
 	// Remove the ( AND ) brackets
-	return str.substr(str.find('(') + 1, str.find(')') - str.find('(') - 1);
+    str = str.substr(str.find('(') + 1, str.find(')') - str.find('(') - 1);
+    return true;
 }
 
 // Clones the object

@@ -1,6 +1,7 @@
 #include "hit_object_v.h"
 #include <algorithm>
 #include "../../custom_functions/split_string.h"
+#include <iostream>
 
 hit_object_v::hit_object_v() : osu_object_v()
 {
@@ -10,17 +11,16 @@ hit_object_v::hit_object_v() : osu_object_v()
 // Create an object with a designated amount of default constructed hit_objects
 
 hit_object_v::hit_object_v(unsigned int amount) {
-	load_defaults(amount);
+    load_defaults(amount);
 }
 
-void hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
+bool hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
 
 	// Reject loading of empty string
-	if (str == "") {
-		return; // Don't throw an error as an empty str just means load nothing
-	}
-
-	str = hit_object::trim_editor_hit_object(str); // Shed the brackets
+    if (!hit_object::trim_editor_hit_object(str)) {
+        std::cout << "Invalid Editor Hit Object Format";
+        return false;
+    }; // Shed the brackets
 
 	std::vector<std::string> str_comma_v = split_string::by_delimeter(str, ','); // Split by comma
 	std::vector<std::string> str_bar_v = {};
@@ -29,33 +29,40 @@ void hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
 		hit_object ho;
 		str_bar_v = split_string::by_delimeter(str_comma, '|'); // Split each comma token by bar
 
-		ho.load_parameters( // Load in by parameter
+        if (!ho.load_parameters( // Load in by parameter
             static_cast<unsigned int>(std::stoi(str_bar_v[1])),  // Column
 			std::stod(str_bar_v[0]),  // Offset
 			0,                        // LN End (default to 0)
-			keys);                    // Keys
+            keys)){ // Keys
+            return false;
+        }
 
 		m_object_v.push_back(ho); // Append to our private hit_object vector
 	}
+
+    return true;
 }
 
 // Where if the user loads in the whole thing as a string
 
-void hit_object_v::load_raw_hit_object(std::string str, unsigned int keys, char delimeter) {
-    load_raw_hit_object(split_string::by_delimeter(str, delimeter), keys); // Use the vector variant of this function
+bool hit_object_v::load_raw_hit_object(std::string str, unsigned int keys, char delimeter) {
+    return load_raw_hit_object(split_string::by_delimeter(str, delimeter), keys); // Use the vector variant of this function
 }
 
-void hit_object_v::load_raw_hit_object(std::vector<std::string> str_v, unsigned int keys)
+bool hit_object_v::load_raw_hit_object(std::vector<std::string> str_v, unsigned int keys)
 {
 	for (std::string str : str_v) { // For each str in the string vector
 		hit_object ho;
-		ho.load_raw_hit_object(str, keys);
+        if (!ho.load_raw_hit_object(str, keys)) {
+            return false;
+        }
 
 		m_object_v.push_back(ho); // Append to our private hit_object vector
 	}
+    return true;
 }
 
-std::vector<std::string> hit_object_v::get_string_raw_v(int keys)
+std::vector<std::string> hit_object_v::get_string_raw_v(unsigned int keys)
 {
 	std::vector<std::string> output = {};
 	std::transform(m_object_v.begin(), m_object_v.end(), std::back_inserter(output), [&](hit_object &ho) {

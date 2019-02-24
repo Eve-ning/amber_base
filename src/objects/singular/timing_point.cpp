@@ -2,6 +2,7 @@
 #include "../../exceptions/reamber_exception.h"
 #include "../../custom_functions/split_string.h"	
 #include <vector>
+#include <iostream>
 
 timing_point::timing_point()
 {
@@ -15,12 +16,13 @@ timing_point::timing_point()
     m_is_kiai = false;
 }
 
-void timing_point::load_raw_timing_point(std::string str)
+bool timing_point::load_raw_timing_point(std::string str)
 {
     // Validate the str
     // If either of these characters are not found, it's not valid
     if (str.find(',') == std::string::npos) { // == npos means not found
-        throw reamber_exception("This is not a valid Editor Hit Object string.");
+        std::cout << "This is not a valid Editor Hit Object string.";
+        return false;
     }
 
     // We append this so that the while loop continues till the end
@@ -41,18 +43,22 @@ void timing_point::load_raw_timing_point(std::string str)
 
 	// Dependent on m_is_bpm
 	m_value = convert_code_to_value(std::stod(timing_point_comma_v[1]), m_is_bpm); 
+
+    return true;
 }
 
-void timing_point::load_parameters(double offset, double value, bool is_bpm, bool is_kiai, unsigned int metronome)
+bool timing_point::load_parameters(double offset, double value, bool is_bpm, bool is_kiai, unsigned int metronome)
 {
 	m_offset = offset;
     m_value = value;
     m_is_bpm = is_bpm;
     m_is_kiai = is_kiai;
     m_metronome = metronome;
+
+    return true;
 }
 
-void timing_point::load_parameters(double offset, double value, unsigned int metronome, sample_set sample_set_, unsigned int sample_set_index, unsigned int volume, bool is_bpm, bool is_kiai) {
+bool timing_point::load_parameters(double offset, double value, unsigned int metronome, sample_set sample_set_, unsigned int sample_set_index, unsigned int volume, bool is_bpm, bool is_kiai) {
 	m_offset = offset;
 	m_value = value;
 	m_metronome = metronome;
@@ -61,6 +67,8 @@ void timing_point::load_parameters(double offset, double value, unsigned int met
 	m_volume = volume;
 	m_is_kiai = is_kiai;
 	m_is_bpm = is_bpm;
+
+    return true;
 }
 
 bool timing_point::operator ==(const timing_point & tp) const {
