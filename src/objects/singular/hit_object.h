@@ -27,17 +27,17 @@ public:
 	// Loads from data from the editor
 	// Do not skip keys if you want to export to .osu
 	// Specify index to use if you are inputting multiple editor hit objects
-    void load_editor_hit_object(std::string str, unsigned int keys = 0, unsigned int index = 0);
+    bool load_editor_hit_object(std::string str, unsigned int keys = 0, unsigned int index = 0);
 
 	// Loads from data from the .osu file
 	// Key count is required for conversion to columns
-    void load_raw_hit_object(std::string str, unsigned int keys);
+    bool load_raw_hit_object(std::string str, unsigned int keys);
 
 	// Loads parameters manually (Simple)
 	// Column starts from 0
 	// ln_end = 0 for Normal Notes
 	// Do not skip keys if you want to export to .osu
-    void load_parameters(unsigned int column,
+    bool load_parameters(unsigned int column,
                          double offset,
                          unsigned int ln_end = 0,
                          unsigned int keys = 0);
@@ -70,7 +70,7 @@ public:
 
 	// Get the string compatible to .osu format
     // This variant is to override and set the current keys if user failed the other variant
-	virtual std::string get_string_raw(int keys);
+    virtual std::string get_string_raw(unsigned int keys);
 
     //// Getter and Setters
 

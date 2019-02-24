@@ -19,15 +19,20 @@ hit_object::hit_object() {
 	m_keys = 4;
 }
 
-void hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsigned int index)
+bool hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsigned int index)
 {
 	// Reject loading of empty string
 	if (str == "") {
-		return; // Don't throw an error as an empty str just means load nothing
+        return false; // Don't throw an error as an empty str just means load nothing
 	}
 
 	// Remove the brackets
-	str = trim_editor_hit_object(str);
+    try {
+        str = trim_editor_hit_object(str);
+    } catch (...) {
+        throw reamber_exception("This is not a valid Editor Hit Object string.");
+    }
+
 	m_keys = keys;
 
     // Now we are just left with the contents
@@ -47,7 +52,7 @@ void hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsi
 		// We push back the data after conversion
 		try {
 			offset_v.push_back(std::stod(str_bar_v[0]));
-			column_v.push_back(std::stoi(str_bar_v[1]));
+            column_v.push_back(static_cast<unsigned int>(std::stoi(str_bar_v[1])));
 		}
 		catch (...) {
 			throw reamber_exception(str_comma_v[0].c_str());
@@ -57,10 +62,17 @@ void hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsi
     // Set according to index
     m_offset = offset_v[index];
     m_column = column_v[index];
+
+    return true;
 }
 
-void hit_object::load_raw_hit_object(std::string str, unsigned int keys)
+bool hit_object::load_raw_hit_object(std::string str, unsigned int keys)
 {
+    int count_comma = 0;
+    for (char c: str) {
+        if (c == ',') { count_comma++; }
+    }
+
     // We find out if it's an long note or a note
     int count_colon = 0;
     for (char c: str) {
@@ -68,7 +80,7 @@ void hit_object::load_raw_hit_object(std::string str, unsigned int keys)
     }
 
     // If it's invalid we throw
-    if (count_colon < 4 || count_colon > 5) {
+    if (count_colon < 4 || count_colon > 5 || count_comma != 5) {
         throw reamber_exception("Raw Hit Object is not valid.");
     }
 
@@ -119,9 +131,11 @@ void hit_object::load_raw_hit_object(std::string str, unsigned int keys)
     default:
         throw reamber_exception("Raw Hit Object is not valid. [INVALID ERROR]");
     }
+
+    return true;
 }
 
-void hit_object::load_parameters(unsigned int column, double offset, unsigned int ln_end, unsigned int keys){
+bool hit_object::load_parameters(unsigned int column, double offset, unsigned int ln_end, unsigned int keys){
     m_column = column;
     m_offset = offset;
     m_ln_end = ln_end;
@@ -132,6 +146,7 @@ void hit_object::load_parameters(unsigned int column, double offset, unsigned in
                                             "is before Head (" + offset_str + ")").c_str());
     }
     m_keys = keys;
+    return true;
 }
 
 void hit_object::load_parameters(unsigned int column, unsigned int y_axis, double offset, unsigned int note_type, sample_set hitsound_set, double ln_end, sample_set sample_set_, sample_set addition_set, sample_set custom_set, unsigned int volume, std::string hitsound_file, unsigned int keys) {
@@ -173,7 +188,7 @@ std::string hit_object::get_string_raw() const
 		std::to_string(m_offset) + "," +
 		std::to_string(m_note_type) + "," +
 		std::to_string(static_cast<unsigned int>(m_hitsound_set)) + "," +
-		(m_ln_end == 0 ? "" : (std::to_string(m_ln_end) + ":")) + // If it's a note, m_ln_end == 0
+        (m_ln_end == 0.0 ? "" : (std::to_string(m_ln_end) + ":")) + // If it's a note, m_ln_end == 0
 		std::to_string(static_cast<unsigned int>(m_sample_set)) + ":" +
 		std::to_string(static_cast<unsigned int>(m_addition_set)) + ":" +
 		std::to_string(static_cast<unsigned int>(m_custom_set)) + ":" +
@@ -183,7 +198,7 @@ std::string hit_object::get_string_raw() const
 	return output;
 }
 
-std::string hit_object::get_string_raw(int keys)
+std::string hit_object::get_string_raw(unsigned int keys)
 {
 	m_keys = keys;
 	return get_string_raw(); // Call no-arg function
@@ -290,7 +305,7 @@ void hit_object::set_ln_end(double ln_end)
 }
 
 bool hit_object::get_is_note() const {
-	return (m_ln_end == 0);
+    return (m_ln_end == 0.0);
 }
 
 bool hit_object::get_is_long_note() const {

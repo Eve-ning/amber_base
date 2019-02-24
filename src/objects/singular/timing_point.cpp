@@ -171,19 +171,19 @@ void timing_point::set_is_sv(bool is_sv) {
 
 double timing_point::convert_code_to_value(double code, bool is_bpm) {
 	if (is_bpm) {
-		return 60000 / code;
+        return 60000.0 / code;
 	}
 	else { // Means it's an SV
-		return -100 / code;
+        return -100.0 / code;
 	}
 }
 
 double timing_point::convert_value_to_code(double value, bool is_bpm) {
 	if (is_bpm) {
-		return 60000 / value;
+        return 60000.0 / value;
 	}
 	else { // Means it's an SV
-		return -100 / value;
+        return -100.0 / value;
 	}
 }
 
