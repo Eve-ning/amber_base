@@ -21,7 +21,7 @@ bool timing_point::load_raw_timing_point(std::string str)
     // Validate the str
     // If either of these characters are not found, it's not valid
     if (str.find(',') == std::string::npos) { // == npos means not found
-        std::cout << "This is not a valid Editor Hit Object string.";
+        std::cout << "This is not a valid Editor Hit Object string." << std::endl;
         return false;
     }
 

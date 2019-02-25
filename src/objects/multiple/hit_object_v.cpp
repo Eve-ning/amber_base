@@ -18,7 +18,7 @@ bool hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
 
 	// Reject loading of empty string
     if (!hit_object::trim_editor_hit_object(str)) {
-        std::cout << "Invalid Editor Hit Object Format";
+        std::cout << "Invalid Editor Hit Object Format" << std::endl;
         return false;
     }; // Shed the brackets
 

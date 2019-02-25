@@ -23,7 +23,7 @@ bool hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsi
 {
 	// Remove the brackets
     if (!trim_editor_hit_object(str)){
-        std::cout << "This is not a valid Editor Hit Object string.";
+        std::cout << "This is not a valid Editor Hit Object string." << std::endl;
         return false;
     }
 
@@ -49,7 +49,7 @@ bool hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsi
             column_v.push_back(static_cast<unsigned int>(std::stoi(str_bar_v[1])));
 		}
 		catch (...) {
-            std::cout << "Editor Hit Object content is corrupt.";
+            std::cout << "Editor Hit Object content is corrupt." << std::endl;
             return false;
 		}
 	}
@@ -76,7 +76,7 @@ bool hit_object::load_raw_hit_object(std::string str, unsigned int keys)
 
     // If it's invalid we throw
     if (count_colon < 4 || count_colon > 5 || count_comma != 5) {
-        std::cout << "Raw Hit Object is not valid.";
+        std::cout << "Raw Hit Object is not valid." << std::endl;
         return false;
     }
 
