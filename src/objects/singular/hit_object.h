@@ -119,6 +119,11 @@ public:
 	// Clones the object
 	virtual std::shared_ptr<osu_object> clone() const;
 
+    enum NOTE_TYPE {
+        NORMAL = 1,
+        LN = 128
+    };
+
 private:
 
     unsigned int m_column; // Starts from 0

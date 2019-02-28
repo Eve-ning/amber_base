@@ -699,13 +699,16 @@ namespace lib_functions
 
 		osu_object_v<T> obj_v_c;
 
-		// [0][1][2][3][4][5]
-		//     ^        ^
+        // [0][1][2][3][4][5][6]
+        //           ^        ^
 		// off = 1
-		// n = 3
+        // n = 3
 
-        for (unsigned int i = offset; i < obj_v->size(); i ++) {
-			if ((i - offset) % n != 0) { // Only push back those not in the nth sequence
+        for (unsigned int i = 0; i < obj_v->size(); i ++) {
+            if (
+                    i < offset || // Push back any element < offset
+                    (i - offset + 1) % n != 0 // Only push back those not in the nth sequence
+                    ) {
 				obj_v_c.push_back(obj_v->get_index(i));
 			}
 		}

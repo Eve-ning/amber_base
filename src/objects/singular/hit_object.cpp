@@ -8,7 +8,7 @@
 hit_object::hit_object() {
     m_column = 0;
     m_y_axis = 192;
-    m_note_type = 1;
+    m_note_type = NOTE_TYPE::NORMAL;
     m_hitsound_set = sample_set::AUTO;
     m_ln_end = 0;
     m_sample_set = sample_set::AUTO;
@@ -135,6 +135,9 @@ bool hit_object::load_parameters(unsigned int column, double offset, unsigned in
     m_column = column;
     m_offset = offset;
     m_ln_end = ln_end;
+    if (ln_end != 0) {
+        m_note_type = NOTE_TYPE::LN;
+    }
     if (ln_end != 0 && ln_end < offset){
         // Throw if Long Note End is before Long Note Head unless it's 0
         std::string ln_end_str = std::to_string(ln_end), offset_str = std::to_string(offset);
