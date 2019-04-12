@@ -27,37 +27,37 @@ public:
 	// Loads from data from the editor
 	// Do not skip keys if you want to export to .osu
 	// Specify index to use if you are inputting multiple editor hit objects
-    bool load_editor_hit_object(std::string str, unsigned int keys = 0, unsigned int index = 0);
+    bool load_eho(std::string str, unsigned int keys = 0, unsigned int index = 0);
 
 	// Loads from data from the .osu file
 	// Key count is required for conversion to columns
-    bool load_raw_hit_object(std::string str, unsigned int keys);
+    bool load_raw(std::string str, unsigned int keys);
 
 	// Loads parameters manually (Simple)
 	// Column starts from 0
 	// ln_end = 0 for Normal Notes
 	// Do not skip keys if you want to export to .osu
-    bool load_parameters(unsigned int column,
-                         double offset,
-                         unsigned int ln_end = 0,
-                         unsigned int keys = 0);
+    bool load_par(unsigned int column,
+                  double offset,
+                  unsigned int ln_end = 0,
+                  unsigned int keys = 0);
 
 	// Loads parameters manually (Advanced)
 	// Column starts from 0
 	// ln_end = 0 for Normal Notes
 	// Do not skip keys if you want to export to .osu
-	void load_parameters(unsigned int column, // Starts from 0
-						 unsigned int y_axis,
-						 double offset,
-						 unsigned int note_type, // 1: Note, 128: Long Note
-						 sample_set hitsound_set,
-						 double ln_end, // If note, ln_end = 0,
-						 sample_set sample_set_,
-						 sample_set addition_set,
-						 sample_set custom_set,
-						 unsigned int volume,
-						 std::string hitsound_file,
-						 unsigned int keys);
+    void load_par(unsigned int column, // Starts from 0
+                  unsigned int y_axis,
+                  double offset,
+                  unsigned int note_type, // 1: Note, 128: Long Note
+                  sample_set hitsound_set,
+                  double ln_end, // If note, ln_end = 0,
+                  sample_set sample_set_,
+                  sample_set addition_set,
+                  sample_set custom_set,
+                  unsigned int volume,
+                  std::string hitsound_file,
+                  unsigned int keys);
 
 	// Checks if all variables match
 	bool operator ==(const hit_object &ho) const;
@@ -110,11 +110,11 @@ public:
 	bool get_is_note() const;
 	bool get_is_long_note() const;
 
-	static unsigned int convert_column_to_x_axis(unsigned int column, unsigned int keys);
-	static unsigned int convert_x_axis_to_column(unsigned int x_axis, unsigned int keys);
+    static unsigned int column_to_x_axis(unsigned int column, unsigned int keys);
+    static unsigned int x_axis_to_column(unsigned int x_axis, unsigned int keys);
 
 	// Removes the brackets on the editor hitobject
-    static bool trim_editor_hit_object(std::string& str);
+    static bool trim_eho(std::string& str);
 
 	// Clones the object
 	virtual std::shared_ptr<osu_object> clone() const;

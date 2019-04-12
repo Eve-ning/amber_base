@@ -27,7 +27,7 @@ public:
 
 	// Loads from data from the editor
 	// Do not skip keys if you want to export to .osu
-    bool load_editor_hit_object(std::string str, unsigned int keys = 0);
+    bool load_eho(std::string str, unsigned int keys = 0);
 
 	// Loads from data from the .osu file as one whole string
 	// Key count is required for conversion to columns

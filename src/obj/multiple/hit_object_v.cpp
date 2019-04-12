@@ -14,10 +14,10 @@ hit_object_v::hit_object_v(unsigned int amount) {
     load_defaults(amount);
 }
 
-bool hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
+bool hit_object_v::load_eho(std::string str, unsigned int keys) {
 
 	// Reject loading of empty string
-    if (!hit_object::trim_editor_hit_object(str)) {
+    if (!hit_object::trim_eho(str)) {
         std::cout << "Invalid Editor Hit Object Format" << std::endl;
         return false;
     }; // Shed the brackets
@@ -29,7 +29,7 @@ bool hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
 		hit_object ho;
 		str_bar_v = split_string::by_delimeter(str_comma, '|'); // Split each comma token by bar
 
-        if (!ho.load_parameters( // Load in by parameter
+        if (!ho.load_par( // Load in by parameter
             static_cast<unsigned int>(std::stoi(str_bar_v[1])),  // Column
 			std::stod(str_bar_v[0]),  // Offset
 			0,                        // LN End (default to 0)
@@ -53,7 +53,7 @@ bool hit_object_v::load_raw_hit_object(std::vector<std::string> str_v, unsigned 
 {
 	for (std::string str : str_v) { // For each str in the string vector
 		hit_object ho;
-        if (!ho.load_raw_hit_object(str, keys)) {
+        if (!ho.load_raw(str, keys)) {
             return false;
         }
 
