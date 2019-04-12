@@ -6,7 +6,7 @@
     #define AMBER_BASE __declspec(dllimport)
 #endif
 
-#include "../../objects/singular/hit_object.h"
+#include "../../obj/singular/hit_object.h"
 #include "osu_object_v.h"
 
 // The list variant provides additional features to load in hit_objects and modify them.

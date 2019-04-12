@@ -1,8 +1,8 @@
-#include "objects/singular/osu_object.h"
-#include "objects/multiple/hit_object_v.h"
-#include "objects/multiple/timing_point_v.h"
-#include "objects/multiple/hit_object_v.h"
-#include "exceptions/reamber_exception.h"
+#include "obj/singular/osu_object.h"
+#include "obj/multiple/hit_object_v.h"
+#include "obj/multiple/timing_point_v.h"
+#include "obj/multiple/hit_object_v.h"
+#include "exc/reamber_exception.h"
 #include <vector>
 
 timing_point_v stutter_swap(timing_point_v tp_v) {
