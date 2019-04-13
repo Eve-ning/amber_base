@@ -6,7 +6,7 @@
     #define AMBER_BASE __declspec(dllimport)
 #endif
 
-#include "../../obj/singular/hit_object.h"
+#include "../../objects/singular/hit_object.h"
 #include "osu_object_v.h"
 
 // The list variant provides additional features to load in hit_objects and modify them.
@@ -27,7 +27,7 @@ public:
 
 	// Loads from data from the editor
 	// Do not skip keys if you want to export to .osu
-    bool load_eho(std::string str, unsigned int keys = 0);
+    bool load_editor_hit_object(std::string str, unsigned int keys = 0);
 
 	// Loads from data from the .osu file as one whole string
 	// Key count is required for conversion to columns

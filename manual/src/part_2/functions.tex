@@ -1,0 +1,44 @@
+\part{Functions}
+
+This is the part that becomes confusing, however, it's important to define every single nook and cranny of this 
+
+\section{Stutter}
+
+Let's say we have a vector of offsets, we need to ask a few questions before we can generate a Stutter that works.
+
+\begin{enumerate}
+	\item Should we entrust the task of assigning the offsets to the user?
+	
+	We should! Split the work so that it's more specific
+	\item Can we determine if it's valid?
+	
+	We can apply a precursory check towards the input to see if the both the value and size is valid
+	
+	\item Can we omit certain traits if needed?
+	
+	We also need to perform precursory checks on if some parameters have overlapped, such as $Location_{abs}$ and $Location_{rel}$
+	
+	\item Lastly, how many functions are needed?
+\end{enumerate}
+
+This problem felt like it needed a function that allows varying amounts of arguments like Python's named arguments.
+
+We can either create a function that takes in a struct that holds certain traits, or we can create a class/struct that handles Stutter as a whole. We will go with the latter as the former would be more effective if there are other functions using the traits.
+
+\begin{lstlisting}[language=C++]
+
+struct AMBER_BASE Stutter
+{
+	double initial_val
+	double threshold_val
+	double average_val
+	
+	double threshold_rel
+	double threshold_abs
+	
+}
+
+
+\end{lstlisting}
+
+

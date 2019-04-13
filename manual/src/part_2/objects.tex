@@ -2,19 +2,12 @@
 
 \section{Singular}
 
-The simplest block is the Hit Object and Timing Point
+The simplest block is the Hit Object and Timing Point, these are derived from a osu\_object class.
+This makes up the basic building block for both types.
 
-\subsection{Hit Object}
+\section{Multiple}
 
-For the Hit Object, it has a few primitives to take note of
-unsigned int m\_column
-unsigned int m\_y\_axis
-unsigned int m\_note\_type
-sample\_set m\_hitsound\_set
-double m\_ln\_end
-sample\_set m\_sample\_set
-sample\_set m\_addition\_set
-sample\_set m\_custom\_set
-unsigned int m\_volume
-std::string m\_hitsound\_file
-unsigned int m\_keys
+The secondary block would be Hit Object List, and Timing Point List. However, it's important to note that these are not directly derived from hit\_object or timing\_point, these are derived from a template of osu\_object\_v.
+
+Most of the details are not covered as they are more-so self explanatory.
+

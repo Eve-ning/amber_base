@@ -1,9 +1,9 @@
 #include "hit_object.h"
-#include "_func/split_string.h"
+#include "../../custom_functions/split_string.h"
 #include <cmath>
 #include <vector>
 #include <iostream>
-#include "../../exc/reamber_exception.h"
+#include "../../exceptions/reamber_exception.h"
 
 hit_object::hit_object() {
     m_column = 0;
@@ -19,10 +19,10 @@ hit_object::hit_object() {
 	m_keys = 4;
 }
 
-bool hit_object::load_eho(std::string str, unsigned int keys, unsigned int index)
+bool hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsigned int index)
 {
 	// Remove the brackets
-    if (!trim_eho(str)){
+    if (!trim_editor_hit_object(str)){
         std::cout << "This is not a valid Editor Hit Object string." << std::endl;
         return false;
     }
@@ -61,7 +61,7 @@ bool hit_object::load_eho(std::string str, unsigned int keys, unsigned int index
     return true;
 }
 
-bool hit_object::load_raw(std::string str, unsigned int keys)
+bool hit_object::load_raw_hit_object(std::string str, unsigned int keys)
 {
     int count_comma = 0;
     for (char c: str) {
@@ -97,7 +97,7 @@ bool hit_object::load_raw(std::string str, unsigned int keys)
 
     switch (count_colon) {
     case 4:
-        m_column = x_axis_to_column(static_cast<unsigned int>(std::stoi(hit_object_comma_v[0])), keys);
+        m_column = convert_x_axis_to_column(static_cast<unsigned int>(std::stoi(hit_object_comma_v[0])), keys);
         m_y_axis = static_cast<unsigned int>(std::stoi(hit_object_comma_v[1]));
         m_offset = std::stod(hit_object_comma_v[2]);
         m_note_type = static_cast<unsigned int>(std::stoi(hit_object_comma_v[3]));
@@ -111,7 +111,7 @@ bool hit_object::load_raw(std::string str, unsigned int keys)
         // m_ln_end is 0 as by constructor
         break;
     case 5:
-        m_column = x_axis_to_column(static_cast<unsigned int>(std::stoi(hit_object_comma_v[0])), keys);
+        m_column = convert_x_axis_to_column(static_cast<unsigned int>(std::stoi(hit_object_comma_v[0])), keys);
         m_y_axis = static_cast<unsigned int>(std::stoi(hit_object_comma_v[1]));
         m_offset = std::stod(hit_object_comma_v[2]);
         m_note_type = static_cast<unsigned int>(std::stoi(hit_object_comma_v[3]));
@@ -131,7 +131,7 @@ bool hit_object::load_raw(std::string str, unsigned int keys)
     return true;
 }
 
-bool hit_object::load_par(unsigned int column, double offset, unsigned int ln_end, unsigned int keys){
+bool hit_object::load_parameters(unsigned int column, double offset, unsigned int ln_end, unsigned int keys){
     m_column = column;
     m_offset = offset;
     m_ln_end = ln_end;
@@ -148,7 +148,7 @@ bool hit_object::load_par(unsigned int column, double offset, unsigned int ln_en
     return true;
 }
 
-void hit_object::load_par(unsigned int column, unsigned int y_axis, double offset, unsigned int note_type, sample_set hitsound_set, double ln_end, sample_set sample_set_, sample_set addition_set, sample_set custom_set, unsigned int volume, std::string hitsound_file, unsigned int keys) {
+void hit_object::load_parameters(unsigned int column, unsigned int y_axis, double offset, unsigned int note_type, sample_set hitsound_set, double ln_end, sample_set sample_set_, sample_set addition_set, sample_set custom_set, unsigned int volume, std::string hitsound_file, unsigned int keys) {
 	m_column = column;
 	m_y_axis = y_axis;
 	m_offset = offset;
@@ -182,7 +182,7 @@ bool hit_object::operator ==(const hit_object & ho) const {
 std::string hit_object::get_string_raw() const
 {
 	std::string output =
-        std::to_string(column_to_x_axis(m_column, m_keys)) + "," +
+		std::to_string(convert_column_to_x_axis(m_column, m_keys)) + "," +
 		std::to_string(m_y_axis) + "," +
 		std::to_string(m_offset) + "," +
 		std::to_string(m_note_type) + "," +
@@ -311,15 +311,15 @@ bool hit_object::get_is_long_note() const {
 	return !get_is_note();
 }
 
-unsigned int hit_object::column_to_x_axis(unsigned int column, unsigned int keys) {
+unsigned int hit_object::convert_column_to_x_axis(unsigned int column, unsigned int keys) {
 	return static_cast<unsigned int>(round(((512 * column) + 256) / keys));
 }
 
-unsigned int hit_object::x_axis_to_column(unsigned int x_axis, unsigned int keys) {
+unsigned int hit_object::convert_x_axis_to_column(unsigned int x_axis, unsigned int keys) {
 	return static_cast<unsigned int>(round((x_axis * keys - 256) / 512));
 }
 
-bool hit_object::trim_eho(std::string& str)
+bool hit_object::trim_editor_hit_object(std::string& str)
 {
 	// Validate the str
 	// If either of these characters are not found, it's not valid
