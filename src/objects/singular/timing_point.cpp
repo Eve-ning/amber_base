@@ -1,6 +1,6 @@
 #include "timing_point.h"
 #include "../../exceptions/reamber_exception.h"
-#include "../../custom_functions/split_string.h"	
+#include "../../amber_privf/split_string.h"
 #include <vector>
 #include <iostream>
 

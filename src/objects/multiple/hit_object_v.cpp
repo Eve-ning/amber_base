@@ -1,6 +1,6 @@
 #include "hit_object_v.h"
 #include <algorithm>
-#include "../../custom_functions/split_string.h"
+#include "../../amber_privf/split_string.h"
 #include <iostream>
 
 hit_object_v::hit_object_v() : osu_object_v()

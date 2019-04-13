@@ -12,7 +12,7 @@
 	There are 2 ways to represent hit_object_v AND timing_point_v in a type
 	
 	1) std::shared_ptr<osu_object_v<T = hit_object/timing_point>> (Recommended)
-		+ You get to use functions implemented in osu_object_v<T> class
+        + You get to use functions implemented in ObjV<T> class
 		- Polymorphism may be a bit messy and confusing
 		- Longer type name
 
@@ -26,23 +26,26 @@
 		- Risky as T can be hit_object or timing_point too
 		- Unclear on input
 
-	For this library I've chosen the former so that I can utilize osu_object_v<T>'s own functions
+    For this library I've chosen the former so that I can utilize ObjV<T>'s own functions
 	We are also able to shorten most library code and shift common and important implementations
 		to the class itself
 */
 
-namespace lib_functions 
+template<typename T>
+using ObjV = osu_object_v<T>;
+
+namespace amber_f
 {
 	// NOTATION
 	// [0] OFFSET on 0ms
 	// <0> OBJECT 0 on 0ms
 	//  0
 
-	// Gets the difference in all offset difference in a vector form
+    // Gets the difference in all offset difference in a vector form
 	// Note that notes on the same offset will be regarded as 1 offset
-	// This will return a vector that has a -1 size
+    // This will return a vector that has a -1 size
 	template <typename T>
-	std::vector<double> get_offset_difference(osu_object_v<T> const* obj_v) {
+    std::vector<double> offset_diff(ObjV<T> const* obj_v) {
 
 		// [0] REJECT
 		if (obj_v->size() <= 1) {
@@ -50,7 +53,7 @@ namespace lib_functions
 		}
 
 		// const [0][1][2] ---> [0][1][2]
-		auto obj_v_copy = osu_object_v<T>::clone_obj_v(obj_v);
+        auto obj_v_copy = ObjV<T>::clone_obj_v(obj_v);
 
 		// [0][2][1] ---> [0][1][2]
 		obj_v_copy->sort_by_offset(true);
@@ -80,9 +83,9 @@ namespace lib_functions
 	// <0><0> OUT
 	//  0  1 
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies(
+    std::shared_ptr<ObjV<T>> copy(
 		T obj, const std::vector<double>& copy_to_v, bool sort = true) {
-		osu_object_v<T> output = osu_object_v<T>();
+        ObjV<T> output = ObjV<T>();
 
 		if (copy_to_v.size() == 0) {
 			throw reamber_exception("copy_to_v is empty");
@@ -102,7 +105,7 @@ namespace lib_functions
 			//        ^----^
 			std::sort(output.begin(), output.end());
 		}
-		return std::make_shared<osu_object_v<T>>(output);
+        return std::make_shared<ObjV<T>>(output);
 	}
 
 	// [0]   [2]	IN
@@ -111,13 +114,14 @@ namespace lib_functions
 	// <0><1><0><1> OUT
 	//  0  1  2  3 
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies(
-		osu_object_v<T> const* obj_v, std::vector<double> copy_to_v,
+    std::shared_ptr<ObjV<T>> copy(
+        ObjV<T> const* obj_v, std::vector<double> copy_to_v,
 		bool anchor_front = true, bool sort = true) {
-		osu_object_v<T> output = osu_object_v<T>();
+        // Test
+        ObjV<T> output = ObjV<T>();
 
 		// const [0][1][2] ---> [0][1][2]
-		auto obj_v_copy = osu_object_v<T>::clone_obj_v(obj_v);
+        auto obj_v_copy = ObjV<T>::clone_obj_v(obj_v);
 
 		// [0][4][2]
 		for (double copy_to : copy_to_v) {
@@ -133,7 +137,7 @@ namespace lib_functions
 			//		       ^----^----^----^
 			std::sort(output.begin(), output.end());
 		}
-		return std::make_shared<osu_object_v<T>>(output);
+        return std::make_shared<ObjV<T>>(output);
 	}
 
 	// <0>   <1>   <2> IN
@@ -142,17 +146,17 @@ namespace lib_functions
 	// <0><0><1><1><2> OUT
 	//  0  1  2  3  4  
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies_delay(
-		osu_object_v<T> const* obj_v, std::vector<double> offset_v, bool include) {
+    std::shared_ptr<ObjV<T>> copy_delay(
+        ObjV<T> const* obj_v, std::vector<double> offset_v, bool include) {
 
-		osu_object_v<T> obj_v_c = *osu_object_v<T>::clone_obj_v(obj_v);
+        ObjV<T> obj_v_c = *ObjV<T>::clone_obj_v(obj_v);
 		obj_v_c.sort_by_offset();
 		std::sort(offset_v.begin(), offset_v.end());
 
 		auto offset_v_it = offset_v.begin();
 		auto obj_v_it = obj_v_c.begin();
 
-		osu_object_v<T> output;
+        ObjV<T> output;
 		
 		while (true) {
 
@@ -199,12 +203,12 @@ namespace lib_functions
 			
 		}
 
-		return std::make_shared<osu_object_v<T>>(output);
+        return std::make_shared<ObjV<T>>(output);
 	}
 
 	// [0]   [2]   [4] IN 
 	// [0][1][2][3][4] OUT
-    std::vector<double> create_copies_subdivision_by(
+    std::vector<double> copy_subd_by(
 		std::vector<double> offset_v, unsigned int subdivisions, bool include) {
 		// [0] REJECT
 		if (offset_v.size() <= 1) {
@@ -242,10 +246,10 @@ namespace lib_functions
 	// <0><0><0><0><0> OUT
 	//  0  1  2  3  4
 	template <typename T>
-    std::shared_ptr<osu_object_v<T>> create_copies_subdivision_by(
+    std::shared_ptr<ObjV<T>> copy_subd_by(
 		std::vector<double> offset_v, const T& obj_define,
 		unsigned int subdivisions, bool include) {
-        return create_copies(obj_define, create_copies_subdivision_by(offset_v, subdivisions, include));
+        return copy(obj_define, copy_subd_by(offset_v, subdivisions, include));
 	}
 
 	// <0>   <1>   <2> IN 
@@ -253,20 +257,20 @@ namespace lib_functions
 	// <0><0><1><1><2> OUT
 	//  0  1  2  3  4
 	template <typename T>
-    std::shared_ptr<osu_object_v<T>> create_copies_subdivision_by(
-		osu_object_v<T> const* obj_v, unsigned int subdivisions, bool include) {
+    std::shared_ptr<ObjV<T>> copy_subd_by(
+        ObjV<T> const* obj_v, unsigned int subdivisions, bool include) {
 
 		// <0>   <1>   <2>
 		//  0     2     4
 		// [0][1][2][3][4]
-        auto offset_v = create_copies_subdivision_by(obj_v->get_offset_v(true), subdivisions, true);
+        auto offset_v = copy_subd_by(obj_v->get_offset_v(true), subdivisions, true);
 		
 		// <0>   <2>   <4>
 		//  0     2     4
 		// [0][1][2][3][4]
 		// <0><0><2><2><4>
 		//  0  1  2  3  4
-		auto output = create_copies_delay(obj_v, offset_v, include);
+        auto output = copy_delay(obj_v, offset_v, include);
 
 		return output;
 	}
@@ -274,7 +278,7 @@ namespace lib_functions
     // [0]            [5] IN
     // SUBDIV_LEN 2
     // [0]   [2]   [4][5] OUT
-    std::vector<double> create_copies_subdivision_to(
+    std::vector<double> copy_subd_to(
         std::vector<double> offset_v, unsigned int subdivision_len, bool include) {
         // [0] REJECT
         if (offset_v.size() <= 1) {
@@ -314,10 +318,10 @@ namespace lib_functions
     // <0><0><0><0><0> OUT
     //  0  1  2  3  4
     template <typename T>
-    std::shared_ptr<osu_object_v<T>> create_copies_subdivision_to(
+    std::shared_ptr<ObjV<T>> copy_subd_to(
         std::vector<double> offset_v, const T& obj_define,
         unsigned int subdivision_len, bool include) {
-        return create_copies(obj_define, create_copies_subdivision_to(offset_v, subdivision_len, include));
+        return copy(obj_define, copy_subd_to(offset_v, subdivision_len, include));
     }
 
     // <0>   <1>   <2> IN
@@ -325,27 +329,27 @@ namespace lib_functions
     // <0><0><1><1><2> OUT
     //  0  1  2  3  4
     template <typename T>
-    std::shared_ptr<osu_object_v<T>> create_copies_subdivision_to(
-        osu_object_v<T> const* obj_v, unsigned int subdivision_len, bool include) {
+    std::shared_ptr<ObjV<T>> copy_subd_to(
+        ObjV<T> const* obj_v, unsigned int subdivision_len, bool include) {
 
         // <0>   <1>   <2>
         //  0     2     4
         // [0][1][2][3][4]
-        auto offset_v = create_copies_subdivision_to(obj_v->get_offset_v(true), subdivision_len, true);
+        auto offset_v = copy_subd_to(obj_v->get_offset_v(true), subdivision_len, true);
 
         // <0>   <2>   <4>
         //  0     2     4
         // [0][1][2][3][4]
         // <0><0><2><2><4>
         //  0  1  2  3  4
-        auto output = create_copies_delay(obj_v, offset_v, include);
+        auto output = copy_delay(obj_v, offset_v, include);
 
         return output;
     }
 
 	// [0]   [2]   [4] IN 
 	// [0][%][2][%][4] OUT
-	std::vector<double> create_copies_rel_diff(
+    std::vector<double> copy_rel(
 		std::vector<double> offset_v, double relativity, bool include) {
 
 		// [0] REJECT
@@ -381,10 +385,10 @@ namespace lib_functions
 	// <0><0><2><2><4> OUT
 	//  0  %  2  %  4
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies_rel_diff(
+    std::shared_ptr<ObjV<T>> copy_rel(
 		const std::vector<double> offset_v, const T obj_define, double relativity, bool include) {
-		auto copies = create_copies_rel_diff(offset_v, relativity, include);
-		return create_copies(obj_define, copies);
+        auto copies = copy_rel(offset_v, relativity, include);
+        return copy(obj_define, copies);
 	}
 
 	// <0>   <1>   <2> IN
@@ -393,27 +397,27 @@ namespace lib_functions
 	// <0><0><1><1><2> OUT
 	//  0  %  2  %  4
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies_rel_diff(
-        osu_object_v<T> const* obj_v, double relativity, bool include) {
+    std::shared_ptr<ObjV<T>> copy_rel(
+        ObjV<T> const* obj_v, double relativity, bool include) {
 
 		// <0>   <1>   <2>
 		//  0     2     4
 		// [0][%][2][%][4]
-        auto offset_v = create_copies_rel_diff(obj_v->get_offset_v(true), relativity, true);
+        auto offset_v = copy_rel(obj_v->get_offset_v(true), relativity, true);
 
 		// <0>   <2>   <4>
 		//  0     2     4
 		// [0][%][2][%][4]
 		// <0><0><2><2><4>
 		//  0  %  2  %  4
-        auto output = create_copies_delay(obj_v, offset_v, include);
+        auto output = copy_delay(obj_v, offset_v, include);
 
 		return output;
 	}
 
 	// [0]   [2]   [4] IN 
 	// [0][+][2][+][4] OUT
-	std::vector<double> create_copies_abs_diff(
+    std::vector<double> copy_abs(
 		const std::vector<double> offset_v, double relativity, bool include, bool relative_from_front = true, bool exclude_overlap = true) {
 		// [0] REJECT
 		if (offset_v.size() <= 1) {
@@ -462,10 +466,10 @@ namespace lib_functions
 	// <0><0><2><2><4> OUT
 	//  0  +  2  +  4
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies_abs_diff(
+    std::shared_ptr<ObjV<T>> copy_abs(
 		const std::vector<double> offset_v, const T obj_define,
 		double relativity, bool include, bool relative_from_front = true, bool exclude_overlap = true) {
-		return create_copies(obj_define, create_copies_abs_diff(offset_v, relativity, include, relative_from_front, exclude_overlap));
+        return copy(obj_define, copy_abs(offset_v, relativity, include, relative_from_front, exclude_overlap));
 	}
 
 	// <0>   <2>   <4> IN
@@ -474,28 +478,28 @@ namespace lib_functions
 	// <0><0><2><2><4> OUT
 	//  0  +  2  +  4
 	template <typename T>
-	std::shared_ptr<osu_object_v<T>> create_copies_abs_diff(
-        osu_object_v<T> const* obj_v, double relativity, bool include,
+    std::shared_ptr<ObjV<T>> copy_abs(
+        ObjV<T> const* obj_v, double relativity, bool include,
 		bool relative_from_front = true, bool exclude_overlap = true) {
 
 		// <0>   <2>   <4>
 		//  0     2     4
 		// [0][+][2][+][4]
-        auto offset_v = create_copies_abs_diff(obj_v->get_offset_v(), relativity, true, relative_from_front, exclude_overlap);
+        auto offset_v = copy_abs(obj_v->get_offset_v(), relativity, true, relative_from_front, exclude_overlap);
 
 		// <0>   <2>   <4>
 		//  0     2     4
 		// [0][+][2][+][4]
 		// <0><0><2><2><4>
 		//  0  +  2  +  4
-		auto output = create_copies_delay(obj_v, offset_v, include);
+        auto output = copy_delay(obj_v, offset_v, include);
 
 		return output;
 	}
 
 	// Automatically creates tps to counteract bpm line scroll speed manipulation
 	// include_with defines if the created tps exports alongside the original
-	timing_point_v create_normalize(timing_point_v tp_v, const double &reference, bool include_with = false) {
+    timing_point_v normalize(timing_point_v tp_v, const double &reference, bool include_with = false) {
 		timing_point_v output = include_with ? tp_v : timing_point_v();
 
 		tp_v = tp_v.get_bpm_only();
@@ -516,7 +520,7 @@ namespace lib_functions
 	// [0][1][2][3][4]
 	// <I><T><I><T><A>
 	// I: INITIAL, T: THRESHOLD, A: AVERAGE
-	timing_point_v create_stutter_from_offset(std::vector<double> offset_v, double initial,
+    timing_point_v stutter(std::vector<double> offset_v, double initial,
 		double average = 1.0, bool is_bpm = false, bool skip_on_invalid = true) {
 
 		if (offset_v.size() % 2 != 1) {
@@ -580,7 +584,7 @@ namespace lib_functions
 
 	// Used to find the limits of create_basic_stutter
 	// [0] is min, [1] is max
-	std::vector<double> get_stutter_rel_init_limits(
+    std::vector<double> stutter_rel_init_limits(
 		double threshold, double average, double threshold_min = 0.1, double threshold_max = 10.0) {
 
 		// init * thr + thr_ * ( 1 - thr ) = ave
@@ -606,28 +610,28 @@ namespace lib_functions
 
 	// Used to find the limits of create_basic_stutter
 	// [0] is min, [1] is max
-	std::vector<double> get_stutter_abs_init_limits(
+    std::vector<double> stutter_abs_init_limits(
 		double threshold, double average, double distance, double threshold_min = 0.1, double threshold_max = 10.0) {
-		return get_stutter_rel_init_limits(threshold / distance, average, threshold_min, threshold_max);
+        return stutter_rel_init_limits(threshold / distance, average, threshold_min, threshold_max);
 	}
 
 	// Creates a simple Act - CounterAct - Normalize movement
 	// Stutter creation will chain on more than 2 offsets
-	timing_point_v create_stutter_relative(const std::vector<double> &offset_v, double initial,
+    timing_point_v stutter_rel(const std::vector<double> &offset_v, double initial,
 		double relativity, double average = 1.0, bool is_bpm = false, bool skip_on_invalid = true) {
 		// force inclusion of inits
-		auto offset_v_c = create_copies_rel_diff(offset_v, relativity, true);
-		return create_stutter_from_offset(offset_v_c, initial, average, is_bpm, skip_on_invalid);
+        auto offset_v_c = copy_rel(offset_v, relativity, true);
+        return stutter(offset_v_c, initial, average, is_bpm, skip_on_invalid);
 	}
 
 	// Creates a simple Act - CounterAct - Normalize movement
 	// Stutter creation will chain on more than 2 offsets
-	timing_point_v create_stutter_absolute(const std::vector<double> &offset_v, double initial,
+    timing_point_v stutter_abs(const std::vector<double> &offset_v, double initial,
 		double relativity, double average = 1.0, bool is_bpm = false, bool relative_from_front = true,
 		bool skip_on_invalid = true) {
 		// force inclusion of inits
-		auto offset_v_c = create_copies_abs_diff(offset_v, relativity, true, relative_from_front, skip_on_invalid);
-		return create_stutter_from_offset(offset_v_c, initial, average, is_bpm, skip_on_invalid);
+        auto offset_v_c = copy_abs(offset_v, relativity, true, relative_from_front, skip_on_invalid);
+        return stutter(offset_v_c, initial, average, is_bpm, skip_on_invalid);
 	}
 
 	timing_point_v stutter_swap(timing_point_v tp_v) {
@@ -676,28 +680,28 @@ namespace lib_functions
 	}
 
 	template <typename T>
-    std::shared_ptr<osu_object_v<T>> extract_nth(osu_object_v<T> const* obj_v, unsigned int n, unsigned int offset = 0) {
+    std::shared_ptr<ObjV<T>> extract_nth(ObjV<T> const* obj_v, unsigned int n, unsigned int offset = 0) {
 
 		if (n <= 0) {
 			throw reamber_exception("n cannot be less than or equal to 0");
 		}
 
-		osu_object_v<T> obj_v_c;
+        ObjV<T> obj_v_c;
 
         for (unsigned int i = offset; i < obj_v->size(); i += n) {
 			obj_v_c.push_back(obj_v->get_index(i));
 		}
 
-		return std::make_shared<osu_object_v<T>>(obj_v_c);
+        return std::make_shared<ObjV<T>>(obj_v_c);
 	}
 	template <typename T>
-    std::shared_ptr<osu_object_v<T>> delete_nth(osu_object_v<T> const* obj_v, unsigned int n, unsigned int offset = 0) {
+    std::shared_ptr<ObjV<T>> delete_nth(ObjV<T> const* obj_v, unsigned int n, unsigned int offset = 0) {
 
 		if (n <= 0) {
 			throw reamber_exception("n cannot be less than or equal to 0");
 		}
 
-		osu_object_v<T> obj_v_c;
+        ObjV<T> obj_v_c;
 
         // [0][1][2][3][4][5][6]
         //           ^        ^
@@ -713,6 +717,6 @@ namespace lib_functions
 			}
 		}
 
-		return std::make_shared<osu_object_v<T>>(obj_v_c);
+        return std::make_shared<ObjV<T>>(obj_v_c);
 	}
 };

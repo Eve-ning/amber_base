@@ -28,8 +28,8 @@ unix {
 }
 
 HEADERS += \
-    src/custom_functions/split_string.h \
-    src/custom_lib_functions/lib_functions.h \
+    src/amber_privf/split_string.h \
+    src/amber_f/lib_functions.h \
     src/exceptions/reamber_exception.h \
     src/objects/multiple/hit_object_v.h \
     src/objects/multiple/osu_object_v.h \
@@ -40,8 +40,8 @@ HEADERS += \
 
 
 SOURCES += \
-    src/custom_functions/split_string.cpp \
-    src/custom_lib_functions/lib_functions.cpp \
+    src/amber_privf/split_string.cpp \
+    src/amber_f/lib_functions.cpp \
     src/exceptions/reamber_exception.cpp \
     src/objects/multiple/hit_object_v.cpp \
     src/objects/multiple/osu_object_v.cpp \

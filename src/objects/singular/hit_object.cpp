@@ -1,5 +1,5 @@
 #include "hit_object.h"
-#include "../../custom_functions/split_string.h"
+#include "../../amber_privf/split_string.h"
 #include <cmath>
 #include <vector>
 #include <iostream>

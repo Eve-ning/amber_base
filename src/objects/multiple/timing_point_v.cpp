@@ -1,6 +1,6 @@
 #include "timing_point_v.h"
 #include <algorithm>
-#include "../../custom_functions/split_string.h"
+#include "../../amber_privf/split_string.h"
 
 timing_point_v::timing_point_v() : osu_object_v()
 {
