@@ -19,7 +19,9 @@ hit_object::hit_object() {
 	m_keys = 4;
 }
 
-bool hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsigned int index)
+bool hit_object::load_editor_hit_object(std::string str,
+                                        unsigned int keys,
+                                        unsigned int index)
 {
 	// Remove the brackets
     if (!trim_editor_hit_object(str)){
@@ -61,7 +63,8 @@ bool hit_object::load_editor_hit_object(std::string str, unsigned int keys, unsi
     return true;
 }
 
-bool hit_object::load_raw_hit_object(std::string str, unsigned int keys)
+bool hit_object::load_raw_hit_object(std::string str,
+                                     unsigned int keys)
 {
     int count_comma = 0;
     for (char c: str) {
@@ -131,7 +134,10 @@ bool hit_object::load_raw_hit_object(std::string str, unsigned int keys)
     return true;
 }
 
-bool hit_object::load_parameters(unsigned int column, double offset, unsigned int ln_end, unsigned int keys){
+bool hit_object::load_parameters(unsigned int column,
+                                 double offset,
+                                 unsigned int ln_end,
+                                 unsigned int keys){
     m_column = column;
     m_offset = offset;
     m_ln_end = ln_end;
@@ -311,11 +317,13 @@ bool hit_object::get_is_long_note() const {
 	return !get_is_note();
 }
 
-unsigned int hit_object::convert_column_to_x_axis(unsigned int column, unsigned int keys) {
+unsigned int hit_object::convert_column_to_x_axis(unsigned int column,
+                                                  unsigned int keys) {
 	return static_cast<unsigned int>(round(((512 * column) + 256) / keys));
 }
 
-unsigned int hit_object::convert_x_axis_to_column(unsigned int x_axis, unsigned int keys) {
+unsigned int hit_object::convert_x_axis_to_column(unsigned int x_axis,
+                                                  unsigned int keys) {
 	return static_cast<unsigned int>(round((x_axis * keys - 256) / 512));
 }
 

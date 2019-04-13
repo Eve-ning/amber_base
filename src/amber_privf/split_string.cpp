@@ -1,7 +1,8 @@
 #include "split_string.h"
 #include <algorithm>
 
-std::vector<std::string> split_string::by_delimeter(std::string str, char delimeter) {
+std::vector<std::string> split_string::by_delimeter(std::string str,
+                                                    char delimeter) {
 	std::vector<std::string> output = {};
 
 	str.push_back(delimeter); // Make sure the while loop includes the last token

@@ -12,7 +12,8 @@ timing_point_v::timing_point_v(unsigned int amount) {
 	load_defaults(amount);
 }
 
-bool timing_point_v::load_raw_timing_point(std::string str, char delimeter)
+bool timing_point_v::load_raw_timing_point(std::string str,
+                                           char delimeter)
 {
     return load_raw_timing_point(split_string::by_delimeter(str, delimeter));
 }

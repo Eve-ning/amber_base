@@ -45,7 +45,9 @@ bool hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
 
 // Where if the user loads in the whole thing as a string
 
-bool hit_object_v::load_raw_hit_object(std::string str, unsigned int keys, char delimeter) {
+bool hit_object_v::load_raw_hit_object(std::string str,
+                                       unsigned int keys,
+                                       char delimeter) {
     return load_raw_hit_object(split_string::by_delimeter(str, delimeter), keys); // Use the vector variant of this function
 }
 
