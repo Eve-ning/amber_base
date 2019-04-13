@@ -29,23 +29,23 @@ unix {
 
 HEADERS += \
     src/amber_privf/split_string.h \
-    src/amber_f/lib_functions.h \
     src/exceptions/reamber_exception.h \
     src/objects/multiple/hit_object_v.h \
     src/objects/multiple/osu_object_v.h \
     src/objects/multiple/timing_point_v.h \
     src/objects/singular/hit_object.h \
     src/objects/singular/osu_object.h \
-    src/objects/singular/timing_point.h
+    src/objects/singular/timing_point.h \
+    src/amber_f/amber_f.h
 
 
 SOURCES += \
     src/amber_privf/split_string.cpp \
-    src/amber_f/lib_functions.cpp \
     src/exceptions/reamber_exception.cpp \
     src/objects/multiple/hit_object_v.cpp \
     src/objects/multiple/osu_object_v.cpp \
     src/objects/multiple/timing_point_v.cpp \
     src/objects/singular/hit_object.cpp \
     src/objects/singular/osu_object.cpp \
-    src/objects/singular/timing_point.cpp
+    src/objects/singular/timing_point.cpp \
+    src/amber_f/amber_f.cpp

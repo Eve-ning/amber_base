@@ -34,6 +34,9 @@
 template<typename T>
 using ObjV = osu_object_v<T>;
 
+typedef std::vector<double> doublev;
+typedef unsigned int uint;
+
 namespace amber_f
 {
 	// NOTATION
@@ -45,7 +48,7 @@ namespace amber_f
 	// Note that notes on the same offset will be regarded as 1 offset
     // This will return a vector that has a -1 size
 	template <typename T>
-    std::vector<double> offset_diff(ObjV<T> const* obj_v) {
+    doublev offset_diff(ObjV<T> const* obj_v) {
 
 		// [0] REJECT
 		if (obj_v->size() <= 1) {
@@ -59,7 +62,7 @@ namespace amber_f
 		obj_v_copy->sort_by_offset(true);
 
 		double offset_buffer = obj_v->get_index(0).get_offset();
-		std::vector<double> output = {};
+        doublev output = {};
 
 		
 		for (const T &obj : *obj_v_copy) {
@@ -84,7 +87,7 @@ namespace amber_f
 	//  0  1 
 	template <typename T>
     std::shared_ptr<ObjV<T>> copy(
-		T obj, const std::vector<double>& copy_to_v, bool sort = true) {
+        T obj, const doublev& copy_to_v, bool sort = true) {
         ObjV<T> output = ObjV<T>();
 
 		if (copy_to_v.size() == 0) {
@@ -115,7 +118,7 @@ namespace amber_f
 	//  0  1  2  3 
 	template <typename T>
     std::shared_ptr<ObjV<T>> copy(
-        ObjV<T> const* obj_v, std::vector<double> copy_to_v,
+        ObjV<T> const* obj_v, doublev copy_to_v,
 		bool anchor_front = true, bool sort = true) {
         // Test
         ObjV<T> output = ObjV<T>();
@@ -147,7 +150,7 @@ namespace amber_f
 	//  0  1  2  3  4  
 	template <typename T>
     std::shared_ptr<ObjV<T>> copy_delay(
-        ObjV<T> const* obj_v, std::vector<double> offset_v, bool include) {
+        ObjV<T> const* obj_v, doublev offset_v, bool include) {
 
         ObjV<T> obj_v_c = *ObjV<T>::clone_obj_v(obj_v);
 		obj_v_c.sort_by_offset();
@@ -208,14 +211,14 @@ namespace amber_f
 
 	// [0]   [2]   [4] IN 
 	// [0][1][2][3][4] OUT
-    std::vector<double> copy_subd_by(
-		std::vector<double> offset_v, unsigned int subdivisions, bool include) {
+    doublev copy_subd_by(
+        doublev offset_v, uint subdivisions, bool include) {
 		// [0] REJECT
 		if (offset_v.size() <= 1) {
 			throw reamber_exception("offset_v size must be at least 2 for the function to work");
 		}
 
-		std::vector<double> offset_v_c = include ? offset_v : std::vector<double>();
+        doublev offset_v_c = include ? offset_v : doublev();
 
 		// [0][1][2][3]
 		// <-------> 
@@ -233,7 +236,7 @@ namespace amber_f
 			//     <-1->
 			//     <---2--->
 			//     <-----3----->
-			for (unsigned int slice = 1; slice <= subdivisions; slice++) {
+            for (uint slice = 1; slice <= subdivisions; slice++) {
 				offset_v_c.push_back((*start) + slice_distance * slice);
 			}
 		}
@@ -247,8 +250,8 @@ namespace amber_f
 	//  0  1  2  3  4
 	template <typename T>
     std::shared_ptr<ObjV<T>> copy_subd_by(
-		std::vector<double> offset_v, const T& obj_define,
-		unsigned int subdivisions, bool include) {
+        doublev offset_v, const T& obj_define,
+        uint subdivisions, bool include) {
         return copy(obj_define, copy_subd_by(offset_v, subdivisions, include));
 	}
 
@@ -258,7 +261,7 @@ namespace amber_f
 	//  0  1  2  3  4
 	template <typename T>
     std::shared_ptr<ObjV<T>> copy_subd_by(
-        ObjV<T> const* obj_v, unsigned int subdivisions, bool include) {
+        ObjV<T> const* obj_v, uint subdivisions, bool include) {
 
 		// <0>   <1>   <2>
 		//  0     2     4
@@ -278,14 +281,14 @@ namespace amber_f
     // [0]            [5] IN
     // SUBDIV_LEN 2
     // [0]   [2]   [4][5] OUT
-    std::vector<double> copy_subd_to(
-        std::vector<double> offset_v, unsigned int subdivision_len, bool include) {
+    doublev copy_subd_to(
+        doublev offset_v, uint subdivision_len, bool include) {
         // [0] REJECT
         if (offset_v.size() <= 1) {
             throw reamber_exception("offset_v size must be at least 2 for the function to work");
         }
 
-        std::vector<double> offset_v_c = include ? offset_v : std::vector<double>();
+        doublev offset_v_c = include ? offset_v : doublev();
 
         // [0][1][2][3]
         // <------->
@@ -302,7 +305,7 @@ namespace amber_f
             //     <---1--->
             //     <-------2------->
             //     <-----------3-----------> // REJECT by FLOOR
-            for (unsigned int slice = 1;
+            for (uint slice = 1;
                  ((*start) + subdivision_len * slice) < *(start + 1);
                  slice++) {
                 offset_v_c.push_back((*start) + subdivision_len * slice);
@@ -319,8 +322,8 @@ namespace amber_f
     //  0  1  2  3  4
     template <typename T>
     std::shared_ptr<ObjV<T>> copy_subd_to(
-        std::vector<double> offset_v, const T& obj_define,
-        unsigned int subdivision_len, bool include) {
+        doublev offset_v, const T& obj_define,
+        uint subdivision_len, bool include) {
         return copy(obj_define, copy_subd_to(offset_v, subdivision_len, include));
     }
 
@@ -330,7 +333,7 @@ namespace amber_f
     //  0  1  2  3  4
     template <typename T>
     std::shared_ptr<ObjV<T>> copy_subd_to(
-        ObjV<T> const* obj_v, unsigned int subdivision_len, bool include) {
+        ObjV<T> const* obj_v, uint subdivision_len, bool include) {
 
         // <0>   <1>   <2>
         //  0     2     4
@@ -349,8 +352,8 @@ namespace amber_f
 
 	// [0]   [2]   [4] IN 
 	// [0][%][2][%][4] OUT
-    std::vector<double> copy_rel(
-		std::vector<double> offset_v, double relativity, bool include) {
+    doublev copy_rel(
+        doublev offset_v, double relativity, bool include) {
 
 		// [0] REJECT
 		if (offset_v.size() <= 1) {
@@ -360,7 +363,7 @@ namespace amber_f
 			throw reamber_exception("relativity must be non-zero and positive");
 		}
 
-		std::vector<double> offset_v_c = include ? offset_v : std::vector<double>();
+        doublev offset_v_c = include ? offset_v : doublev();
 		
 		//	[0][1][2][3]
 		//  <------->
@@ -386,7 +389,7 @@ namespace amber_f
 	//  0  %  2  %  4
 	template <typename T>
     std::shared_ptr<ObjV<T>> copy_rel(
-		const std::vector<double> offset_v, const T obj_define, double relativity, bool include) {
+        const doublev offset_v, const T obj_define, double relativity, bool include) {
         auto copies = copy_rel(offset_v, relativity, include);
         return copy(obj_define, copies);
 	}
@@ -417,8 +420,8 @@ namespace amber_f
 
 	// [0]   [2]   [4] IN 
 	// [0][+][2][+][4] OUT
-    std::vector<double> copy_abs(
-		const std::vector<double> offset_v, double relativity, bool include, bool relative_from_front = true, bool exclude_overlap = true) {
+    doublev copy_abs(
+        const doublev offset_v, double relativity, bool include, bool relative_from_front = true, bool exclude_overlap = true) {
 		// [0] REJECT
 		if (offset_v.size() <= 1) {
 			throw reamber_exception("offset_v size must be at least 2 for the function to work");
@@ -429,7 +432,7 @@ namespace amber_f
 
 		// <0><0><1><2><2> 
 		// [0][1][2]
-		std::vector<double> offset_v_c = include ? offset_v : std::vector<double>();
+        doublev offset_v_c = include ? offset_v : doublev();
 
 		// [0][1][2][3]
 		//  <----->
@@ -467,7 +470,7 @@ namespace amber_f
 	//  0  +  2  +  4
 	template <typename T>
     std::shared_ptr<ObjV<T>> copy_abs(
-		const std::vector<double> offset_v, const T obj_define,
+        const doublev offset_v, const T obj_define,
 		double relativity, bool include, bool relative_from_front = true, bool exclude_overlap = true) {
         return copy(obj_define, copy_abs(offset_v, relativity, include, relative_from_front, exclude_overlap));
 	}
@@ -520,7 +523,7 @@ namespace amber_f
 	// [0][1][2][3][4]
 	// <I><T><I><T><A>
 	// I: INITIAL, T: THRESHOLD, A: AVERAGE
-    timing_point_v stutter(std::vector<double> offset_v, double initial,
+    timing_point_v stutter(doublev offset_v, double initial,
 		double average = 1.0, bool is_bpm = false, bool skip_on_invalid = true) {
 
 		if (offset_v.size() % 2 != 1) {
@@ -584,7 +587,7 @@ namespace amber_f
 
 	// Used to find the limits of create_basic_stutter
 	// [0] is min, [1] is max
-    std::vector<double> stutter_rel_init_limits(
+    doublev stutter_rel_init_limits(
 		double threshold, double average, double threshold_min = 0.1, double threshold_max = 10.0) {
 
 		// init * thr + thr_ * ( 1 - thr ) = ave
@@ -595,7 +598,7 @@ namespace amber_f
 		double init_1 = threshold_min + ((average - threshold_min) / threshold);
 		double init_2 = threshold_max + ((average - threshold_max) / threshold);
 
-		std::vector<double> output;
+        doublev output;
 		if (init_1 < init_2) {
 			output.push_back(init_1);
 			output.push_back(init_2);
@@ -607,17 +610,16 @@ namespace amber_f
 		return output;
 	}
 
-
 	// Used to find the limits of create_basic_stutter
 	// [0] is min, [1] is max
-    std::vector<double> stutter_abs_init_limits(
+    doublev stutter_abs_init_limits(
 		double threshold, double average, double distance, double threshold_min = 0.1, double threshold_max = 10.0) {
         return stutter_rel_init_limits(threshold / distance, average, threshold_min, threshold_max);
 	}
 
 	// Creates a simple Act - CounterAct - Normalize movement
 	// Stutter creation will chain on more than 2 offsets
-    timing_point_v stutter_rel(const std::vector<double> &offset_v, double initial,
+    timing_point_v stutter_rel(const doublev &offset_v, double initial,
 		double relativity, double average = 1.0, bool is_bpm = false, bool skip_on_invalid = true) {
 		// force inclusion of inits
         auto offset_v_c = copy_rel(offset_v, relativity, true);
@@ -626,7 +628,7 @@ namespace amber_f
 
 	// Creates a simple Act - CounterAct - Normalize movement
 	// Stutter creation will chain on more than 2 offsets
-    timing_point_v stutter_abs(const std::vector<double> &offset_v, double initial,
+    timing_point_v stutter_abs(const doublev &offset_v, double initial,
 		double relativity, double average = 1.0, bool is_bpm = false, bool relative_from_front = true,
 		bool skip_on_invalid = true) {
 		// force inclusion of inits
@@ -680,7 +682,7 @@ namespace amber_f
 	}
 
 	template <typename T>
-    std::shared_ptr<ObjV<T>> extract_nth(ObjV<T> const* obj_v, unsigned int n, unsigned int offset = 0) {
+    std::shared_ptr<ObjV<T>> extract_nth(ObjV<T> const* obj_v, uint n, uint offset = 0) {
 
 		if (n <= 0) {
 			throw reamber_exception("n cannot be less than or equal to 0");
@@ -688,14 +690,14 @@ namespace amber_f
 
         ObjV<T> obj_v_c;
 
-        for (unsigned int i = offset; i < obj_v->size(); i += n) {
+        for (uint i = offset; i < obj_v->size(); i += n) {
 			obj_v_c.push_back(obj_v->get_index(i));
 		}
 
         return std::make_shared<ObjV<T>>(obj_v_c);
 	}
 	template <typename T>
-    std::shared_ptr<ObjV<T>> delete_nth(ObjV<T> const* obj_v, unsigned int n, unsigned int offset = 0) {
+    std::shared_ptr<ObjV<T>> delete_nth(ObjV<T> const* obj_v, uint n, uint offset = 0) {
 
 		if (n <= 0) {
 			throw reamber_exception("n cannot be less than or equal to 0");
@@ -708,7 +710,7 @@ namespace amber_f
 		// off = 1
         // n = 3
 
-        for (unsigned int i = 0; i < obj_v->size(); i ++) {
+        for (uint i = 0; i < obj_v->size(); i ++) {
             if (
                     i < offset || // Push back any element < offset
                     (i - offset + 1) % n != 0 // Only push back those not in the nth sequence
