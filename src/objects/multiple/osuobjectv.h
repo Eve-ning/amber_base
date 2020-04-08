@@ -14,61 +14,61 @@ class OsuObjectV
 {
 public:
 
-    OsuObjectV() : object_v({}) {}
+    OsuObjectV() : objectV({}) {}
 
 	// Clones the vector of shared_ptrs
 	// Any template argument will work in order to access this static function
-    static QSharedPointer<OsuObjectV<obj_type>> clone_obj_v(OsuObjectV<obj_type> const* obj_v) {
+    static QSharedPointer<OsuObjectV<obj_type>> cloneObjV(OsuObjectV<obj_type> const* obj_v) {
         OsuObjectV<obj_type> obj_v_copy;
 
 		// This makes a copy of the obj_sptr_v by dereferencing every element and creating
 		// a new instance of the shared_ptr
 		// This is pushed back to the obj_sptr_v_copy
 		for (const auto &obj : *obj_v) {
-			obj_v_copy.push_back(*std::dynamic_pointer_cast<obj_type>(obj.clone()));
+            //obj_v_copy.pushBack(*std::dynamic_pointer_cast<obj_type>(obj.clone()));
 		}
 
-        return std::make_shared<OsuObjectV<obj_type>>(obj_v_copy);
+        return QSharedPointer<OsuObjectV<obj_type>>::create(obj_v_copy);
 	}
 
 	//// Explicit Loading
 
 	// Loads from a sptr vector
-    virtual void load_obj_sptr(QVector<QSharedPointer<OsuObject>> obj_sptr_v) {
+    virtual void loadObjSptr(QVector<QSharedPointer<OsuObject>> obj_sptr_v) {
 		// Empty our current vector
-		object_v = {};
+        objectV = {};
 
         for (QSharedPointer<OsuObject> obj : obj_sptr_v) {
-			object_v.push_back(*std::dynamic_pointer_cast<obj_type>(obj));
+            objectV.push_back(*obj.dynamicCast<obj_type>());
 		}
 	}
-	virtual void load_defaults(unsigned int amount) {
+    virtual void loadDefaults(unsigned int amount) {
 		for (unsigned int x = 0; x < amount; x++) {
-			object_v.push_back(obj_type());
+            objectV.push_back(obj_type());
 		}
 	}
 	
 	//// Getters & Setters
 
 	virtual size_t size() const {
-		return object_v.size();
+        return objectV.size();
 	}
 
 	// Get the vector of strings compatible to .osu format
 	// hit_object_v this will fail if keys = 0
-    QVector<QString> get_string_raw_v() const {
+    QVector<QString> getStringRawV() const {
         QVector<QString> output = {};
-		std::transform(object_v.begin(), object_v.end(),
+        std::transform(objectV.begin(), objectV.end(),
 			std::back_inserter(output), [&](const obj_type &obj) {
-			return obj.get_string_raw();
+            return obj.getStringRaw();
 		});
 		return output;
 	}
 	
 	// Get the string compatible to .osu format, joined by a delimeter
 	// hit_object_v this will fail if keys = 0
-    QString get_string_raw(QString delimeter = "\n") const {
-		auto string_v = get_string_raw_v();
+    QString getStringRaw(QString delimeter = "\n") const {
+        auto string_v = getStringRawV();
         QString str = "";
         for (const QString &string : string_v) {
 			str.append(string);
@@ -78,63 +78,63 @@ public:
 	}
 
 	// Gets the object vector
-	QVector<obj_type> get_object_v() const {
-		return object_v;
+    QVector<obj_type> getObjectV() const {
+        return objectV;
 	}
 	// Sets the object vector
-	void set_object_v(QVector<obj_type> object_v) {
-        this->object_v = object_v;
+    void setObjectV(QVector<obj_type> object_v) {
+        this->objectV = object_v;
 	}
 
 	// Specify if offset_v should have duplicates in make_unique
-	QVector<double> get_offset_v(bool make_unique = false) const {
+    QVector<double> getOffsetV(bool make_unique = false) const {
 		QVector<double> offset_v = {};
 		std::transform(begin(), end(), std::back_inserter(offset_v), [](const obj_type &obj) {
-			return obj.get_offset();
+            return obj.getOffset();
 		});
 		
 		if (make_unique) {
 			std::sort(offset_v.begin(), offset_v.end());
-			offset_v.erase(unique(offset_v.begin(), offset_v.end()), offset_v.end());
+            offset_v.erase(std::unique(offset_v.begin(), offset_v.end()), offset_v.end());
 		}
 		
 		return offset_v;
 	}
 
-	void sort_by_offset(bool ascending = true) {
+    void sortByOffset(bool ascending = true) {
 		std::sort(begin(), end(), [=](obj_type& obj1, obj_type& obj2) {
 			return (ascending ? // Ternary expression on ascending
-				(obj1.get_offset() < obj2.get_offset()) : // If ascending is true
-				(obj1.get_offset() > obj2.get_offset())); // If ascending is false
+                (obj1.getOffset() < obj2.getOffset()) : // If ascending is true
+                (obj1.getOffset() > obj2.getOffset())); // If ascending is false
 		});
 	}
 
 	// Adjusts the offset of all objects in the vector BY a offset
-	void adjust_offset_by(double adjust_by) {
-		for (obj_type &obj : object_v) {
-			obj.set_offset(obj.get_offset() + adjust_by);
+    void adjustOffsetBy(double adjust_by) {
+        for (obj_type &obj : objectV) {
+            obj.setOffset(obj.getOffset() + adjust_by);
 		}
 	}
 	
 	// Adjust the vector offsets such that the front/back of the vector is on zero
-	void adjust_offset_to_zero(bool anchor_front = true) {
+    void adjustOffsetToZero(bool anchor_front = true) {
 		anchor_front ?
-			adjust_offset_by(-get_offset_min()) : // Minus off the lowest offset
-			adjust_offset_by(-get_offset_max());  // Minus off the largest offset
+            adjustOffsetBy(-getOffsetMin()) : // Minus off the lowest offset
+            adjustOffsetBy(-getOffsetMax());  // Minus off the largest offset
 	}
 
 	// Adjusts the offset of all objects in the vector TO a offset
-	void adjust_offset_to(double adjust_to, bool anchor_front = true) {
-        adjust_offset_to_zero(anchor_front); // Zero then move by the offset
-        adjust_offset_by(adjust_to);
+    void adjustOffsetTo(double adjust_to, bool anchor_front = true) {
+        adjustOffsetToZero(anchor_front); // Zero then move by the offset
+        adjustOffsetBy(adjust_to);
 	}
 
 	// Grabs the first osu_object, sorted by offset
 	// It will not modify the vector
-	obj_type get_first_object_by_offset() const {
+    obj_type getFirstObjectByOffset() const {
 		return *std::min_element(begin(), end(),
 			[](const obj_type& obj1, const obj_type& obj2) {
-			return obj1.get_offset() < obj2.get_offset();
+            return obj1.getOffset() < obj2.getOffset();
 		});
 	}
 
@@ -143,35 +143,35 @@ public:
 	obj_type get_last_object_by_offset() const {
 		return *std::max_element(begin(), end(),
 			[](const obj_type& obj1, const obj_type& obj2) {
-			return obj1.get_offset() < obj2.get_offset();
+            return obj1.getOffset() < obj2.getOffset();
 		});
 	}
 
-	double get_offset_min() const {
-		return get_first_object_by_offset().get_offset();
+    double getOffsetMin() const {
+        return getFirstObjectByOffset().getOffset();
 	}
-	double get_offset_max() const {
-		return get_last_object_by_offset().get_offset();
+    double getOffsetMax() const {
+        return get_last_object_by_offset().getOffset();
 	}
 
 	// Appends to back of vector
-	void push_back(const obj_type &obj) {
-		object_v.push_back(obj);
+    void pushBack(const obj_type &obj) {
+        objectV.push_back(obj);
 	}
 	// Appends vector to back of vector
-    void push_back(const OsuObjectV &obj_v) {
+    void pushBack(const OsuObjectV &obj_v) {
 		for (obj_type obj : obj_v) {
-			push_back(obj);
+            pushBack(obj);
 		}
 	}
 
 	// Removes the last element of the vector
-	void pop_back() {
-		object_v.pop_back();
+    void popBack() {
+        objectV.pop_back();
 	}
 
     OsuObjectV& operator =(QVector<QSharedPointer<OsuObject>> obj_sptr_v) {
-		load_obj_sptr(obj_sptr_v);
+        loadObjSptr(obj_sptr_v);
 		return *this;
 	}
     bool operator ==(const OsuObjectV &obj_v) const {
@@ -185,22 +185,22 @@ public:
 		size_t x = 0;
 		while (x < input_size && (flag == true)) {
 			// If any mismatch, flag will be false;
-			flag &= (obj_v[0] == object_v[0]);
+            flag &= (obj_v[0] == objectV[0]);
 			x++;
 		}
 
 		return flag;
 	}
 
-	obj_type get_index(unsigned index) const {
-		return object_v[index];
+    obj_type getIndex(unsigned index) const {
+        return objectV[index];
 	}
-	obj_type & get_index(unsigned index) {
-		return object_v[index];
+    obj_type & getIndex(unsigned index) {
+        return objectV[index];
 	}
 
-	obj_type operator [](unsigned int i) const { return get_index(i); }
-	obj_type & operator [](unsigned int i) { return get_index(i); }
+    obj_type operator [](unsigned int i) const { return getIndex(i); }
+    obj_type & operator [](unsigned int i) { return getIndex(i); }
 
     void cross_effect(OsuObjectV eff_obj_v, obj_type (*effect)(obj_type self, obj_type eff)) {
 		if (eff_obj_v.size() == 0 || size() == 0) {
@@ -208,8 +208,8 @@ public:
 		}
 
 		// Make sure it's sorted
-		sort_by_offset(true);
-		eff_obj_v.sort_by_offset(true);
+        sortByOffset(true);
+        eff_obj_v.sortByOffset(true);
 
 		auto self_it = begin();
 		auto eff_it = eff_obj_v.begin();
@@ -219,7 +219,7 @@ public:
             auto e = eff_obj_v.end();
 			// Case: self < eff
 			// Do: self ++
-			if (self_it->get_offset() < eff_it->get_offset()) {
+            if (self_it->getOffset() < eff_it->getOffset()) {
 				self_it++;
 				continue;
 			}
@@ -227,7 +227,7 @@ public:
 			// Pre-condition of checking eff_next is if it is in range
             // Do: eff ++
             else if (eff_it != --e && // Make sure it isn't the last element
-				self_it->get_offset() >= (eff_it + 1)->get_offset()) { // self >= eff_next
+                self_it->getOffset() >= (eff_it + 1)->getOffset()) { // self >= eff_next
 				eff_it++;
 				continue;
 			}
@@ -242,25 +242,25 @@ public:
 	}
 
 	// Direct all iterator functions to the vector
-	typename QVector<obj_type>::iterator begin() { return object_v.begin(); }
-	typename QVector<obj_type>::iterator end() { return object_v.end(); }
-	typename QVector<obj_type>::const_iterator begin() const { return object_v.cbegin(); }
-	typename QVector<obj_type>::const_iterator end() const { return object_v.cend(); }
+    typename QVector<obj_type>::iterator begin() { return objectV.begin(); }
+    typename QVector<obj_type>::iterator end() { return objectV.end(); }
+    typename QVector<obj_type>::const_iterator begin() const { return objectV.cbegin(); }
+    typename QVector<obj_type>::const_iterator end() const { return objectV.cend(); }
 
-	obj_type front() const { return object_v.front(); }
-	obj_type back() const { return object_v.back(); }
+    obj_type front() const { return objectV.front(); }
+    obj_type back() const { return objectV.back(); }
 
-    OsuObjectV offset_arithmetic(double parameter, double(*oper)(double offset, double parameter)) {
+    OsuObjectV offsetArithmetic(double parameter, double(*oper)(double offset, double parameter)) {
 		auto obj_v = *this;
 		for (auto &obj : obj_v) {
-			obj.set_offset(oper(obj.get_offset(), parameter));
+            obj.setOffset(oper(obj.getOffset(), parameter));
 		}
 		return obj_v;
 	}
 
 protected:
 	
-	QVector<obj_type> object_v;
+    QVector<obj_type> objectV;
 
 };
 

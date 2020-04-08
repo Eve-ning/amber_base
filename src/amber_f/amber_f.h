@@ -55,12 +55,12 @@ namespace amber_f
 		}
 
 		// const [0][1][2] ---> [0][1][2]
-        auto obj_v_copy = ObjV<T>::clone_obj_v(obj_v);
+        auto obj_v_copy = ObjV<T>::cloneObjV(obj_v);
 
 		// [0][2][1] ---> [0][1][2]
-		obj_v_copy->sort_by_offset(true);
+		obj_v_copy->sortByOffset(true);
 
-		double offset_buffer = obj_v->get_index(0).get_offset();
+        double offset_buffer = obj_v->getIndex(0).getOffset();
         doublev output = {};
 
 		
@@ -71,9 +71,9 @@ namespace amber_f
 			//  ^  ^  			^     ^  	          ^  ^  	          ^  
 			// REJECT			 ACCEPT	             ACCEPT		      REJECT
 
-			if (obj.get_offset() != offset_buffer) {
-				output.push_back(obj.get_offset() - offset_buffer);
-				offset_buffer = obj.get_offset();
+            if (obj.getOffset() != offset_buffer) {
+                output.push_back(obj.getOffset() - offset_buffer);
+                offset_buffer = obj.getOffset();
 			}
 		}
 		return output;
@@ -100,7 +100,7 @@ namespace amber_f
 			// <X> ---> <0>
 			obj.set_offset(copy_to);
 			// [<0>, <2>, <1>, <3>]
-			output.push_back(obj);
+			output.pushBack(obj);
 		}
 
 		if (sort) {
@@ -125,16 +125,16 @@ namespace amber_f
         ObjV<T> output = ObjV<T>();
 
 		// const [0][1][2] ---> [0][1][2]
-        auto obj_v_copy = ObjV<T>::clone_obj_v(obj_v);
+        auto obj_v_copy = ObjV<T>::cloneObjV(obj_v);
 
 		// [0][4][2]
 		for (double copy_to : copy_to_v) {
 			// FOR [0]
 			// [<X>,<X+1> ---> <0>,<1>]
-			obj_v_copy->adjust_offset_to(copy_to, anchor_front);
+			obj_v_copy->adjustOffsetTo(copy_to, anchor_front);
 
 			// [<0>, <1>, <4>, <5>, <2>, <3>]
-			output.push_back(*obj_v_copy);
+			output.pushBack(*obj_v_copy);
 		}
 		if (sort) {
 			// [<0>, <1>, <2>, <3>, <4>, <5>]
@@ -154,8 +154,8 @@ namespace amber_f
         // <0><0><1><1><2> OUT
         //  0  1  2  3  4
 
-        ObjV<T> obj_v_c = *ObjV<T>::clone_obj_v(obj_v);
-		obj_v_c.sort_by_offset();
+        ObjV<T> obj_v_c = *ObjV<T>::cloneObjV(obj_v);
+		obj_v_c.sortByOffset();
 		std::sort(offset_v.begin(), offset_v.end());
 
 		auto offset_v_it = offset_v.begin();
@@ -173,7 +173,7 @@ namespace amber_f
 				if (include) {
 					T obj = *(obj_v_it + 1);
 					obj.set_offset(*offset_v_it);
-					output.push_back(obj);
+					output.pushBack(obj);
 				}
 				break;
 			}
@@ -184,7 +184,7 @@ namespace amber_f
 			//        v
 			// <0>   <1>   <2>
 			// MOVE OBJ_IT
-			if (*offset_v_it == (obj_v_it + 1)->get_offset()) {
+            if (*offset_v_it == (obj_v_it + 1)->getOffset()) {
 				obj_v_it++;
 			}
 	
@@ -198,10 +198,10 @@ namespace amber_f
 			//      ==  !=
 			//  INC  T   T
 			// !INC  F   T
-			if (include || (*offset_v_it != obj_v_it->get_offset())) {
+            if (include || (*offset_v_it != obj_v_it->getOffset())) {
 				T obj = *obj_v_it;
 				obj.set_offset(*offset_v_it);
-				output.push_back(obj);
+				output.pushBack(obj);
 			}
 			offset_v_it++;
 
@@ -273,7 +273,7 @@ namespace amber_f
 		// <0>   <1>   <2>
 		//  0     2     4
 		// [0][1][2][3][4]
-        auto offset_v = copy_subd_by(obj_v->get_offset_v(true), subdivisions, true);
+        auto offset_v = copy_subd_by(obj_v->getOffsetV(true), subdivisions, true);
 		
 		// <0>   <2>   <4>
 		//  0     2     4
@@ -286,7 +286,7 @@ namespace amber_f
 	}
 
 
-    doublev copy_subd_to(doublev offset_v,
+    doublev copySubdTo(doublev offset_v,
                          uint subdivision_len,
                          bool include) {
         // [0]            [5] IN
@@ -325,7 +325,7 @@ namespace amber_f
     }
 
     template <typename T>
-    QSharedPointer<ObjV<T>> copy_subd_to(doublev offset_v,
+    QSharedPointer<ObjV<T>> copySubdTo(doublev offset_v,
                                           const T& obj_define,
                                           uint subdivision_len,
                                           bool include) {
@@ -335,11 +335,11 @@ namespace amber_f
         // <0><0><0><0><0> OUT
         //  0  1  2  3  4
 
-        return copy(obj_define, copy_subd_to(offset_v, subdivision_len, include));
+        return copy(obj_define, copySubdTo(offset_v, subdivision_len, include));
     }
 
     template <typename T>
-    QSharedPointer<ObjV<T>> copy_subd_to(ObjV<T> const* obj_v,
+    QSharedPointer<ObjV<T>> copySubdTo(ObjV<T> const* obj_v,
                                           uint subdivision_len,
                                           bool include) {
         // <0>   <1>   <2> IN
@@ -350,7 +350,7 @@ namespace amber_f
         // <0>   <1>   <2>
         //  0     2     4
         // [0][1][2][3][4]
-        auto offset_v = copy_subd_to(obj_v->get_offset_v(true), subdivision_len, true);
+        auto offset_v = copySubdTo(obj_v->getOffsetV(true), subdivision_len, true);
 
         // <0>   <2>   <4>
         //  0     2     4
@@ -363,7 +363,7 @@ namespace amber_f
     }
 
 
-    doublev copy_rel(doublev offset_v,
+    doublev copyRel(doublev offset_v,
                      double relativity,
                      bool include) {
         // [0]   [2]   [4] IN
@@ -397,7 +397,7 @@ namespace amber_f
 	}
 
 	template <typename T>
-    QSharedPointer<ObjV<T>> copy_rel(const doublev offset_v,
+    QSharedPointer<ObjV<T>> copyRel(const doublev offset_v,
                                       const T obj_define,
                                       double relativity,
                                       bool include) {
@@ -407,12 +407,12 @@ namespace amber_f
         // <0><0><2><2><4> OUT
         //  0  %  2  %  4
 
-        auto copies = copy_rel(offset_v, relativity, include);
+        auto copies = copyRel(offset_v, relativity, include);
         return copy(obj_define, copies);
 	}
 
 	template <typename T>
-    QSharedPointer<ObjV<T>> copy_rel(ObjV<T> const* obj_v,
+    QSharedPointer<ObjV<T>> copyRel(ObjV<T> const* obj_v,
                                       double relativity,
                                       bool include) {
         // <0>   <1>   <2> IN
@@ -424,7 +424,7 @@ namespace amber_f
 		// <0>   <1>   <2>
 		//  0     2     4
 		// [0][%][2][%][4]
-        auto offset_v = copy_rel(obj_v->get_offset_v(true), relativity, true);
+        auto offset_v = copyRel(obj_v->getOffsetV(true), relativity, true);
 
 		// <0>   <2>   <4>
 		//  0     2     4
@@ -437,7 +437,7 @@ namespace amber_f
 	}
 
 
-    doublev copy_abs(const doublev offset_v,
+    doublev copyAbs(const doublev offset_v,
                      double relativity,
                      bool include,
                      bool relative_frofront = true,
@@ -488,7 +488,7 @@ namespace amber_f
 
 
 	template <typename T>
-    QSharedPointer<ObjV<T>> copy_abs(const doublev offset_v,
+    QSharedPointer<ObjV<T>> copyAbs(const doublev offset_v,
                                       const T obj_define,
                                       double relativity,
                                       bool include,
@@ -499,12 +499,12 @@ namespace amber_f
         //  0
         // <0><0><2><2><4> OUT
         //  0  +  2  +  4
-        return copy(obj_define, copy_abs(offset_v, relativity, include, relative_frofront, exclude_overlap));
+        return copy(obj_define, copyAbs(offset_v, relativity, include, relative_frofront, exclude_overlap));
 	}
 
 
 	template <typename T>
-    QSharedPointer<ObjV<T>> copy_abs(ObjV<T> const* obj_v,
+    QSharedPointer<ObjV<T>> copyAbs(ObjV<T> const* obj_v,
                                       double relativity,
                                       bool include,
                                       bool relative_frofront = true,
@@ -518,7 +518,7 @@ namespace amber_f
 		// <0>   <2>   <4>
 		//  0     2     4
 		// [0][+][2][+][4]
-        auto offset_v = copy_abs(obj_v->get_offset_v(), relativity, true, relative_frofront, exclude_overlap);
+        auto offset_v = copyAbs(obj_v->getOffsetV(), relativity, true, relative_frofront, exclude_overlap);
 
 		// <0>   <2>   <4>
 		//  0     2     4
@@ -544,9 +544,9 @@ namespace amber_f
 		}
 
 		for (auto tp : tp_v) {
-			tp.set_value(reference / tp.get_value());
-			tp.set_is_sv(true);
-			output.push_back(tp);
+            tp.setValue(reference / tp.getValue());
+            tp.setIsSv(true);
+			output.pushBack(tp);
 		}
 
 		return output;
@@ -597,8 +597,8 @@ namespace amber_f
 				begin_tp.loadParameters(*offset_it_begin, initial, is_bpm);
 				threshold_tp.loadParameters(*offset_it_threshold, threshold, is_bpm);
 
-				tp_v.push_back(begin_tp);
-				tp_v.push_back(threshold_tp);
+				tp_v.pushBack(begin_tp);
+				tp_v.pushBack(threshold_tp);
 			}
 
 			if (offset_it_end == (offset_v.end() - 1)) {
@@ -606,7 +606,7 @@ namespace amber_f
                 TimingPoint end_tp;
 				end_tp.loadParameters(*offset_it_end, average, is_bpm);
 
-				tp_v.push_back(end_tp);
+				tp_v.pushBack(end_tp);
 				break;
 			}
 
@@ -616,13 +616,13 @@ namespace amber_f
 			offset_it_end += 2;
 		}
 
-		tp_v.sort_by_offset();
+		tp_v.sortByOffset();
 
 		return tp_v;
 	}
 
 
-    doublev stutter_rel_init_limits(double threshold,
+    doublev stutterRelInitLimits(double threshold,
                                     double average,
                                     double threshold_min = 0.1,
                                     double threshold_max = 10.0) {
@@ -650,18 +650,18 @@ namespace amber_f
 	}
 
 
-    doublev stutter_abs_init_limits(double threshold,
+    doublev stutterAbsInitLimits(double threshold,
                                     double average,
                                     double distance,
                                     double threshold_min = 0.1,
                                     double threshold_max = 10.0) {
         // Used to find the limits of create_basic_stutter
         // [0] is min, [1] is max
-        return stutter_rel_init_limits(threshold / distance, average, threshold_min, threshold_max);
+        return stutterRelInitLimits(threshold / distance, average, threshold_min, threshold_max);
 	}
 
 
-    TimingPointV stutter_rel(const doublev &offset_v,
+    TimingPointV stutterRel(const doublev &offset_v,
                                double initial,
                                double relativity,
                                double average = 1.0,
@@ -671,12 +671,12 @@ namespace amber_f
         // Stutter creation will chain on more than 2 offsets
 
 		// force inclusion of inits
-        auto offset_v_c = copy_rel(offset_v, relativity, true);
+        auto offset_v_c = copyRel(offset_v, relativity, true);
         return stutter(offset_v_c, initial, average, is_bpm, skip_on_invalid);
 	}
 
 
-    TimingPointV stutter_abs(const doublev &offset_v,
+    TimingPointV stutterAbs(const doublev &offset_v,
                                double initial,
                                double relativity,
                                double average = 1.0,
@@ -687,11 +687,11 @@ namespace amber_f
         // Stutter creation will chain on more than 2 offsets
 
 		// force inclusion of inits
-        auto offset_v_c = copy_abs(offset_v, relativity, true, relative_frofront, skip_on_invalid);
+        auto offset_v_c = copyAbs(offset_v, relativity, true, relative_frofront, skip_on_invalid);
         return stutter(offset_v_c, initial, average, is_bpm, skip_on_invalid);
 	}
 
-    TimingPointV stutter_swap(TimingPointV tp_v) {
+    TimingPointV stutterSwap(TimingPointV tp_v) {
 
 		if (tp_v.size() % 2 != 1) {
 			// only works on odd
@@ -719,8 +719,8 @@ namespace amber_f
 			tp_v_2->setOffset(tp_v_1->getOffset());
 			tp_v_1->setOffset(offset_buffer);
 
-			output.push_back(*tp_v_1);
-			output.push_back(*tp_v_2);
+			output.pushBack(*tp_v_1);
+			output.pushBack(*tp_v_2);
 			tp_v_1 += 2;
 			tp_v_2 += 2;
 		}
@@ -730,14 +730,14 @@ namespace amber_f
 		//     ----> ^  ^ BREAK
 		// Need to push back [5]
 		if (tp_v_2 == tp_v.end()) {
-			output.push_back(*tp_v_1);
+			output.pushBack(*tp_v_1);
 		}
 
 		return output;
 	}
 
 	template <typename T>
-    QSharedPointer<ObjV<T>> extract_nth(ObjV<T> const* obj_v,
+    QSharedPointer<ObjV<T>> extractNth(ObjV<T> const* obj_v,
                                          uint n,
                                          uint offset = 0) {
 
@@ -748,13 +748,13 @@ namespace amber_f
         ObjV<T> obj_v_c;
 
         for (uint i = offset; i < obj_v->size(); i += n) {
-			obj_v_c.push_back(obj_v->get_index(i));
+			obj_v_c.pushBack(obj_v->getIndex(i));
 		}
 
         return std::make_shared<ObjV<T>>(obj_v_c);
 	}
 	template <typename T>
-    QSharedPointer<ObjV<T>> delete_nth(ObjV<T> const* obj_v,
+    QSharedPointer<ObjV<T>> deleteNth(ObjV<T> const* obj_v,
                                         uint n,
                                         uint offset = 0) {
 
@@ -774,7 +774,7 @@ namespace amber_f
                     i < offset || // Push back any element < offset
                     (i - offset + 1) % n != 0 // Only push back those not in the nth sequence
                     ) {
-				obj_v_c.push_back(obj_v->get_index(i));
+				obj_v_c.pushBack(obj_v->getIndex(i));
 			}
 		}
 

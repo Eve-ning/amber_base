@@ -10,7 +10,7 @@ TimingPointV::TimingPointV() : OsuObjectV()
 // Create an object with a designated amount of default constructed timing_points 
 
 TimingPointV::TimingPointV(unsigned int amount) {
-	load_defaults(amount);
+    loadDefaults(amount);
 }
 
 bool TimingPointV::loadRawTimingPoint(const QString &str,
@@ -25,7 +25,7 @@ bool TimingPointV::loadRawTimingPoint(QVector<QString> str_v)
         if (!tp.loadRawTimingPoint(str)) {
             return false;
         }; // Load by string
-		object_v.push_back(tp); // Push back to private member
+        objectV.push_back(tp); // Push back to private member
     }
     return true;
 }
@@ -34,9 +34,9 @@ bool TimingPointV::loadRawTimingPoint(QVector<QString> str_v)
 
 TimingPointV TimingPointV::getSvOnly() const {
     TimingPointV output = TimingPointV();
-	for (const auto &tp : object_v) {
+    for (const auto &tp : objectV) {
         if (tp.getIsSv()) {
-			output.push_back(tp);
+            output.pushBack(tp);
 		}
 	}
 	return output;
@@ -46,9 +46,9 @@ TimingPointV TimingPointV::getSvOnly() const {
 
 TimingPointV TimingPointV::getBpmOnly() const {
     TimingPointV output = TimingPointV();
-	for (const auto &tp : object_v) {
+    for (const auto &tp : objectV) {
         if (tp.getIsBpm()) {
-			output.push_back(tp);
+            output.pushBack(tp);
 		}
 	}
 	return output;
@@ -58,7 +58,7 @@ TimingPointV TimingPointV::getBpmOnly() const {
 
 QVector<double> TimingPointV::getValueV() const {
     QVector<double> value_v = {};
-	for (const auto &tp : object_v) {
+    for (const auto &tp : objectV) {
         value_v.push_back(tp.getValue());
 	}
 
@@ -113,26 +113,26 @@ TimingPointV TimingPointV::operator -(double par) {
 }
 
 void TimingPointV::operator *=(double par) {
-    object_v = value_arithmetic(par, [](double value, double parameter) {
+    objectV = value_arithmetic(par, [](double value, double parameter) {
         return value * parameter;
-    }).get_object_v();
+    }).getObjectV();
 }
 
 void TimingPointV::operator /=(double par) {
-    object_v = value_arithmetic(par, [](double value, double parameter) {
+    objectV = value_arithmetic(par, [](double value, double parameter) {
         return value / parameter;
-    }).get_object_v();
+    }).getObjectV();
 }
 void TimingPointV::operator +=(double par) {
-    object_v = value_arithmetic(par, [](double value, double parameter) {
+    objectV = value_arithmetic(par, [](double value, double parameter) {
         return value + parameter;
-    }).get_object_v();
+    }).getObjectV();
 }
 
 void TimingPointV::operator -=(double par) {
-    object_v = value_arithmetic(par, [](double value, double parameter) {
+    objectV = value_arithmetic(par, [](double value, double parameter) {
         return value - parameter;
-    }).get_object_v();
+    }).getObjectV();
 }
 
 TimingPointV TimingPointV::value_arithmetic(double parameter, double (*oper)(double, double)) {
@@ -156,7 +156,7 @@ double TimingPointV::get_average_value(bool is_bpm) const {
 	double offset = 0;
 	double distance = 0;
 
-	tp_v.sort_by_offset(true);
+    tp_v.sortByOffset(true);
 
 	// Loop through all pairs excluding the last invalid pair
 	for (auto tp_it = tp_v.begin(); tp_it != tp_v.end() - 1; tp_it++) {

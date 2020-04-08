@@ -11,7 +11,7 @@ HitObjectV::HitObjectV() : OsuObjectV()
 // Create an object with a designated amount of default constructed hit_objects
 
 HitObjectV::HitObjectV(unsigned int amount) {
-    load_defaults(amount);
+    loadDefaults(amount);
 }
 
 bool HitObjectV::loadEditorHitObject(QString str, unsigned int keys) {
@@ -37,7 +37,7 @@ bool HitObjectV::loadEditorHitObject(QString str, unsigned int keys) {
             return false;
         }
 
-		object_v.push_back(ho); // Append to our private hit_object vector
+        objectV.push_back(ho); // Append to our private hit_object vector
 	}
 
     return true;
@@ -56,7 +56,7 @@ bool HitObjectV::loadRawHitObject(QVector<QString> str_v, unsigned int keys)
     for (QString str : str_v) { // For each str in the string vector
         HitObject ho;
         if (!ho.loadRawHitObject(str, keys)) return false;
-		object_v.push_back(ho); // Append to our private hit_object vector
+        objectV.push_back(ho); // Append to our private hit_object vector
 	}
     return true;
 }
@@ -64,7 +64,7 @@ bool HitObjectV::loadRawHitObject(QVector<QString> str_v, unsigned int keys)
 QVector<QString> HitObjectV::getStringRawV(unsigned int keys)
 {
     QVector<QString> output = {};
-    std::transform(object_v.begin(), object_v.end(), std::back_inserter(output), [&](HitObject &ho) {
+    std::transform(objectV.begin(), objectV.end(), std::back_inserter(output), [&](HitObject &ho) {
 		return ho.getStringRaw(keys);
 	});
 	return output;
@@ -84,8 +84,8 @@ QVector<unsigned int> HitObjectV::getColumnV() const {
 
 HitObjectV HitObjectV::getNotesOnly() const {
     HitObjectV output = HitObjectV();
-	for (const auto &ho : object_v) {
-        if (ho.get_is_note()) output.push_back(ho);
+    for (const auto &ho : objectV) {
+        if (ho.getIsNote()) output.pushBack(ho);
 	}
 	return output;
 }
@@ -94,8 +94,8 @@ HitObjectV HitObjectV::getNotesOnly() const {
 
 HitObjectV HitObjectV::getLongNotesOnly() const {
     HitObjectV output = HitObjectV();
-	for (const auto &ho : object_v) {
-        if (ho.get_is_long_note()) output.push_back(ho);
+    for (const auto &ho : objectV) {
+        if (ho.getIsLongNote()) output.pushBack(ho);
 	}
 	return output;
 }

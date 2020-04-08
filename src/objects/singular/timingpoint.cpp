@@ -141,12 +141,3 @@ QSharedPointer<OsuObject> TimingPoint::clone() const {
     return QSharedPointer<TimingPoint>::create(tp);
 }
 
-SAMPLE_SET TimingPoint::getSample_set() const
-{
-    return sampleSet;
-}
-
-void TimingPoint::setSample_set(const SAMPLE_SET &value)
-{
-    sampleSet = value;
-}

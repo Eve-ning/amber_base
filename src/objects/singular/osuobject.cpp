@@ -30,12 +30,3 @@ OsuObject::OsuObject(const OsuObject &obj) {
     offset = obj.offset;
 }
 
-double OsuObject::getOffset() const
-{
-    return offset;
-}
-
-void OsuObject::setOffset(double value)
-{
-    offset = value;
-}
