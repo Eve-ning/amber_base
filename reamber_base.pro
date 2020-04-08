@@ -28,24 +28,24 @@ unix {
 }
 
 HEADERS += \
-    src/amber_privf/split_string.h \
-    src/exceptions/reamber_exception.h \
-    src/objects/multiple/hit_object_v.h \
-    src/objects/multiple/osu_object_v.h \
-    src/objects/multiple/timing_point_v.h \
-    src/objects/singular/hit_object.h \
-    src/objects/singular/osu_object.h \
-    src/objects/singular/timing_point.h \
-    src/amber_f/amber_f.h
+    src/amber_privf/splitstring.h \
+    src/exceptions/reamberexception.h \
+    src/objects/multiple/hitobjectv.h \
+    src/objects/multiple/osuobjectv.h \
+    src/objects/multiple/timingpointv.h \
+    src/objects/singular/hitobject.h \
+    src/objects/singular/osuobject.h \
+    src/amber_f/amber_f.h \
+    src/objects/singular/timingpoint.h
 
 
 SOURCES += \
-    src/amber_privf/split_string.cpp \
-    src/exceptions/reamber_exception.cpp \
-    src/objects/multiple/hit_object_v.cpp \
-    src/objects/multiple/osu_object_v.cpp \
-    src/objects/multiple/timing_point_v.cpp \
-    src/objects/singular/hit_object.cpp \
-    src/objects/singular/osu_object.cpp \
-    src/objects/singular/timing_point.cpp \
-    src/amber_f/amber_f.cpp
+    src/amber_privf/splitstring.cpp \
+    src/exceptions/reamberexception.cpp \
+    src/objects/multiple/hitobjectv.cpp \
+    src/objects/multiple/osuobjectv.cpp \
+    src/objects/multiple/timingpointv.cpp \
+    src/objects/singular/hitobject.cpp \
+    src/objects/singular/osuobject.cpp \
+    src/amber_f/amber_f.cpp \
+    src/objects/singular/timingpoint.cpp

@@ -6,10 +6,10 @@
     #define AMBER_BASE __declspec(dllimport)
 #endif
 
-#include "osu_object.h"
+#include "osuobject.h"
 #include <string>
 
-class AMBER_BASE timing_point : public osu_object
+class AMBER_BASE TimingPoint : public OsuObject
 {
 public:
 
@@ -17,7 +17,7 @@ public:
 
 	// Create a blank constructor
 	// Load in via the load_<functions>
-    timing_point();
+    TimingPoint();
 
     //// Explicit Loading
 
@@ -44,7 +44,7 @@ public:
 						 bool is_kiai);
 
 	// Checks if all variables match
-	bool operator ==(const timing_point &tp) const;
+    bool operator ==(const TimingPoint &tp) const;
 
     //// Exporting
 
@@ -81,7 +81,7 @@ public:
 	static double convert_value_to_code(double value, bool is_bpm);
 
 	// Clones the object
-	virtual std::shared_ptr<osu_object> clone() const;
+    virtual std::shared_ptr<OsuObject> clone() const;
 
 private:
 

@@ -1,11 +1,11 @@
-#include "hit_object.h"
+#include "hitobject.h"
 #include "../../amber_privf/split_string.h"
 #include <cmath>
 #include <vector>
 #include <iostream>
 #include "../../exceptions/reamber_exception.h"
 
-hit_object::hit_object() :
+HitObject::HitObject() :
     column (0),
     y_axis (192),
     note_type (NOTE_TYPE::NORMAL),
@@ -18,7 +18,7 @@ hit_object::hit_object() :
     hitsound_file (""),
     keys (4){}
 
-bool hit_object::load_editor_hit_object(std::string str,
+bool HitObject::load_editor_hit_object(std::string str,
                                         unsigned int keys,
                                         unsigned int index)
 {
@@ -62,7 +62,7 @@ bool hit_object::load_editor_hit_object(std::string str,
     return true;
 }
 
-bool hit_object::load_raw_hit_object(std::string str,
+bool HitObject::load_raw_hit_object(std::string str,
                                      unsigned int keys)
 {
     int count_comma = 0;
@@ -99,10 +99,10 @@ bool hit_object::load_raw_hit_object(std::string str,
         y_axis = static_cast<unsigned int>(std::stoi(hit_object_comma_v[1]));
         offset = std::stod(hit_object_comma_v[2]);
         note_type = static_cast<unsigned int>(std::stoi(hit_object_comma_v[3]));
-        hitsound_set = static_cast<osu_object::SAMPLE_SET>(std::stoi(hit_object_comma_v[4]));
-        sample_set = static_cast<osu_object::SAMPLE_SET>(std::stoi(hit_object_colon_v[0]));
-        addition_set = static_cast<osu_object::SAMPLE_SET>(std::stoi(hit_object_colon_v[1]));
-        custom_set = static_cast<osu_object::SAMPLE_SET>(std::stoi(hit_object_colon_v[2]));
+        hitsound_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(hit_object_comma_v[4]));
+        sample_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(hit_object_colon_v[0]));
+        addition_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(hit_object_colon_v[1]));
+        custom_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(hit_object_colon_v[2]));
         volume = static_cast<unsigned int>(std::stoi(hit_object_colon_v[3]));
         hitsound_file = hit_object_colon_v[4];
 
@@ -113,11 +113,11 @@ bool hit_object::load_raw_hit_object(std::string str,
         y_axis = static_cast<unsigned int>(std::stoi(hit_object_comma_v[1]));
         offset = std::stod(hit_object_comma_v[2]);
         note_type = static_cast<unsigned int>(std::stoi(hit_object_comma_v[3]));
-        hitsound_set = static_cast<osu_object::SAMPLE_SET>(std::stoi(hit_object_comma_v[4]));
+        hitsound_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(hit_object_comma_v[4]));
         ln_end = std::stod(hit_object_colon_v[0]);
-        sample_set = static_cast<osu_object::SAMPLE_SET>(std::stoi(hit_object_colon_v[1]));
-        addition_set = static_cast<osu_object::SAMPLE_SET>(std::stoi(hit_object_colon_v[2]));
-        custom_set = static_cast<osu_object::SAMPLE_SET>(std::stoi(hit_object_colon_v[3]));
+        sample_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(hit_object_colon_v[1]));
+        addition_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(hit_object_colon_v[2]));
+        custom_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(hit_object_colon_v[3]));
         volume = static_cast<unsigned int>(std::stoi(hit_object_colon_v[4]));
         hitsound_file = hit_object_colon_v[5];
 
@@ -129,7 +129,7 @@ bool hit_object::load_raw_hit_object(std::string str,
     return true;
 }
 
-bool hit_object::load_parameters(unsigned int column,
+bool HitObject::load_parameters(unsigned int column,
                                  double offset,
                                  unsigned int ln_end,
                                  unsigned int keys){
@@ -149,7 +149,7 @@ bool hit_object::load_parameters(unsigned int column,
     return true;
 }
 
-void hit_object::load_parameters(unsigned int column,
+void HitObject::load_parameters(unsigned int column,
                                  unsigned int y_axis,
                                  double offset,
                                  unsigned int note_type,
@@ -175,7 +175,7 @@ void hit_object::load_parameters(unsigned int column,
     this->keys = keys;
 }
 
-bool hit_object::operator ==(const hit_object & ho) const {
+bool HitObject::operator ==(const HitObject & ho) const {
 	return (
 		column == ho.column &&
 		y_axis == ho.y_axis &&
@@ -191,7 +191,7 @@ bool hit_object::operator ==(const hit_object & ho) const {
 		);
 }
 
-std::string hit_object::get_string_raw() const
+std::string HitObject::get_string_raw() const
 {
 	std::string output =
 		std::to_string(convert_column_to_x_axis(column, keys)) + "," +
@@ -209,131 +209,131 @@ std::string hit_object::get_string_raw() const
 	return output;
 }
 
-std::string hit_object::get_string_raw(unsigned int keys)
+std::string HitObject::get_string_raw(unsigned int keys)
 {
     this->keys = keys;
 	return get_string_raw(); // Call no-arg function
 }
 
-unsigned int hit_object::get_column() const
+unsigned int HitObject::get_column() const
 {
     return column;
 }
 
-void hit_object::set_column(unsigned int column)
+void HitObject::set_column(unsigned int column)
 {
     this->column = column;
 }
 
-unsigned int hit_object::get_y_axis() const
+unsigned int HitObject::get_y_axis() const
 {
     return y_axis;
 }
 
-void hit_object::set_y_axis(unsigned int y_axis)
+void HitObject::set_y_axis(unsigned int y_axis)
 {
     this->y_axis = y_axis;
 }
 
-unsigned int hit_object::get_note_type() const
+unsigned int HitObject::get_note_type() const
 {
     return note_type;
 }
 
-void hit_object::set_note_type(unsigned int note_type)
+void HitObject::set_note_type(unsigned int note_type)
 {
     this->note_type = note_type;
 }
 
-osu_object::SAMPLE_SET hit_object::get_SAMPLE_SET() const
+OsuObject::SAMPLE_SET HitObject::get_SAMPLE_SET() const
 {
     return sample_set;
 }
 
-void hit_object::set_SAMPLE_SET(const SAMPLE_SET &sample_set)
+void HitObject::set_SAMPLE_SET(const SAMPLE_SET &sample_set)
 {
     this->sample_set = sample_set;
 }
 
-osu_object::SAMPLE_SET hit_object::get_addition_set() const
+OsuObject::SAMPLE_SET HitObject::get_addition_set() const
 {
     return addition_set;
 }
 
-void hit_object::set_addition_set(const SAMPLE_SET &addition_set)
+void HitObject::set_addition_set(const SAMPLE_SET &addition_set)
 {
     this->addition_set = addition_set;
 }
 
-osu_object::SAMPLE_SET hit_object::get_custom_set() const
+OsuObject::SAMPLE_SET HitObject::get_custom_set() const
 {
     return this->custom_set;
 }
 
-void hit_object::set_custom_set(const SAMPLE_SET &custom_set)
+void HitObject::set_custom_set(const SAMPLE_SET &custom_set)
 {
     this->custom_set = custom_set;
 }
 
-unsigned int hit_object::get_volume() const
+unsigned int HitObject::get_volume() const
 {
     return volume;
 }
 
-void hit_object::set_volume(unsigned int volume)
+void HitObject::set_volume(unsigned int volume)
 {
     this->volume = volume;
 }
 
-std::string hit_object::get_hitsound_file() const
+std::string HitObject::get_hitsound_file() const
 {
     return hitsound_file;
 }
 
-void hit_object::set_hitsound_file(const std::string &hitsound_file)
+void HitObject::set_hitsound_file(const std::string &hitsound_file)
 {
     this->hitsound_file = hitsound_file;
 }
 
-unsigned int hit_object::get_keys() const
+unsigned int HitObject::get_keys() const
 {
     return keys;
 }
 
-void hit_object::set_keys(unsigned int keys)
+void HitObject::set_keys(unsigned int keys)
 {
     this->keys = keys;
 }
 
-double hit_object::get_ln_end() const
+double HitObject::get_ln_end() const
 {
     return ln_end;
 }
 
-void hit_object::set_ln_end(double ln_end)
+void HitObject::set_ln_end(double ln_end)
 {
     this->ln_end = ln_end;
 }
 
-bool hit_object::get_is_note() const {
+bool HitObject::get_is_note() const {
     return (ln_end == 0.0);
 }
 
-bool hit_object::get_is_long_note() const {
+bool HitObject::get_is_long_note() const {
 	return !get_is_note();
 }
 
-unsigned int hit_object::convert_column_to_x_axis(unsigned int column,
+unsigned int HitObject::convert_column_to_x_axis(unsigned int column,
                                                   unsigned int keys) {
 	return static_cast<unsigned int>(round(((512 * column) + 256) / keys));
 }
 
-unsigned int hit_object::convert_x_axis_to_column(unsigned int x_axis,
+unsigned int HitObject::convert_x_axis_to_column(unsigned int x_axis,
                                                   unsigned int keys) {
 	return static_cast<unsigned int>(round((x_axis * keys - 256) / 512));
 }
 
-bool hit_object::trieditor_hit_object(std::string& str)
+bool HitObject::trieditor_hit_object(std::string& str)
 {
 	// Validate the str
 	// If either of these characters are not found, it's not valid
@@ -350,18 +350,18 @@ bool hit_object::trieditor_hit_object(std::string& str)
 
 // Clones the object
 
-std::shared_ptr<osu_object> hit_object::clone() const {
-	hit_object ho;
+std::shared_ptr<OsuObject> HitObject::clone() const {
+    HitObject ho;
 	ho = *this;
-	return std::make_shared<hit_object>(ho);
+    return std::make_shared<HitObject>(ho);
 }
 
-osu_object::SAMPLE_SET hit_object::get_hitsound_set() const
+OsuObject::SAMPLE_SET HitObject::get_hitsound_set() const
 {
     return hitsound_set;
 }
 
-void hit_object::set_hitsound_set(const SAMPLE_SET &hitsound_set)
+void HitObject::set_hitsound_set(const SAMPLE_SET &hitsound_set)
 {
     this->hitsound_set = hitsound_set;
 }

@@ -10,14 +10,14 @@
 
 // Defines the any object in the rhythm game
 
-class AMBER_BASE osu_object
+class AMBER_BASE OsuObject
 {
 public:
 
 	double get_offset() const;
     void set_offset(double value);
 
-	virtual std::shared_ptr<osu_object> clone() const = 0;
+    virtual std::shared_ptr<OsuObject> clone() const = 0;
 
     enum class SAMPLE_SET
     {
@@ -27,10 +27,10 @@ public:
         DRUM
     };
 
-	bool operator <(const osu_object &ho) const {
+    bool operator <(const OsuObject &ho) const {
 		return offset < ho.offset;
 	}
-	bool operator ==(const osu_object &ho) const {
+    bool operator ==(const OsuObject &ho) const {
 		return offset == ho.offset;
 	}
 
@@ -38,9 +38,9 @@ public:
 
 protected: // only allow inherited classes use the constructor
 
-    osu_object();
-    osu_object(double new_offset);
-	osu_object(const osu_object &obj) {
+    OsuObject();
+    OsuObject(double new_offset);
+    OsuObject(const OsuObject &obj) {
 		offset = obj.offset;
 	}
     double offset; // defines the offset in ms

@@ -1,27 +1,27 @@
-#include "timing_point_v.h"
+#include "timingpointv.h"
 #include <algorithm>
 #include "../../amber_privf/split_string.h"
 
-timing_point_v::timing_point_v() : osu_object_v()
+TimingPointV::TimingPointV() : OsuObjectV()
 {
 }
 
 // Create an object with a designated amount of default constructed timing_points 
 
-timing_point_v::timing_point_v(unsigned int amount) {
+TimingPointV::TimingPointV(unsigned int amount) {
 	load_defaults(amount);
 }
 
-bool timing_point_v::load_raw_timing_point(std::string str,
+bool TimingPointV::load_raw_timing_point(std::string str,
                                            char delimeter)
 {
     return load_raw_timing_point(split_string::by_delimeter(str, delimeter));
 }
 
-bool timing_point_v::load_raw_timing_point(std::vector<std::string> str_v)
+bool TimingPointV::load_raw_timing_point(std::vector<std::string> str_v)
 {
 	for (std::string str : str_v) {
-		timing_point tp;
+        TimingPoint tp;
         if (!tp.load_raw_timing_point(str)) {
             return false;
         }; // Load by string
@@ -32,8 +32,8 @@ bool timing_point_v::load_raw_timing_point(std::vector<std::string> str_v)
 
 // Gets sv only in a vector form
 
-timing_point_v timing_point_v::get_sv_only() const {
-	timing_point_v output = timing_point_v();
+TimingPointV TimingPointV::get_sv_only() const {
+    TimingPointV output = TimingPointV();
 	for (const auto &tp : object_v) {
 		if (tp.get_is_sv()) {
 			output.push_back(tp);
@@ -44,8 +44,8 @@ timing_point_v timing_point_v::get_sv_only() const {
 
 // Gets bpm only in a vector form
 
-timing_point_v timing_point_v::get_bponly() const {
-	timing_point_v output = timing_point_v();
+TimingPointV TimingPointV::get_bponly() const {
+    TimingPointV output = TimingPointV();
 	for (const auto &tp : object_v) {
 		if (tp.get_is_bpm()) {
 			output.push_back(tp);
@@ -56,7 +56,7 @@ timing_point_v timing_point_v::get_bponly() const {
 
 // Gets all values
 
-std::vector<double> timing_point_v::get_value_v() const {
+std::vector<double> TimingPointV::get_value_v() const {
 	std::vector<double> value_v = {};
 	for (const auto &tp : object_v) {
 		value_v.push_back(tp.get_value());
@@ -65,79 +65,79 @@ std::vector<double> timing_point_v::get_value_v() const {
 	return value_v;
 }
 
-double timing_point_v::get_average_sv_value() const {
+double TimingPointV::get_average_sv_value() const {
     return get_average_value(false);
 }
 
-double timing_point_v::get_average_bpvalue() const {
+double TimingPointV::get_average_bpvalue() const {
     return get_average_value(true);
 }
 
 // Cross multiplies the tp_vs
-void timing_point_v::cross_effect_multiply(timing_point_v eff_tp_v) {
-	cross_effect(eff_tp_v, [](timing_point self, timing_point eff) {
+void TimingPointV::cross_effect_multiply(TimingPointV eff_tp_v) {
+    cross_effect(eff_tp_v, [](TimingPoint self, TimingPoint eff) {
 		self.set_value(self.get_value() * eff.get_value());
 		return self;
 	});
 }
 // Cross add the tp_vs
-void timing_point_v::cross_effect_add(timing_point_v eff_tp_v) {
-	cross_effect(eff_tp_v, [](timing_point self, timing_point eff) {
+void TimingPointV::cross_effect_add(TimingPointV eff_tp_v) {
+    cross_effect(eff_tp_v, [](TimingPoint self, TimingPoint eff) {
 		self.set_value(self.get_value() + eff.get_value());
 		return self;
 	});
 }
 
-timing_point_v timing_point_v::operator *(double par) {
+TimingPointV TimingPointV::operator *(double par) {
     return value_arithmetic(par, [](double value, double parameter) {
         return value * parameter;
     });
 }
 
-timing_point_v timing_point_v::operator /(double par) {
+TimingPointV TimingPointV::operator /(double par) {
     return value_arithmetic(par, [](double value, double parameter) {
         return value / parameter;
     });
 }
 
-timing_point_v timing_point_v::operator +(double par) {
+TimingPointV TimingPointV::operator +(double par) {
     return value_arithmetic(par, [](double value, double parameter) {
         return value + parameter;
     });
 }
 
-timing_point_v timing_point_v::operator -(double par) {
+TimingPointV TimingPointV::operator -(double par) {
     return value_arithmetic(par, [](double value, double parameter) {
         return value - parameter;
     });
 }
 
-void timing_point_v::operator *=(double par) {
+void TimingPointV::operator *=(double par) {
     object_v = value_arithmetic(par, [](double value, double parameter) {
         return value * parameter;
     }).get_object_v();
 }
 
-void timing_point_v::operator /=(double par) {
+void TimingPointV::operator /=(double par) {
     object_v = value_arithmetic(par, [](double value, double parameter) {
         return value / parameter;
     }).get_object_v();
 }
-void timing_point_v::operator +=(double par) {
+void TimingPointV::operator +=(double par) {
     object_v = value_arithmetic(par, [](double value, double parameter) {
         return value + parameter;
     }).get_object_v();
 }
 
-void timing_point_v::operator -=(double par) {
+void TimingPointV::operator -=(double par) {
     object_v = value_arithmetic(par, [](double value, double parameter) {
         return value - parameter;
     }).get_object_v();
 }
 
-double timing_point_v::get_average_value(bool is_bpm) const {
+double TimingPointV::get_average_value(bool is_bpm) const {
 
-    timing_point_v tp_v = is_bpm ? get_bponly() : get_sv_only();
+    TimingPointV tp_v = is_bpm ? get_bponly() : get_sv_only();
     if (tp_v.size() <= 0) {
         return 0;
     }

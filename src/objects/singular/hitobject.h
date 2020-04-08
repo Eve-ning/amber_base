@@ -6,13 +6,13 @@
     #define AMBER_BASE __declspec(dllimport)
 #endif
 
-#include "osu_object.h"
+#include "osuobject.h"
 #include <string>
 
 // Defines the Hit Object/Note/Long Note in the rhythm game
 // Stems from osu_object
 
-class AMBER_BASE hit_object : public osu_object
+class AMBER_BASE HitObject : public OsuObject
 {
 public:
 
@@ -20,7 +20,7 @@ public:
 
     // Create a blank constructor
 	// Load in via the load_<functions>
-    hit_object();
+    HitObject();
 
     //// Explicit Loading
 
@@ -60,7 +60,7 @@ public:
 						 unsigned int keys);
 
 	// Checks if all variables match
-	bool operator ==(const hit_object &ho) const;
+    bool operator ==(const HitObject &ho) const;
 
     //// Exporting
 
@@ -117,7 +117,7 @@ public:
     static bool trieditor_hit_object(std::string& str);
 
 	// Clones the object
-	virtual std::shared_ptr<osu_object> clone() const;
+    virtual std::shared_ptr<OsuObject> clone() const;
 
     enum NOTE_TYPE {
         NORMAL = 1,

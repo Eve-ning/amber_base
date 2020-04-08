@@ -6,22 +6,22 @@
     #define AMBER_BASE __declspec(dllimport)
 #endif
 
-#include "../../objects/singular/hit_object.h"
-#include "osu_object_v.h"
+#include "../../objects/singular/hitobject.h"
+#include "osuobjectv.h"
 
 // The list variant provides additional features to load in hit_objects and modify them.
 
-class AMBER_BASE hit_object_v : public osu_object_v<hit_object>
+class AMBER_BASE HitObjectV : public OsuObjectV<HitObject>
 {
 public:
 	// We don't do a string constructor as it'll be clearer on how the user loaded in their objects
 
 	// Create a blank constructor
 	// Load in via the load_<functions>
-    hit_object_v();
+    HitObjectV();
 
 	// Create an object with a designated amount of default constructed hit_objects
-	hit_object_v(unsigned int amount);
+	HitObjectV(unsigned int amount);
 
 	//// Explicit Loading
 
@@ -48,8 +48,8 @@ public:
 	std::vector<unsigned int> get_column_v() const;
 
 	// Gets notes only in a vector form
-	hit_object_v get_notes_only() const;
+	HitObjectV get_notes_only() const;
 
 	// Gets long notes only in a vector form
-	hit_object_v get_long_notes_only() const;
+	HitObjectV get_long_notes_only() const;
 };

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../objects/singular/osu_object.h"
-#include "../objects/multiple/hit_object_v.h"
-#include "../objects/multiple/timing_point_v.h"
+#include "../objects/singular/osuobject.h"
+#include "../objects/multiple/hitobjectv.h"
+#include "../objects/multiple/timingpointv.h"
 #include "../exceptions/reamber_exception.h"
 #include <vector>
 // Here we declare all common functions that amber_base will include
@@ -32,7 +32,7 @@
 */
 
 template<typename T>
-using ObjV = osu_object_v<T>;
+using ObjV = OsuObjectV<T>;
 
 typedef std::vector<double> doublev;
 typedef unsigned int uint;
@@ -531,13 +531,13 @@ namespace amber_f
 	}
 
 
-    timing_point_v normalize(timing_point_v tp_v,
+    TimingPointV normalize(TimingPointV tp_v,
                              const double &reference,
                              bool include_with = false) {
         // Automatically creates tps to counteract bpm line scroll speed manipulation
         // include_with defines if the created tps exports alongside the original
 
-		timing_point_v output = include_with ? tp_v : timing_point_v();
+        TimingPointV output = include_with ? tp_v : TimingPointV();
         tp_v = tp_v.get_bponly();
 		if (tp_v.size() == 0) {
 			throw reamber_exception("tp_v BPM size is 0");
@@ -553,7 +553,7 @@ namespace amber_f
 	}
 
 
-    timing_point_v stutter(doublev offset_v,
+    TimingPointV stutter(doublev offset_v,
                            double initial,
                            double average = 1.0,
                            bool is_bpm = false,
@@ -569,7 +569,7 @@ namespace amber_f
 
 		std::sort(offset_v.begin(), offset_v.end());
 
-		timing_point_v tp_v;
+        TimingPointV tp_v;
 		double gap; // defined as end - front
 		double threshold; // value of the threshold
 
@@ -592,7 +592,7 @@ namespace amber_f
 			// we won't restrict it if the user really wants the invalid value
 			if (threshold > 0 || !skip_on_invalid) {
 
-				timing_point begin_tp, threshold_tp;
+                TimingPoint begin_tp, threshold_tp;
 
 				begin_tp.load_parameters(*offset_it_begin, initial, is_bpm);
 				threshold_tp.load_parameters(*offset_it_threshold, threshold, is_bpm);
@@ -603,7 +603,7 @@ namespace amber_f
 
 			if (offset_it_end == (offset_v.end() - 1)) {
 				// indicates it's the last pair
-				timing_point end_tp;
+                TimingPoint end_tp;
 				end_tp.load_parameters(*offset_it_end, average, is_bpm);
 
 				tp_v.push_back(end_tp);
@@ -661,7 +661,7 @@ namespace amber_f
 	}
 
 
-    timing_point_v stutter_rel(const doublev &offset_v,
+    TimingPointV stutter_rel(const doublev &offset_v,
                                double initial,
                                double relativity,
                                double average = 1.0,
@@ -676,7 +676,7 @@ namespace amber_f
 	}
 
 
-    timing_point_v stutter_abs(const doublev &offset_v,
+    TimingPointV stutter_abs(const doublev &offset_v,
                                double initial,
                                double relativity,
                                double average = 1.0,
@@ -691,7 +691,7 @@ namespace amber_f
         return stutter(offset_v_c, initial, average, is_bpm, skip_on_invalid);
 	}
 
-	timing_point_v stutter_swap(timing_point_v tp_v) {
+    TimingPointV stutter_swap(TimingPointV tp_v) {
 
 		if (tp_v.size() % 2 != 1) {
 			// only works on odd
@@ -703,7 +703,7 @@ namespace amber_f
 
 
 		// [0][1][2][3][4][E]	
-		timing_point_v output;
+        TimingPointV output;
 		while (tp_v_2 < tp_v.end()) {
 
 			//       [0]   [1]           [2]

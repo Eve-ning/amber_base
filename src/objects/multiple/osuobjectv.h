@@ -2,22 +2,22 @@
 
 // This acts as a middleman between the vector objects and the lib_functions
 // All vectors will inherit from this, so polymorphism on vectors will be possible
-#include "../singular/osu_object.h"
-#include "../singular/hit_object.h"
+#include "../singular/osuobject.h"
+#include "../singular/hitobject.h"
 #include <vector>
 #include <algorithm>
 
 template <class obj_type>
-class osu_object_v
+class OsuObjectV
 {
 public:
 
-	osu_object_v() : object_v({}) {}
+    OsuObjectV() : object_v({}) {}
 
 	// Clones the vector of shared_ptrs
 	// Any template argument will work in order to access this static function
-	static std::shared_ptr<osu_object_v<obj_type>> clone_obj_v(osu_object_v<obj_type> const* obj_v) {
-		osu_object_v<obj_type> obj_v_copy;
+    static std::shared_ptr<OsuObjectV<obj_type>> clone_obj_v(OsuObjectV<obj_type> const* obj_v) {
+        OsuObjectV<obj_type> obj_v_copy;
 
 		// This makes a copy of the obj_sptr_v by dereferencing every element and creating
 		// a new instance of the shared_ptr
@@ -26,17 +26,17 @@ public:
 			obj_v_copy.push_back(*std::dynamic_pointer_cast<obj_type>(obj.clone()));
 		}
 
-		return std::make_shared<osu_object_v<obj_type>>(obj_v_copy);
+        return std::make_shared<OsuObjectV<obj_type>>(obj_v_copy);
 	}
 
 	//// Explicit Loading
 
 	// Loads from a sptr vector
-	virtual void load_obj_sptr(std::vector<std::shared_ptr<osu_object>> obj_sptr_v) {
+	virtual void load_obj_sptr(std::vector<std::shared_ptr<OsuObject>> obj_sptr_v) {
 		// Empty our current vector
 		object_v = {};
 
-		for (std::shared_ptr<osu_object> obj : obj_sptr_v) {
+		for (std::shared_ptr<OsuObject> obj : obj_sptr_v) {
 			object_v.push_back(*std::dynamic_pointer_cast<obj_type>(obj));
 		}
 	}
@@ -81,7 +81,7 @@ public:
 	}
 	// Sets the object vector
 	void set_object_v(std::vector<obj_type> object_v) {
-		object_v = object_v;
+        this->object_v = object_v;
 	}
 
 	// Specify if offset_v should have duplicates in make_unique
@@ -157,7 +157,7 @@ public:
 		object_v.push_back(obj);
 	}
 	// Appends vector to back of vector
-	void push_back(const osu_object_v &obj_v) {
+    void push_back(const OsuObjectV &obj_v) {
 		for (obj_type obj : obj_v) {
 			push_back(obj);
 		}
@@ -168,11 +168,11 @@ public:
 		object_v.pop_back();
 	}
 
-	osu_object_v& operator =(std::vector<std::shared_ptr<osu_object>> obj_sptr_v) {
+    OsuObjectV& operator =(std::vector<std::shared_ptr<OsuObject>> obj_sptr_v) {
 		load_obj_sptr(obj_sptr_v);
 		return *this;
 	}
-	bool operator ==(const osu_object_v &obj_v) const {
+    bool operator ==(const OsuObjectV &obj_v) const {
 		bool flag = true;
 		size_t input_size = obj_v.size();
 
@@ -200,7 +200,7 @@ public:
 	obj_type operator [](unsigned int i) const { return get_index(i); }
 	obj_type & operator [](unsigned int i) { return get_index(i); }
 
-	void cross_effect(osu_object_v eff_obj_v, obj_type (*effect)(obj_type self, obj_type eff)) {
+    void cross_effect(OsuObjectV eff_obj_v, obj_type (*effect)(obj_type self, obj_type eff)) {
 		if (eff_obj_v.size() == 0 || size() == 0) {
 			return; // Do not execute if empty
 		}
@@ -247,7 +247,7 @@ public:
 	obj_type front() const { return object_v.front(); }
 	obj_type back() const { return object_v.back(); }
 
-	osu_object_v offset_arithmetic(double parameter, double(*oper)(double offset, double parameter)) {
+    OsuObjectV offset_arithmetic(double parameter, double(*oper)(double offset, double parameter)) {
 		auto obj_v = *this;
 		for (auto &obj : obj_v) {
 			obj.set_offset(oper(obj.get_offset(), parameter));
