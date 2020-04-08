@@ -1,4 +1,5 @@
 #include "osuobject.h"
+#include <QtGlobal>
 
 double OsuObject::get_offset() const
 {
@@ -8,6 +9,14 @@ double OsuObject::get_offset() const
 void OsuObject::set_offset(double value)
 {
     offset = value;
+}
+
+bool OsuObject::operator <(const OsuObject &ho) const {
+    return offset < ho.offset;
+}
+
+bool OsuObject::operator ==(const OsuObject &ho) const {
+    return qFuzzyCompare(offset, ho.offset);
 }
 
 OsuObject::OsuObject() : offset(-1){}

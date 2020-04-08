@@ -18,7 +18,7 @@ HitObject::HitObject() :
     hitsound_file (""),
     keys (4){}
 
-bool HitObject::load_editor_hit_object(std::string str,
+bool HitObject::load_editor_hit_object(QString str,
                                         unsigned int keys,
                                         unsigned int index)
 {
@@ -33,21 +33,21 @@ bool HitObject::load_editor_hit_object(std::string str,
     // Now we are just left with the contents
     std::vector<double> offset_v = {};
     std::vector<unsigned int> column_v = {};
-    std::string note = "";
+    QString note = "";
 
 	// We first split it by comma
-    std::vector<std::string> str_comma_v = SplitString::by_delimeter(str, ',');
+    std::vector<QString> str_comma_v = SplitString::by_delimeter(str, ',');
 
 	// Then for each element split by comma
-	for (std::string str_comma : str_comma_v) {
+    for (QString str_comma : str_comma_v) {
 
 		// We split by bar
-        std::vector<std::string> str_bar_v = SplitString::by_delimeter(str_comma, '|');
+        std::vector<QString> str_bar_v = SplitString::by_delimeter(str_comma, '|');
 
 		// We push back the data after conversion
 		try {
-			offset_v.push_back(std::stod(str_bar_v[0]));
-            column_v.push_back(static_cast<unsigned int>(std::stoi(str_bar_v[1])));
+            offset_v.push_back(str_bar_v[0].toDouble());
+            column_v.push_back(static_cast<unsigned int>(str_bar_v[1].toInt()));
 		}
 		catch (...) {
             std::cout << "Editor Hit Object content is corrupt." << std::endl;
@@ -62,15 +62,15 @@ bool HitObject::load_editor_hit_object(std::string str,
     return true;
 }
 
-bool HitObject::load_raw_hit_object(std::string str,
+bool HitObject::load_raw_hit_object(QString str,
                                      unsigned int keys)
 {
     int count_comma = 0;
-    for (char c: str) if (c == ',') { count_comma++; }
+    for (QChar c: str) if (c == ',') { count_comma++; }
 
     // We find out if it's an long note or a note
     int count_colon = 0;
-    for (char c: str) if (c == ':') { count_colon++; }
+    for (QChar c: str) if (c == ':') { count_colon++; }
 
     // If it's invalid we throw
     if (count_colon < 4 || count_colon > 5 || count_comma != 5) {
@@ -80,10 +80,10 @@ bool HitObject::load_raw_hit_object(std::string str,
 
     this->keys = keys;
 
-    std::vector<std::string> hit_object_comma_v = {};
-    std::vector<std::string> hit_object_colon_v = {};
+    std::vector<QString> hit_object_comma_v = {};
+    std::vector<QString> hit_object_colon_v = {};
 
-    std::string temp_;
+    QString temp_;
 
 	// We split by comma
     hit_object_comma_v = SplitString::by_delimeter(str, ',');
@@ -95,30 +95,30 @@ bool HitObject::load_raw_hit_object(std::string str,
 
     switch (count_colon) {
     case 4:
-        column = convert_x_axis_to_column(static_cast<unsigned int>(std::stoi(hit_object_comma_v[0])), keys);
-        y_axis = static_cast<unsigned int>(std::stoi(hit_object_comma_v[1]));
-        offset = std::stod(hit_object_comma_v[2]);
-        note_type = static_cast<unsigned int>(std::stoi(hit_object_comma_v[3]));
-        hitsound_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(hit_object_comma_v[4]));
-        sample_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(hit_object_colon_v[0]));
-        addition_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(hit_object_colon_v[1]));
-        custom_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(hit_object_colon_v[2]));
-        volume = static_cast<unsigned int>(std::stoi(hit_object_colon_v[3]));
+        column        = convert_x_axis_to_column(hit_object_comma_v[0].toUInt(), keys);
+        y_axis        = hit_object_comma_v[1].toUInt();
+        offset        = hit_object_comma_v[2].toInt();
+        note_type     = hit_object_comma_v[3].toUInt();
+        hitsound_set  = static_cast<OsuObject::SAMPLE_SET>(hit_object_comma_v[4].toInt());
+        sample_set    = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[0].toInt());
+        addition_set  = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[1].toInt());
+        custom_set    = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[2].toInt());
+        volume        = hit_object_colon_v[3].toUInt();
         hitsound_file = hit_object_colon_v[4];
 
         // ln_end is 0 as by constructor
         break;
     case 5:
-        column = convert_x_axis_to_column(static_cast<unsigned int>(std::stoi(hit_object_comma_v[0])), keys);
-        y_axis = static_cast<unsigned int>(std::stoi(hit_object_comma_v[1]));
-        offset = std::stod(hit_object_comma_v[2]);
-        note_type = static_cast<unsigned int>(std::stoi(hit_object_comma_v[3]));
-        hitsound_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(hit_object_comma_v[4]));
-        ln_end = std::stod(hit_object_colon_v[0]);
-        sample_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(hit_object_colon_v[1]));
-        addition_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(hit_object_colon_v[2]));
-        custom_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(hit_object_colon_v[3]));
-        volume = static_cast<unsigned int>(std::stoi(hit_object_colon_v[4]));
+        column        = convert_x_axis_to_column(hit_object_comma_v[0].toUInt(), keys);
+        y_axis        = hit_object_comma_v[1].toUInt();
+        offset        = hit_object_comma_v[2].toDouble();
+        note_type     = hit_object_comma_v[3].toUInt();
+        hitsound_set  = static_cast<OsuObject::SAMPLE_SET>(hit_object_comma_v[4].toInt());
+        ln_end        = hit_object_colon_v[0].toDouble();
+        sample_set    = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[1].toInt());
+        addition_set  = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[2].toInt());
+        custom_set    = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[3].toInt());
+        volume        = hit_object_colon_v[4].toUInt();
         hitsound_file = hit_object_colon_v[5];
 
         break;
@@ -141,9 +141,10 @@ bool HitObject::load_parameters(unsigned int column,
     }
     if (ln_end != 0 && ln_end < offset){
         // Throw if Long Note End is before Long Note Head unless it's 0
-        std::string ln_end_str = std::to_string(ln_end), offset_str = std::to_string(offset);
-        throw ReamberException(std::string("Long Note End (" + ln_end_str + ")"
-                                            "is before Head (" + offset_str + ")").c_str());
+        QString ln_end_str = QString::number(ln_end),
+                offset_str = QString::number(offset);
+        throw ReamberException(QString("Long Note End (" + ln_end_str + ")"
+                                       "is before Head (" + offset_str + ")").toStdString().c_str());
     }
     this->keys = keys;
     return true;
@@ -159,7 +160,7 @@ void HitObject::load_parameters(unsigned int column,
                                  SAMPLE_SET addition_set,
                                  SAMPLE_SET custom_set,
                                  unsigned int volume,
-                                 std::string hitsound_file,
+                                 QString hitsound_file,
                                  unsigned int keys) {
     this->column = column;
     this->y_axis = y_axis;
@@ -181,7 +182,7 @@ bool HitObject::operator ==(const HitObject & ho) const {
 		y_axis == ho.y_axis &&
 		note_type == ho.note_type &&
 		hitsound_set == ho.hitsound_set &&
-        ln_end == ho.ln_end &&
+        qFuzzyCompare(ln_end, ho.ln_end) &&
         sample_set == ho.sample_set &&
 		addition_set == ho.addition_set &&
         custom_set == ho.custom_set &&
@@ -191,25 +192,25 @@ bool HitObject::operator ==(const HitObject & ho) const {
 		);
 }
 
-std::string HitObject::get_string_raw() const
+QString HitObject::get_string_raw() const
 {
-	std::string output =
-		std::to_string(convert_column_to_x_axis(column, keys)) + "," +
-		std::to_string(y_axis) + "," +
-		std::to_string(offset) + "," +
-		std::to_string(note_type) + "," +
-		std::to_string(static_cast<unsigned int>(hitsound_set)) + "," +
-        (ln_end == 0.0 ? "" : (std::to_string(ln_end) + ":")) + // If it's a note, ln_end == 0
-        std::to_string(static_cast<unsigned int>(sample_set)) + ":" +
-		std::to_string(static_cast<unsigned int>(addition_set)) + ":" +
-        std::to_string(static_cast<unsigned int>(custom_set)) + ":" +
-		std::to_string(volume) + ":" +
+    QString output =
+        QString::number(convert_column_to_x_axis(column, keys)) + "," +
+        QString::number(y_axis) + "," +
+        QString::number(offset) + "," +
+        QString::number(note_type) + "," +
+        QString::number(static_cast<unsigned int>(hitsound_set)) + "," +
+        (ln_end == 0.0 ? "" : (QString::number(ln_end) + ":")) + // If it's a note, ln_end == 0
+        QString::number(static_cast<unsigned int>(sample_set)) + ":" +
+        QString::number(static_cast<unsigned int>(addition_set)) + ":" +
+        QString::number(static_cast<unsigned int>(custom_set)) + ":" +
+        QString::number(volume) + ":" +
 		hitsound_file;
 	
 	return output;
 }
 
-std::string HitObject::get_string_raw(unsigned int keys)
+QString HitObject::get_string_raw(unsigned int keys)
 {
     this->keys = keys;
 	return get_string_raw(); // Call no-arg function
@@ -285,12 +286,12 @@ void HitObject::set_volume(unsigned int volume)
     this->volume = volume;
 }
 
-std::string HitObject::get_hitsound_file() const
+QString HitObject::get_hitsound_file() const
 {
     return hitsound_file;
 }
 
-void HitObject::set_hitsound_file(const std::string &hitsound_file)
+void HitObject::set_hitsound_file(const QString &hitsound_file)
 {
     this->hitsound_file = hitsound_file;
 }
@@ -333,18 +334,18 @@ unsigned int HitObject::convert_x_axis_to_column(unsigned int x_axis,
 	return static_cast<unsigned int>(round((x_axis * keys - 256) / 512));
 }
 
-bool HitObject::trieditor_hit_object(std::string& str)
+bool HitObject::trieditor_hit_object(QString& str)
 {
 	// Validate the str
 	// If either of these characters are not found, it's not valid
-	if (str.find('(') == std::string::npos || // == npos means not found
-		str.find(')') == std::string::npos || // means if any are not found, it's True
-        str.find('-') == std::string::npos) {
+    if (!str.contains('(')|| // == npos means not found
+        !str.contains(')')|| // means if any are not found, it's True
+        !str.contains('-')) {
         return false;
 	}
 
 	// Remove the ( AND ) brackets
-    str = str.substr(str.find('(') + 1, str.find(')') - str.find('(') - 1);
+    str = str.mid(str.indexOf('(') + 1, str.indexOf(')') - str.indexOf('(') - 1);
     return true;
 }
 

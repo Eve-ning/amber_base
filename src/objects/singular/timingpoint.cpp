@@ -13,11 +13,11 @@ TimingPoint::TimingPoint() :
     is_bpm(false),
     is_kiai(false){}
 
-bool TimingPoint::load_raw_timing_point(std::string str)
+bool TimingPoint::load_raw_timing_point(QString str)
 {
     // Validate the str
     // If either of these characters are not found, it's not valid
-    if (str.find(',') == std::string::npos) { // == npos means not found
+    if (!str.contains(',')) { // == npos means not found
         std::cout << "This is not a valid Editor Hit Object string." << std::endl;
         return false;
     }
@@ -25,21 +25,21 @@ bool TimingPoint::load_raw_timing_point(std::string str)
     // We append this so that the while loop continues till the end
     str.push_back(',');
 
-    std::vector<std::string> timing_point_comma_v = {};
+    std::vector<QString> timing_point_comma_v = {};
 
 	// Split string by comma
     timing_point_comma_v = SplitString::by_delimeter(str, ',');
 
-    offset = std::stod(timing_point_comma_v[0]);
-    metronome = static_cast<unsigned int>(std::stoi(timing_point_comma_v[2]));
-    sample_set = static_cast<OsuObject::SAMPLE_SET>(std::stoi(timing_point_comma_v[3]));
-    sample_set_index = static_cast<unsigned int>(std::stoi(timing_point_comma_v[4]));
-    volume = static_cast<unsigned int>(std::stoi(timing_point_comma_v[5]));
-    is_bpm = (timing_point_comma_v[6] == "1");
-    is_kiai = (timing_point_comma_v[7] == "1");
+    offset           = timing_point_comma_v[0].toDouble();
+    metronome        = timing_point_comma_v[2].toUInt();
+    sample_set       = static_cast<OsuObject::SAMPLE_SET>(timing_point_comma_v[3].toInt());
+    sample_set_index = timing_point_comma_v[4].toUInt();
+    volume           = timing_point_comma_v[5].toUInt();
+    is_bpm           = (timing_point_comma_v[6] == "1");
+    is_kiai          = (timing_point_comma_v[7] == "1");
 
 	// Dependent on is_bpm
-	value = convert_code_to_value(std::stod(timing_point_comma_v[1]), is_bpm); 
+    value = convert_code_to_value(timing_point_comma_v[1].toDouble(), is_bpm);
 
     return true;
 }
@@ -77,7 +77,7 @@ bool TimingPoint::load_parameters(double offset,
 
 bool TimingPoint::operator ==(const TimingPoint & tp) const {
 	return(
-		value == tp.value &&
+        qFuzzyCompare(value, tp.value) &&
 		metronome == tp.metronome &&
         this->sample_set == tp.sample_set &&
         this->sample_set_index == tp.sample_set_index &&
@@ -87,15 +87,15 @@ bool TimingPoint::operator ==(const TimingPoint & tp) const {
 		);
 }
 
-std::string TimingPoint::get_string_raw() const
+QString TimingPoint::get_string_raw() const
 {
-	std::string output =
-		std::to_string(offset) + "," +
-		std::to_string(convert_value_to_code(value, is_bpm)) + "," +
-		std::to_string(metronome) + "," +
-        std::to_string(static_cast<unsigned int>(sample_set)) + "," +
-        std::to_string(sample_set_index) + "," +
-		std::to_string(volume) + "," +
+    QString output =
+        QString::number(offset) + "," +
+        QString::number(convert_value_to_code(value, is_bpm)) + "," +
+        QString::number(metronome) + "," +
+        QString::number(static_cast<unsigned int>(sample_set)) + "," +
+        QString::number(sample_set_index) + "," +
+        QString::number(volume) + "," +
 		(is_bpm ? "1" : "0") + "," +
 		(is_kiai ? "1" : "0");
 
@@ -117,13 +117,8 @@ bool TimingPoint::get_is_kiai() const { return is_kiai;}
 void TimingPoint::set_is_kiai(bool is_kiai){ this->is_kiai = is_kiai; }
 bool TimingPoint::get_is_bpm() const { return is_bpm; }
 void TimingPoint::set_is_bpm(bool is_bpm){ this->is_bpm = is_bpm; }
-bool TimingPoint::get_is_sv() const {
-	return !get_is_bpm();
-}
-
-void TimingPoint::set_is_sv(bool is_sv) {
-	set_is_bpm(!is_sv);
-}
+bool TimingPoint::get_is_sv() const { return !get_is_bpm(); }
+void TimingPoint::set_is_sv(bool is_sv) { set_is_bpm(!is_sv); }
 
 double TimingPoint::convert_code_to_value(double code,
                                            bool is_bpm) {

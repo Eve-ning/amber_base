@@ -22,7 +22,7 @@ public:
     //// Explicit Loading
 
 	// Loads from data from the .osu file
-    bool load_raw_timing_point(std::string str);
+    bool load_raw_timing_point(QString str);
 
 	// Loads parameters manually (Simple)
 	// value is dependent on is_bpm
@@ -49,7 +49,7 @@ public:
     //// Exporting
 
 	// Get the string compatible to .osu format
-	virtual std::string get_string_raw() const;
+    virtual QString get_string_raw() const;
 
     //// Getters & Setters
 

@@ -14,7 +14,7 @@ HitObjectV::HitObjectV(unsigned int amount) {
     load_defaults(amount);
 }
 
-bool HitObjectV::load_editor_hit_object(std::string str, unsigned int keys) {
+bool HitObjectV::load_editor_hit_object(QString str, unsigned int keys) {
 
 	// Reject loading of empty string
     if (!HitObject::trieditor_hit_object(str)) {
@@ -22,16 +22,16 @@ bool HitObjectV::load_editor_hit_object(std::string str, unsigned int keys) {
         return false;
     }; // Shed the brackets
 
-    std::vector<std::string> str_comma_v = SplitString::by_delimeter(str, ','); // Split by comma
-	std::vector<std::string> str_bar_v = {};
+    std::vector<QString> str_comma_v = SplitString::by_delimeter(str, ','); // Split by comma
+    std::vector<QString> str_bar_v = {};
 
-	for (std::string str_comma : str_comma_v) {
+    for (QString str_comma : str_comma_v) {
         HitObject ho;
         str_bar_v = SplitString::by_delimeter(str_comma, '|'); // Split each comma token by bar
 
         if (!ho.load_parameters( // Load in by parameter
-            static_cast<unsigned int>(std::stoi(str_bar_v[1])),  // Column
-			std::stod(str_bar_v[0]),  // Offset
+            str_bar_v[1].toUInt(),  // Column
+            str_bar_v[0].toDouble(),  // Offset
 			0,                        // LN End (default to 0)
             keys)){ // Keys
             return false;
@@ -45,15 +45,15 @@ bool HitObjectV::load_editor_hit_object(std::string str, unsigned int keys) {
 
 // Where if the user loads in the whole thing as a string
 
-bool HitObjectV::load_raw_hit_object(std::string str,
+bool HitObjectV::load_raw_hit_object(QString str,
                                      unsigned int keys,
                                      char delimeter) {
     return load_raw_hit_object(SplitString::by_delimeter(str, delimeter), keys); // Use the vector variant of this function
 }
 
-bool HitObjectV::load_raw_hit_object(std::vector<std::string> str_v, unsigned int keys)
+bool HitObjectV::load_raw_hit_object(std::vector<QString> str_v, unsigned int keys)
 {
-	for (std::string str : str_v) { // For each str in the string vector
+    for (QString str : str_v) { // For each str in the string vector
         HitObject ho;
         if (!ho.load_raw_hit_object(str, keys)) return false;
 		object_v.push_back(ho); // Append to our private hit_object vector
@@ -61,9 +61,9 @@ bool HitObjectV::load_raw_hit_object(std::vector<std::string> str_v, unsigned in
     return true;
 }
 
-std::vector<std::string> HitObjectV::get_string_raw_v(unsigned int keys)
+std::vector<QString> HitObjectV::get_string_raw_v(unsigned int keys)
 {
-	std::vector<std::string> output = {};
+    std::vector<QString> output = {};
     std::transform(object_v.begin(), object_v.end(), std::back_inserter(output), [&](HitObject &ho) {
 		return ho.get_string_raw(keys);
 	});

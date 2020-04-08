@@ -1,8 +1,9 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <QString>
 
 namespace SplitString {
-    std::vector<std::string> by_delimeter(std::string str, char delimeter = '\n');
+    std::vector<QString> by_delimeter(QString str, char delimeter = '\n');
 }
 

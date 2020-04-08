@@ -7,7 +7,7 @@ ReamberException::~ReamberException() {
 }
 
 const char *ReamberException::what() const noexcept {
-    return m.c_str();
+    return m.toStdString().c_str();
 }
 
 ReamberException::ReamberException()

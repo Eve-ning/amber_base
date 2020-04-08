@@ -54,8 +54,8 @@ public:
 
 	// Get the vector of strings compatible to .osu format
 	// hit_object_v this will fail if keys = 0
-	std::vector<std::string> get_string_raw_v() const {
-		std::vector<std::string> output = {};
+    std::vector<QString> get_string_raw_v() const {
+        std::vector<QString> output = {};
 		std::transform(object_v.begin(), object_v.end(),
 			std::back_inserter(output), [&](const obj_type &obj) {
 			return obj.get_string_raw();
@@ -65,10 +65,10 @@ public:
 	
 	// Get the string compatible to .osu format, joined by a delimeter
 	// hit_object_v this will fail if keys = 0
-	std::string get_string_raw(std::string delimeter = "\n") const {
+    QString get_string_raw(QString delimeter = "\n") const {
 		auto string_v = get_string_raw_v();
-		std::string str = "";
-		for (const std::string &string : string_v) {
+        QString str = "";
+        for (const QString &string : string_v) {
 			str.append(string);
 			str.append(delimeter);
 		}

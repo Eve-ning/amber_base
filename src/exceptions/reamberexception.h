@@ -1,7 +1,6 @@
 #pragma once 
-
 #include <exception>
-#include <string>
+#include <QString>
 
 #ifdef AMBER_BASE_EX                                                // Declare this when compiling the library!
 #define AMBER_BASE __declspec(dllexport)
@@ -21,7 +20,7 @@ public:
     const char* what() const noexcept;
 
 protected:
-    std::string m;
+    QString m;
 
 private:
     ReamberException();

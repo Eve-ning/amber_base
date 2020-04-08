@@ -12,15 +12,15 @@ TimingPointV::TimingPointV(unsigned int amount) {
 	load_defaults(amount);
 }
 
-bool TimingPointV::load_raw_timing_point(std::string str,
-                                           char delimeter)
+bool TimingPointV::load_raw_timing_point(QString str,
+                                         char delimeter)
 {
     return load_raw_timing_point(SplitString::by_delimeter(str, delimeter));
 }
 
-bool TimingPointV::load_raw_timing_point(std::vector<std::string> str_v)
+bool TimingPointV::load_raw_timing_point(std::vector<QString> str_v)
 {
-	for (std::string str : str_v) {
+    for (QString str : str_v) {
         TimingPoint tp;
         if (!tp.load_raw_timing_point(str)) {
             return false;
