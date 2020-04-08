@@ -5,31 +5,30 @@
 #include <iostream>
 #include "../../exceptions/reamber_exception.h"
 
-hit_object::hit_object() {
-    m_column = 0;
-    m_y_axis = 192;
-    m_note_type = NOTE_TYPE::NORMAL;
-    m_hitsound_set = sample_set::AUTO;
-    m_ln_end = 0;
-    m_sample_set = sample_set::AUTO;
-	m_addition_set = sample_set::AUTO;
-	m_custom_set = sample_set::AUTO;
-	m_volume = 50;
-	m_hitsound_file = "";
-	m_keys = 4;
-}
+hit_object::hit_object() :
+    column (0),
+    y_axis (192),
+    note_type (NOTE_TYPE::NORMAL),
+    hitsound_set (SAMPLE_SET::AUTO),
+    ln_end (0),
+    sample_set (SAMPLE_SET::AUTO),
+    addition_set (SAMPLE_SET::AUTO),
+    custom_set (SAMPLE_SET::AUTO),
+    volume (50),
+    hitsound_file (""),
+    keys (4){}
 
 bool hit_object::load_editor_hit_object(std::string str,
                                         unsigned int keys,
                                         unsigned int index)
 {
 	// Remove the brackets
-    if (!trim_editor_hit_object(str)){
+    if (!trieditor_hit_object(str)){
         std::cout << "This is not a valid Editor Hit Object string." << std::endl;
         return false;
     }
 
-	m_keys = keys;
+    this->keys = keys;
 
     // Now we are just left with the contents
     std::vector<double> offset_v = {};
@@ -57,8 +56,8 @@ bool hit_object::load_editor_hit_object(std::string str,
 	}
 
     // Set according to index
-    m_offset = offset_v[index];
-    m_column = column_v[index];
+    offset = offset_v[index];
+    column = column_v[index];
 
     return true;
 }
@@ -67,15 +66,11 @@ bool hit_object::load_raw_hit_object(std::string str,
                                      unsigned int keys)
 {
     int count_comma = 0;
-    for (char c: str) {
-        if (c == ',') { count_comma++; }
-    }
+    for (char c: str) if (c == ',') { count_comma++; }
 
     // We find out if it's an long note or a note
     int count_colon = 0;
-    for (char c: str) {
-        if (c == ':') { count_colon++; }
-    }
+    for (char c: str) if (c == ':') { count_colon++; }
 
     // If it's invalid we throw
     if (count_colon < 4 || count_colon > 5 || count_comma != 5) {
@@ -83,7 +78,7 @@ bool hit_object::load_raw_hit_object(std::string str,
         return false;
     }
 
-    m_keys = keys;
+    this->keys = keys;
 
     std::vector<std::string> hit_object_comma_v = {};
     std::vector<std::string> hit_object_colon_v = {};
@@ -100,31 +95,31 @@ bool hit_object::load_raw_hit_object(std::string str,
 
     switch (count_colon) {
     case 4:
-        m_column = convert_x_axis_to_column(static_cast<unsigned int>(std::stoi(hit_object_comma_v[0])), keys);
-        m_y_axis = static_cast<unsigned int>(std::stoi(hit_object_comma_v[1]));
-        m_offset = std::stod(hit_object_comma_v[2]);
-        m_note_type = static_cast<unsigned int>(std::stoi(hit_object_comma_v[3]));
-        m_hitsound_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_comma_v[4]));
-        m_sample_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_v[0]));
-        m_addition_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_v[1]));
-        m_custom_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_v[2]));
-        m_volume = static_cast<unsigned int>(std::stoi(hit_object_colon_v[3]));
-        m_hitsound_file = hit_object_colon_v[4];
+        column = convert_x_axis_to_column(static_cast<unsigned int>(std::stoi(hit_object_comma_v[0])), keys);
+        y_axis = static_cast<unsigned int>(std::stoi(hit_object_comma_v[1]));
+        offset = std::stod(hit_object_comma_v[2]);
+        note_type = static_cast<unsigned int>(std::stoi(hit_object_comma_v[3]));
+        hitsound_set = static_cast<osu_object::SAMPLE_SET>(std::stoi(hit_object_comma_v[4]));
+        sample_set = static_cast<osu_object::SAMPLE_SET>(std::stoi(hit_object_colon_v[0]));
+        addition_set = static_cast<osu_object::SAMPLE_SET>(std::stoi(hit_object_colon_v[1]));
+        custom_set = static_cast<osu_object::SAMPLE_SET>(std::stoi(hit_object_colon_v[2]));
+        volume = static_cast<unsigned int>(std::stoi(hit_object_colon_v[3]));
+        hitsound_file = hit_object_colon_v[4];
 
-        // m_ln_end is 0 as by constructor
+        // ln_end is 0 as by constructor
         break;
     case 5:
-        m_column = convert_x_axis_to_column(static_cast<unsigned int>(std::stoi(hit_object_comma_v[0])), keys);
-        m_y_axis = static_cast<unsigned int>(std::stoi(hit_object_comma_v[1]));
-        m_offset = std::stod(hit_object_comma_v[2]);
-        m_note_type = static_cast<unsigned int>(std::stoi(hit_object_comma_v[3]));
-        m_hitsound_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_comma_v[4]));
-        m_ln_end = std::stod(hit_object_colon_v[0]);
-        m_sample_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_v[1]));
-        m_addition_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_v[2]));
-        m_custom_set = static_cast<osu_object::sample_set>(std::stoi(hit_object_colon_v[3]));
-        m_volume = static_cast<unsigned int>(std::stoi(hit_object_colon_v[4]));
-        m_hitsound_file = hit_object_colon_v[5];
+        column = convert_x_axis_to_column(static_cast<unsigned int>(std::stoi(hit_object_comma_v[0])), keys);
+        y_axis = static_cast<unsigned int>(std::stoi(hit_object_comma_v[1]));
+        offset = std::stod(hit_object_comma_v[2]);
+        note_type = static_cast<unsigned int>(std::stoi(hit_object_comma_v[3]));
+        hitsound_set = static_cast<osu_object::SAMPLE_SET>(std::stoi(hit_object_comma_v[4]));
+        ln_end = std::stod(hit_object_colon_v[0]);
+        sample_set = static_cast<osu_object::SAMPLE_SET>(std::stoi(hit_object_colon_v[1]));
+        addition_set = static_cast<osu_object::SAMPLE_SET>(std::stoi(hit_object_colon_v[2]));
+        custom_set = static_cast<osu_object::SAMPLE_SET>(std::stoi(hit_object_colon_v[3]));
+        volume = static_cast<unsigned int>(std::stoi(hit_object_colon_v[4]));
+        hitsound_file = hit_object_colon_v[5];
 
         break;
     default:
@@ -138,11 +133,11 @@ bool hit_object::load_parameters(unsigned int column,
                                  double offset,
                                  unsigned int ln_end,
                                  unsigned int keys){
-    m_column = column;
-    m_offset = offset;
-    m_ln_end = ln_end;
+    this->column = column;
+    this->offset = offset;
+    this->ln_end = ln_end;
     if (ln_end != 0) {
-        m_note_type = NOTE_TYPE::LN;
+        note_type = NOTE_TYPE::LN;
     }
     if (ln_end != 0 && ln_end < offset){
         // Throw if Long Note End is before Long Note Head unless it's 0
@@ -150,167 +145,178 @@ bool hit_object::load_parameters(unsigned int column,
         throw reamber_exception(std::string("Long Note End (" + ln_end_str + ")"
                                             "is before Head (" + offset_str + ")").c_str());
     }
-    m_keys = keys;
+    this->keys = keys;
     return true;
 }
 
-void hit_object::load_parameters(unsigned int column, unsigned int y_axis, double offset, unsigned int note_type, sample_set hitsound_set, double ln_end, sample_set sample_set_, sample_set addition_set, sample_set custom_set, unsigned int volume, std::string hitsound_file, unsigned int keys) {
-	m_column = column;
-	m_y_axis = y_axis;
-	m_offset = offset;
-	m_note_type = note_type;
-	m_hitsound_set = hitsound_set;
-	m_ln_end = ln_end;
-	m_sample_set = sample_set_;
-	m_addition_set = addition_set;
-	m_custom_set = custom_set;
-	m_volume = volume;
-	m_hitsound_file = hitsound_file;
-	m_keys = keys;
+void hit_object::load_parameters(unsigned int column,
+                                 unsigned int y_axis,
+                                 double offset,
+                                 unsigned int note_type,
+                                 SAMPLE_SET hitsound_set,
+                                 double ln_end,
+                                 SAMPLE_SET sample_set,
+                                 SAMPLE_SET addition_set,
+                                 SAMPLE_SET custom_set,
+                                 unsigned int volume,
+                                 std::string hitsound_file,
+                                 unsigned int keys) {
+    this->column = column;
+    this->y_axis = y_axis;
+    this->offset = offset;
+    this->note_type = note_type;
+    this->hitsound_set = hitsound_set;
+    this->ln_end = ln_end;
+    this->sample_set = sample_set;
+    this->addition_set = addition_set;
+    this->custom_set = custom_set;
+    this->volume = volume;
+    this->hitsound_file = hitsound_file;
+    this->keys = keys;
 }
 
 bool hit_object::operator ==(const hit_object & ho) const {
 	return (
-		m_column == ho.m_column &&
-		m_y_axis == ho.m_y_axis &&
-		m_note_type == ho.m_note_type &&
-		m_hitsound_set == ho.m_hitsound_set &&
-        m_ln_end == ho.m_ln_end &&
-		m_sample_set == ho.m_sample_set &&
-		m_addition_set == ho.m_addition_set &&
-		m_custom_set == ho.m_custom_set &&
-		m_volume == ho.m_volume &&
-		m_hitsound_file == ho.m_hitsound_file &&
-		m_keys == ho.m_keys
+		column == ho.column &&
+		y_axis == ho.y_axis &&
+		note_type == ho.note_type &&
+		hitsound_set == ho.hitsound_set &&
+        ln_end == ho.ln_end &&
+        sample_set == ho.sample_set &&
+		addition_set == ho.addition_set &&
+        custom_set == ho.custom_set &&
+		volume == ho.volume &&
+		hitsound_file == ho.hitsound_file &&
+		keys == ho.keys
 		);
 }
 
 std::string hit_object::get_string_raw() const
 {
 	std::string output =
-		std::to_string(convert_column_to_x_axis(m_column, m_keys)) + "," +
-		std::to_string(m_y_axis) + "," +
-		std::to_string(m_offset) + "," +
-		std::to_string(m_note_type) + "," +
-		std::to_string(static_cast<unsigned int>(m_hitsound_set)) + "," +
-        (m_ln_end == 0.0 ? "" : (std::to_string(m_ln_end) + ":")) + // If it's a note, m_ln_end == 0
-		std::to_string(static_cast<unsigned int>(m_sample_set)) + ":" +
-		std::to_string(static_cast<unsigned int>(m_addition_set)) + ":" +
-		std::to_string(static_cast<unsigned int>(m_custom_set)) + ":" +
-		std::to_string(m_volume) + ":" +
-		m_hitsound_file;
+		std::to_string(convert_column_to_x_axis(column, keys)) + "," +
+		std::to_string(y_axis) + "," +
+		std::to_string(offset) + "," +
+		std::to_string(note_type) + "," +
+		std::to_string(static_cast<unsigned int>(hitsound_set)) + "," +
+        (ln_end == 0.0 ? "" : (std::to_string(ln_end) + ":")) + // If it's a note, ln_end == 0
+        std::to_string(static_cast<unsigned int>(sample_set)) + ":" +
+		std::to_string(static_cast<unsigned int>(addition_set)) + ":" +
+        std::to_string(static_cast<unsigned int>(custom_set)) + ":" +
+		std::to_string(volume) + ":" +
+		hitsound_file;
 	
 	return output;
 }
 
 std::string hit_object::get_string_raw(unsigned int keys)
 {
-	m_keys = keys;
+    this->keys = keys;
 	return get_string_raw(); // Call no-arg function
 }
 
 unsigned int hit_object::get_column() const
 {
-    return m_column;
+    return column;
 }
 
 void hit_object::set_column(unsigned int column)
 {
-    m_column = column;
+    this->column = column;
 }
 
 unsigned int hit_object::get_y_axis() const
 {
-    return m_y_axis;
+    return y_axis;
 }
 
 void hit_object::set_y_axis(unsigned int y_axis)
 {
-    m_y_axis = y_axis;
+    this->y_axis = y_axis;
 }
 
 unsigned int hit_object::get_note_type() const
 {
-    return m_note_type;
+    return note_type;
 }
 
 void hit_object::set_note_type(unsigned int note_type)
 {
-    m_note_type = note_type;
+    this->note_type = note_type;
 }
 
-osu_object::sample_set hit_object::get_sample_set() const
+osu_object::SAMPLE_SET hit_object::get_SAMPLE_SET() const
 {
-    return m_sample_set;
+    return sample_set;
 }
 
-void hit_object::set_sample_set(const sample_set &sample_set)
+void hit_object::set_SAMPLE_SET(const SAMPLE_SET &sample_set)
 {
-    m_sample_set = sample_set;
+    this->sample_set = sample_set;
 }
 
-osu_object::sample_set hit_object::get_addition_set() const
+osu_object::SAMPLE_SET hit_object::get_addition_set() const
 {
-    return m_addition_set;
+    return addition_set;
 }
 
-void hit_object::set_addition_set(const sample_set &addition_set)
+void hit_object::set_addition_set(const SAMPLE_SET &addition_set)
 {
-    m_addition_set = addition_set;
+    this->addition_set = addition_set;
 }
 
-osu_object::sample_set hit_object::get_custom_set() const
+osu_object::SAMPLE_SET hit_object::get_custom_set() const
 {
-    return m_custom_set;
+    return this->custom_set;
 }
 
-void hit_object::set_custom_set(const sample_set &custom_set)
+void hit_object::set_custom_set(const SAMPLE_SET &custom_set)
 {
-    m_custom_set = custom_set;
+    this->custom_set = custom_set;
 }
 
 unsigned int hit_object::get_volume() const
 {
-    return m_volume;
+    return volume;
 }
 
 void hit_object::set_volume(unsigned int volume)
 {
-    m_volume = volume;
+    this->volume = volume;
 }
 
 std::string hit_object::get_hitsound_file() const
 {
-    return m_hitsound_file;
+    return hitsound_file;
 }
 
 void hit_object::set_hitsound_file(const std::string &hitsound_file)
 {
-    m_hitsound_file = hitsound_file;
+    this->hitsound_file = hitsound_file;
 }
 
 unsigned int hit_object::get_keys() const
 {
-    return m_keys;
+    return keys;
 }
 
 void hit_object::set_keys(unsigned int keys)
 {
-    m_keys = keys;
+    this->keys = keys;
 }
 
 double hit_object::get_ln_end() const
 {
-    return m_ln_end;
+    return ln_end;
 }
 
 void hit_object::set_ln_end(double ln_end)
 {
-    m_ln_end = ln_end;
+    this->ln_end = ln_end;
 }
 
 bool hit_object::get_is_note() const {
-    return (m_ln_end == 0.0);
+    return (ln_end == 0.0);
 }
 
 bool hit_object::get_is_long_note() const {
@@ -327,7 +333,7 @@ unsigned int hit_object::convert_x_axis_to_column(unsigned int x_axis,
 	return static_cast<unsigned int>(round((x_axis * keys - 256) / 512));
 }
 
-bool hit_object::trim_editor_hit_object(std::string& str)
+bool hit_object::trieditor_hit_object(std::string& str)
 {
 	// Validate the str
 	// If either of these characters are not found, it's not valid
@@ -350,12 +356,12 @@ std::shared_ptr<osu_object> hit_object::clone() const {
 	return std::make_shared<hit_object>(ho);
 }
 
-osu_object::sample_set hit_object::get_hitsound_set() const
+osu_object::SAMPLE_SET hit_object::get_hitsound_set() const
 {
-    return m_hitsound_set;
+    return hitsound_set;
 }
 
-void hit_object::set_hitsound_set(const sample_set &hitsound_set)
+void hit_object::set_hitsound_set(const SAMPLE_SET &hitsound_set)
 {
-    m_hitsound_set = hitsound_set;
+    this->hitsound_set = hitsound_set;
 }

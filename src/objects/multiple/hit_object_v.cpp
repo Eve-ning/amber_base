@@ -17,7 +17,7 @@ hit_object_v::hit_object_v(unsigned int amount) {
 bool hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
 
 	// Reject loading of empty string
-    if (!hit_object::trim_editor_hit_object(str)) {
+    if (!hit_object::trieditor_hit_object(str)) {
         std::cout << "Invalid Editor Hit Object Format" << std::endl;
         return false;
     }; // Shed the brackets
@@ -37,7 +37,7 @@ bool hit_object_v::load_editor_hit_object(std::string str, unsigned int keys) {
             return false;
         }
 
-		m_object_v.push_back(ho); // Append to our private hit_object vector
+		object_v.push_back(ho); // Append to our private hit_object vector
 	}
 
     return true;
@@ -59,7 +59,7 @@ bool hit_object_v::load_raw_hit_object(std::vector<std::string> str_v, unsigned 
             return false;
         }
 
-		m_object_v.push_back(ho); // Append to our private hit_object vector
+		object_v.push_back(ho); // Append to our private hit_object vector
 	}
     return true;
 }
@@ -67,7 +67,7 @@ bool hit_object_v::load_raw_hit_object(std::vector<std::string> str_v, unsigned 
 std::vector<std::string> hit_object_v::get_string_raw_v(unsigned int keys)
 {
 	std::vector<std::string> output = {};
-	std::transform(m_object_v.begin(), m_object_v.end(), std::back_inserter(output), [&](hit_object &ho) {
+	std::transform(object_v.begin(), object_v.end(), std::back_inserter(output), [&](hit_object &ho) {
 		return ho.get_string_raw(keys);
 	});
 	return output;
@@ -87,7 +87,7 @@ std::vector<unsigned int> hit_object_v::get_column_v() const {
 
 hit_object_v hit_object_v::get_notes_only() const {
 	hit_object_v output = hit_object_v();
-	for (const auto &ho : m_object_v) {
+	for (const auto &ho : object_v) {
 		if (ho.get_is_note()) {
 			output.push_back(ho);
 		}
@@ -99,7 +99,7 @@ hit_object_v hit_object_v::get_notes_only() const {
 
 hit_object_v hit_object_v::get_long_notes_only() const {
 	hit_object_v output = hit_object_v();
-	for (const auto &ho : m_object_v) {
+	for (const auto &ho : object_v) {
 		if (ho.get_is_long_note()) {
 			output.push_back(ho);
 		}

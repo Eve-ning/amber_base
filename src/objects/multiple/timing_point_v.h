@@ -35,12 +35,12 @@ public:
 	timing_point_v get_sv_only() const;
 			
 	// Gets bpm only in a vector form
-	timing_point_v get_bpm_only() const;
+	timing_point_v get_bponly() const;
 
 	// Gets all values
 	std::vector<double> get_value_v() const;
     double get_average_sv_value() const;
-    double get_average_bpm_value() const;
+    double get_average_bpvalue() const;
 
 	// Cross multiplies the tp_vs
 	void cross_effect_multiply(timing_point_v eff_tp_v);

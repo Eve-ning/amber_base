@@ -19,7 +19,7 @@ public:
 
 	virtual std::shared_ptr<osu_object> clone() const = 0;
 
-    enum class sample_set
+    enum class SAMPLE_SET
     {
         AUTO,
         NORMAL,
@@ -28,10 +28,10 @@ public:
     };
 
 	bool operator <(const osu_object &ho) const {
-		return m_offset < ho.m_offset;
+		return offset < ho.offset;
 	}
 	bool operator ==(const osu_object &ho) const {
-		return m_offset == ho.m_offset;
+		return offset == ho.offset;
 	}
 
 	virtual std::string get_string_raw() const = 0;
@@ -41,7 +41,7 @@ protected: // only allow inherited classes use the constructor
     osu_object();
     osu_object(double new_offset);
 	osu_object(const osu_object &obj) {
-		m_offset = obj.m_offset;
+		offset = obj.offset;
 	}
-    double m_offset; // defines the offset in ms
+    double offset; // defines the offset in ms
 };

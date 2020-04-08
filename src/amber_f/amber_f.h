@@ -440,7 +440,7 @@ namespace amber_f
     doublev copy_abs(const doublev offset_v,
                      double relativity,
                      bool include,
-                     bool relative_from_front = true,
+                     bool relative_frofront = true,
                      bool exclude_overlap = true) {
         // [0]   [2]   [4] IN
         // [0][+][2][+][4] OUT
@@ -467,7 +467,7 @@ namespace amber_f
 			// RELATIVE FROM BACK
 			// [0]_______[X]___[1][...]
 			//            <-----|
-			double offset = relative_from_front ? (*start + relativity) : (*(start + 1) - relativity);
+            double offset = relative_frofront ? (*start + relativity) : (*(start + 1) - relativity);
 
 			// EXCLUDE OVERLAP
 			// [0]____[1]__[X]
@@ -492,14 +492,14 @@ namespace amber_f
                                       const T obj_define,
                                       double relativity,
                                       bool include,
-                                      bool relative_from_front = true,
+                                      bool relative_frofront = true,
                                       bool exclude_overlap = true) {
         // [0]   [2]   [4] IN
         // <0>             IN
         //  0
         // <0><0><2><2><4> OUT
         //  0  +  2  +  4
-        return copy(obj_define, copy_abs(offset_v, relativity, include, relative_from_front, exclude_overlap));
+        return copy(obj_define, copy_abs(offset_v, relativity, include, relative_frofront, exclude_overlap));
 	}
 
 
@@ -507,7 +507,7 @@ namespace amber_f
     std::shared_ptr<ObjV<T>> copy_abs(ObjV<T> const* obj_v,
                                       double relativity,
                                       bool include,
-                                      bool relative_from_front = true,
+                                      bool relative_frofront = true,
                                       bool exclude_overlap = true) {
         // <0>   <2>   <4> IN
         //  0     2     4
@@ -518,7 +518,7 @@ namespace amber_f
 		// <0>   <2>   <4>
 		//  0     2     4
 		// [0][+][2][+][4]
-        auto offset_v = copy_abs(obj_v->get_offset_v(), relativity, true, relative_from_front, exclude_overlap);
+        auto offset_v = copy_abs(obj_v->get_offset_v(), relativity, true, relative_frofront, exclude_overlap);
 
 		// <0>   <2>   <4>
 		//  0     2     4
@@ -538,7 +538,7 @@ namespace amber_f
         // include_with defines if the created tps exports alongside the original
 
 		timing_point_v output = include_with ? tp_v : timing_point_v();
-		tp_v = tp_v.get_bpm_only();
+        tp_v = tp_v.get_bponly();
 		if (tp_v.size() == 0) {
 			throw reamber_exception("tp_v BPM size is 0");
 		}
@@ -681,13 +681,13 @@ namespace amber_f
                                double relativity,
                                double average = 1.0,
                                bool is_bpm = false,
-                               bool relative_from_front = true,
+                               bool relative_frofront = true,
                                bool skip_on_invalid = true) {
         // Creates a simple Act - CounterAct - Normalize movement
         // Stutter creation will chain on more than 2 offsets
 
 		// force inclusion of inits
-        auto offset_v_c = copy_abs(offset_v, relativity, true, relative_from_front, skip_on_invalid);
+        auto offset_v_c = copy_abs(offset_v, relativity, true, relative_frofront, skip_on_invalid);
         return stutter(offset_v_c, initial, average, is_bpm, skip_on_invalid);
 	}
 

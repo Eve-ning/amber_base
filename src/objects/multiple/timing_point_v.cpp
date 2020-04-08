@@ -25,7 +25,7 @@ bool timing_point_v::load_raw_timing_point(std::vector<std::string> str_v)
         if (!tp.load_raw_timing_point(str)) {
             return false;
         }; // Load by string
-		m_object_v.push_back(tp); // Push back to private member
+		object_v.push_back(tp); // Push back to private member
     }
     return true;
 }
@@ -34,7 +34,7 @@ bool timing_point_v::load_raw_timing_point(std::vector<std::string> str_v)
 
 timing_point_v timing_point_v::get_sv_only() const {
 	timing_point_v output = timing_point_v();
-	for (const auto &tp : m_object_v) {
+	for (const auto &tp : object_v) {
 		if (tp.get_is_sv()) {
 			output.push_back(tp);
 		}
@@ -44,9 +44,9 @@ timing_point_v timing_point_v::get_sv_only() const {
 
 // Gets bpm only in a vector form
 
-timing_point_v timing_point_v::get_bpm_only() const {
+timing_point_v timing_point_v::get_bponly() const {
 	timing_point_v output = timing_point_v();
-	for (const auto &tp : m_object_v) {
+	for (const auto &tp : object_v) {
 		if (tp.get_is_bpm()) {
 			output.push_back(tp);
 		}
@@ -58,7 +58,7 @@ timing_point_v timing_point_v::get_bpm_only() const {
 
 std::vector<double> timing_point_v::get_value_v() const {
 	std::vector<double> value_v = {};
-	for (const auto &tp : m_object_v) {
+	for (const auto &tp : object_v) {
 		value_v.push_back(tp.get_value());
 	}
 
@@ -69,7 +69,7 @@ double timing_point_v::get_average_sv_value() const {
     return get_average_value(false);
 }
 
-double timing_point_v::get_average_bpm_value() const {
+double timing_point_v::get_average_bpvalue() const {
     return get_average_value(true);
 }
 
@@ -113,31 +113,31 @@ timing_point_v timing_point_v::operator -(double par) {
 }
 
 void timing_point_v::operator *=(double par) {
-    m_object_v = value_arithmetic(par, [](double value, double parameter) {
+    object_v = value_arithmetic(par, [](double value, double parameter) {
         return value * parameter;
     }).get_object_v();
 }
 
 void timing_point_v::operator /=(double par) {
-    m_object_v = value_arithmetic(par, [](double value, double parameter) {
+    object_v = value_arithmetic(par, [](double value, double parameter) {
         return value / parameter;
     }).get_object_v();
 }
 void timing_point_v::operator +=(double par) {
-    m_object_v = value_arithmetic(par, [](double value, double parameter) {
+    object_v = value_arithmetic(par, [](double value, double parameter) {
         return value + parameter;
     }).get_object_v();
 }
 
 void timing_point_v::operator -=(double par) {
-    m_object_v = value_arithmetic(par, [](double value, double parameter) {
+    object_v = value_arithmetic(par, [](double value, double parameter) {
         return value - parameter;
     }).get_object_v();
 }
 
 double timing_point_v::get_average_value(bool is_bpm) const {
 
-    timing_point_v tp_v = is_bpm ? get_bpm_only() : get_sv_only();
+    timing_point_v tp_v = is_bpm ? get_bponly() : get_sv_only();
     if (tp_v.size() <= 0) {
         return 0;
     }

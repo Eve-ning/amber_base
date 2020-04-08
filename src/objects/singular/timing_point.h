@@ -37,8 +37,8 @@ public:
     bool load_parameters(double offset,
 						 double value,
 						 unsigned int metronome,
-						 sample_set sample_set_,
-						 unsigned int sample_set_index,
+						 SAMPLE_SET SAMPLE_SET_,
+						 unsigned int SAMPLE_SET_index,
 						 unsigned int volume,
 						 bool is_bpm,
 						 bool is_kiai);
@@ -59,11 +59,11 @@ public:
     unsigned int get_metronome() const;
     void set_metronome(unsigned int metronome);
 
-    sample_set get_sample_set() const;
-    void set_sample_set(const sample_set &sample_set);
+    SAMPLE_SET get_sample_set() const;
+    void set_sample_set(const SAMPLE_SET &SAMPLE_SET);
 
     unsigned int get_sample_set_index() const;
-    void set_sample_set_index(unsigned int sample_set_index);
+    void set_sample_set_index(unsigned int SAMPLE_SET_index);
 
     unsigned int get_volume() const;
     void set_volume(unsigned int volume);
@@ -85,11 +85,11 @@ public:
 
 private:
 
-    double m_value; // Usually it's a positive value for the SV/BPM variant
-    unsigned int m_metronome;
-    sample_set m_sample_set;
-    unsigned int m_sample_set_index;
-    unsigned int m_volume;
-	bool m_is_bpm; // Defines if it's the SV/BPM variant
-    bool m_is_kiai;
+    double value; // Usually it's a positive value for the SV/BPM variant
+    unsigned int metronome;
+    SAMPLE_SET sample_set;
+    unsigned int sample_set_index;
+    unsigned int volume;
+	bool is_bpm; // Defines if it's the SV/BPM variant
+    bool is_kiai;
 };

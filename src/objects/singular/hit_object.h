@@ -50,11 +50,11 @@ public:
 						 unsigned int y_axis,
 						 double offset,
 						 unsigned int note_type, // 1: Note, 128: Long Note
-						 sample_set hitsound_set,
+                         SAMPLE_SET hitsound_set,
 						 double ln_end, // If note, ln_end = 0,
-						 sample_set sample_set_,
-						 sample_set addition_set,
-						 sample_set custom_set,
+                         SAMPLE_SET SAMPLE_SET_,
+                         SAMPLE_SET addition_set,
+                         SAMPLE_SET custom_set,
 						 unsigned int volume,
 						 std::string hitsound_file,
 						 unsigned int keys);
@@ -83,17 +83,17 @@ public:
     unsigned int get_note_type() const;
     void set_note_type(unsigned int note_type);
 
-    sample_set get_hitsound_set() const;
-    void set_hitsound_set(const sample_set &hitsound_set);
+    SAMPLE_SET get_hitsound_set() const;
+    void set_hitsound_set(const SAMPLE_SET &hitsound_set);
 
-    sample_set get_sample_set() const;
-    void set_sample_set(const sample_set &sample_set);
+    SAMPLE_SET get_SAMPLE_SET() const;
+    void set_SAMPLE_SET(const SAMPLE_SET &SAMPLE_SET);
 
-    enum sample_set get_addition_set() const;
-    void set_addition_set(const sample_set &addition_set);
+    enum SAMPLE_SET get_addition_set() const;
+    void set_addition_set(const SAMPLE_SET &addition_set);
 
-    enum sample_set get_custom_set() const;
-    void set_custom_set(const sample_set &custom_set);
+    enum SAMPLE_SET get_custom_set() const;
+    void set_custom_set(const SAMPLE_SET &custom_set);
 
     unsigned int get_volume() const;
     void set_volume(unsigned int volume);
@@ -114,7 +114,7 @@ public:
 	static unsigned int convert_x_axis_to_column(unsigned int x_axis, unsigned int keys);
 
 	// Removes the brackets on the editor hitobject
-    static bool trim_editor_hit_object(std::string& str);
+    static bool trieditor_hit_object(std::string& str);
 
 	// Clones the object
 	virtual std::shared_ptr<osu_object> clone() const;
@@ -126,17 +126,17 @@ public:
 
 private:
 
-    unsigned int m_column; // Starts from 0
-    unsigned int m_y_axis;
-    unsigned int m_note_type; // 1: Note, 128: Long Note
-    sample_set m_hitsound_set;
-    double m_ln_end; // If note, ln_end = 0;
-    sample_set m_sample_set;
-    sample_set m_addition_set;
-    sample_set m_custom_set;
-    unsigned int m_volume;
-    std::string m_hitsound_file;
-    unsigned int m_keys;
+    unsigned int column; // Starts from 0
+    unsigned int y_axis;
+    unsigned int note_type; // 1: Note, 128: Long Note
+    SAMPLE_SET hitsound_set;
+    double ln_end; // If note, ln_end = 0;
+    SAMPLE_SET sample_set;
+    SAMPLE_SET addition_set;
+    SAMPLE_SET custom_set;
+    unsigned int volume;
+    std::string hitsound_file;
+    unsigned int keys;
 
 };
 
