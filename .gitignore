@@ -58,3 +58,4 @@ Temporary Items
 x64/
 .vs/
 debug/
+*.pro.user*

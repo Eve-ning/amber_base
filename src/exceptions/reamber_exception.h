@@ -16,9 +16,7 @@ class AMBER_BASE reamber_exception : public std::exception
 public:
     reamber_exception(const char* msg);
 
-    virtual ~reamber_exception() noexcept {
-
-    }
+    virtual ~reamber_exception() noexcept;
 
     const char* what() const noexcept;
 
