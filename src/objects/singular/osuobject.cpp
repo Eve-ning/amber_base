@@ -25,3 +25,7 @@ OsuObject::OsuObject(double new_offset) : offset(new_offset)
 {
 
 }
+
+OsuObject::OsuObject(const OsuObject &obj) {
+    offset = obj.offset;
+}

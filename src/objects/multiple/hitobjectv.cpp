@@ -17,13 +17,13 @@ HitObjectV::HitObjectV(unsigned int amount) {
 bool HitObjectV::load_editor_hit_object(QString str, unsigned int keys) {
 
 	// Reject loading of empty string
-    if (!HitObject::trieditor_hit_object(str)) {
+    if (!HitObject::trim_editor_hit_object(str)) {
         std::cout << "Invalid Editor Hit Object Format" << std::endl;
         return false;
     }; // Shed the brackets
 
-    std::vector<QString> str_comma_v = SplitString::by_delimeter(str, ','); // Split by comma
-    std::vector<QString> str_bar_v = {};
+    QVector<QString> str_comma_v = SplitString::by_delimeter(str, ','); // Split by comma
+    QVector<QString> str_bar_v = {};
 
     for (QString str_comma : str_comma_v) {
         HitObject ho;
@@ -51,7 +51,7 @@ bool HitObjectV::load_raw_hit_object(QString str,
     return load_raw_hit_object(SplitString::by_delimeter(str, delimeter), keys); // Use the vector variant of this function
 }
 
-bool HitObjectV::load_raw_hit_object(std::vector<QString> str_v, unsigned int keys)
+bool HitObjectV::load_raw_hit_object(QVector<QString> str_v, unsigned int keys)
 {
     for (QString str : str_v) { // For each str in the string vector
         HitObject ho;
@@ -61,9 +61,9 @@ bool HitObjectV::load_raw_hit_object(std::vector<QString> str_v, unsigned int ke
     return true;
 }
 
-std::vector<QString> HitObjectV::get_string_raw_v(unsigned int keys)
+QVector<QString> HitObjectV::get_string_raw_v(unsigned int keys)
 {
-    std::vector<QString> output = {};
+    QVector<QString> output = {};
     std::transform(object_v.begin(), object_v.end(), std::back_inserter(output), [&](HitObject &ho) {
 		return ho.get_string_raw(keys);
 	});
@@ -72,8 +72,8 @@ std::vector<QString> HitObjectV::get_string_raw_v(unsigned int keys)
 
 // Gets column in a vector form
 
-std::vector<unsigned int> HitObjectV::get_column_v() const {
-	std::vector<unsigned int> column_v = {};
+QVector<unsigned int> HitObjectV::get_column_v() const {
+    QVector<unsigned int> column_v = {};
     std::transform(begin(), end(), std::back_inserter(column_v), [](const HitObject &ho) {
 		return ho.get_column();
 	});

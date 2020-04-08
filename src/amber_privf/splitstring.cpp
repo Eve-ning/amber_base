@@ -1,9 +1,8 @@
 #include "splitstring.h"
 #include <algorithm>
 
-std::vector<QString> SplitString::by_delimeter(QString str,
-                                                    char delimeter) {
-    std::vector<QString> output = {};
+QVector<QString> SplitString::by_delimeter(QString str, char delimeter) {
+    QVector<QString> output = {};
 
 	str.push_back(delimeter); // Make sure the while loop includes the last token
     QString temp_ = "";

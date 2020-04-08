@@ -86,8 +86,8 @@ public:
     SAMPLE_SET get_hitsound_set() const;
     void set_hitsound_set(const SAMPLE_SET &hitsound_set);
 
-    SAMPLE_SET get_SAMPLE_SET() const;
-    void set_SAMPLE_SET(const SAMPLE_SET &SAMPLE_SET);
+    SAMPLE_SET get_sample_set() const;
+    void set_sample_set(const SAMPLE_SET &SAMPLE_SET);
 
     enum SAMPLE_SET get_addition_set() const;
     void set_addition_set(const SAMPLE_SET &addition_set);
@@ -114,10 +114,10 @@ public:
 	static unsigned int convert_x_axis_to_column(unsigned int x_axis, unsigned int keys);
 
 	// Removes the brackets on the editor hitobject
-    static bool trieditor_hit_object(QString& str);
+    static bool trim_editor_hit_object(QString& str);
 
 	// Clones the object
-    virtual std::shared_ptr<OsuObject> clone() const;
+    virtual QSharedPointer<OsuObject> clone() const;
 
     enum NOTE_TYPE {
         NORMAL = 1,

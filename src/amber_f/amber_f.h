@@ -11,12 +11,12 @@
 
 	There are 2 ways to represent hit_object_v AND timing_point_v in a type
 	
-	1) std::shared_ptr<osu_object_v<T = hit_object/timing_point>> (Recommended)
+    1) QSharedPointer<osu_object_v<T = hit_object/timing_point>> (Recommended)
         + You get to use functions implemented in ObjV<T> class
 		- Polymorphism may be a bit messy and confusing
 		- Longer type name
 
-	2) std::vector<T = hit_object/timing_point> 
+    2) QVector<T = hit_object/timing_point>
 		+ Shorter type name
 		+ Simpler to use
 		- No custom defined functions to use
@@ -34,7 +34,7 @@
 template<typename T>
 using ObjV = OsuObjectV<T>;
 
-typedef std::vector<double> doublev;
+typedef QVector<double> doublev;
 typedef unsigned int uint;
 
 namespace amber_f
@@ -80,7 +80,7 @@ namespace amber_f
 	}
 
     template <typename T>
-    std::shared_ptr<ObjV<T>> copy(T obj,
+    QSharedPointer<ObjV<T>> copy(T obj,
                                   const doublev& copy_to_v,
                                   bool sort = true) {
         // [0][1] IN
@@ -112,7 +112,7 @@ namespace amber_f
 	}
 
     template <typename T>
-    std::shared_ptr<ObjV<T>> copy(ObjV<T> const* obj_v,
+    QSharedPointer<ObjV<T>> copy(ObjV<T> const* obj_v,
                                   doublev copy_to_v,
                                   bool anchor_front = true,
                                   bool sort = true) {
@@ -145,7 +145,7 @@ namespace amber_f
 	}
 
 	template <typename T>
-    std::shared_ptr<ObjV<T>> copy_delay(ObjV<T> const* obj_v,
+    QSharedPointer<ObjV<T>> copy_delay(ObjV<T> const* obj_v,
                                         doublev offset_v,
                                         bool include) {
         // <0>   <1>   <2> IN
@@ -249,7 +249,7 @@ namespace amber_f
 
 
 	template <typename T>
-    std::shared_ptr<ObjV<T>> copy_subd_by(doublev offset_v,
+    QSharedPointer<ObjV<T>> copy_subd_by(doublev offset_v,
                                           const T& obj_define,
                                           uint subdivisions,
                                           bool include) {
@@ -262,7 +262,7 @@ namespace amber_f
 	}
 
 	template <typename T>
-    std::shared_ptr<ObjV<T>> copy_subd_by(ObjV<T> const* obj_v,
+    QSharedPointer<ObjV<T>> copy_subd_by(ObjV<T> const* obj_v,
                                           uint subdivisions,
                                           bool include) {
         // <0>   <1>   <2> IN
@@ -325,7 +325,7 @@ namespace amber_f
     }
 
     template <typename T>
-    std::shared_ptr<ObjV<T>> copy_subd_to(doublev offset_v,
+    QSharedPointer<ObjV<T>> copy_subd_to(doublev offset_v,
                                           const T& obj_define,
                                           uint subdivision_len,
                                           bool include) {
@@ -339,7 +339,7 @@ namespace amber_f
     }
 
     template <typename T>
-    std::shared_ptr<ObjV<T>> copy_subd_to(ObjV<T> const* obj_v,
+    QSharedPointer<ObjV<T>> copy_subd_to(ObjV<T> const* obj_v,
                                           uint subdivision_len,
                                           bool include) {
         // <0>   <1>   <2> IN
@@ -397,7 +397,7 @@ namespace amber_f
 	}
 
 	template <typename T>
-    std::shared_ptr<ObjV<T>> copy_rel(const doublev offset_v,
+    QSharedPointer<ObjV<T>> copy_rel(const doublev offset_v,
                                       const T obj_define,
                                       double relativity,
                                       bool include) {
@@ -412,7 +412,7 @@ namespace amber_f
 	}
 
 	template <typename T>
-    std::shared_ptr<ObjV<T>> copy_rel(ObjV<T> const* obj_v,
+    QSharedPointer<ObjV<T>> copy_rel(ObjV<T> const* obj_v,
                                       double relativity,
                                       bool include) {
         // <0>   <1>   <2> IN
@@ -488,7 +488,7 @@ namespace amber_f
 
 
 	template <typename T>
-    std::shared_ptr<ObjV<T>> copy_abs(const doublev offset_v,
+    QSharedPointer<ObjV<T>> copy_abs(const doublev offset_v,
                                       const T obj_define,
                                       double relativity,
                                       bool include,
@@ -504,7 +504,7 @@ namespace amber_f
 
 
 	template <typename T>
-    std::shared_ptr<ObjV<T>> copy_abs(ObjV<T> const* obj_v,
+    QSharedPointer<ObjV<T>> copy_abs(ObjV<T> const* obj_v,
                                       double relativity,
                                       bool include,
                                       bool relative_frofront = true,
@@ -538,7 +538,7 @@ namespace amber_f
         // include_with defines if the created tps exports alongside the original
 
         TimingPointV output = include_with ? tp_v : TimingPointV();
-        tp_v = tp_v.get_bponly();
+        tp_v = tp_v.get_bpm_only();
 		if (tp_v.size() == 0) {
             throw ReamberException("tp_v BPM size is 0");
 		}
@@ -737,7 +737,7 @@ namespace amber_f
 	}
 
 	template <typename T>
-    std::shared_ptr<ObjV<T>> extract_nth(ObjV<T> const* obj_v,
+    QSharedPointer<ObjV<T>> extract_nth(ObjV<T> const* obj_v,
                                          uint n,
                                          uint offset = 0) {
 
@@ -754,7 +754,7 @@ namespace amber_f
         return std::make_shared<ObjV<T>>(obj_v_c);
 	}
 	template <typename T>
-    std::shared_ptr<ObjV<T>> delete_nth(ObjV<T> const* obj_v,
+    QSharedPointer<ObjV<T>> delete_nth(ObjV<T> const* obj_v,
                                         uint n,
                                         uint offset = 0) {
 

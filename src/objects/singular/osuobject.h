@@ -7,6 +7,7 @@
 #endif
 
 #include <QString>
+#include <QSharedPointer>
 
 // Defines the any object in the rhythm game
 
@@ -17,7 +18,7 @@ public:
 	double get_offset() const;
     void set_offset(double value);
 
-    virtual std::shared_ptr<OsuObject> clone() const = 0;
+    virtual QSharedPointer<OsuObject> clone() const = 0;
 
     enum class SAMPLE_SET {
         AUTO,
@@ -35,8 +36,6 @@ protected: // only allow inherited classes use the constructor
 
     OsuObject();
     OsuObject(double new_offset);
-    OsuObject(const OsuObject &obj) {
-		offset = obj.offset;
-	}
+    OsuObject(const OsuObject &obj);
     double offset; // defines the offset in ms
 };

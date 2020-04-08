@@ -81,7 +81,7 @@ public:
 	static double convert_value_to_code(double value, bool is_bpm);
 
 	// Clones the object
-    virtual std::shared_ptr<OsuObject> clone() const;
+    virtual QSharedPointer<OsuObject> clone() const;
 
 private:
 

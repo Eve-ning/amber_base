@@ -1,5 +1,6 @@
 #include "timingpointv.h"
 #include <algorithm>
+#include <QVector>
 #include "../../amber_privf/splitstring.h"
 
 TimingPointV::TimingPointV() : OsuObjectV()
@@ -12,13 +13,12 @@ TimingPointV::TimingPointV(unsigned int amount) {
 	load_defaults(amount);
 }
 
-bool TimingPointV::load_raw_timing_point(QString str,
-                                         char delimeter)
-{
+bool TimingPointV::load_raw_timing_point(const QString &str,
+                                         char delimeter) {
     return load_raw_timing_point(SplitString::by_delimeter(str, delimeter));
 }
 
-bool TimingPointV::load_raw_timing_point(std::vector<QString> str_v)
+bool TimingPointV::load_raw_timing_point(QVector<QString> str_v)
 {
     for (QString str : str_v) {
         TimingPoint tp;
@@ -44,7 +44,7 @@ TimingPointV TimingPointV::get_sv_only() const {
 
 // Gets bpm only in a vector form
 
-TimingPointV TimingPointV::get_bponly() const {
+TimingPointV TimingPointV::get_bpm_only() const {
     TimingPointV output = TimingPointV();
 	for (const auto &tp : object_v) {
 		if (tp.get_is_bpm()) {
@@ -56,8 +56,8 @@ TimingPointV TimingPointV::get_bponly() const {
 
 // Gets all values
 
-std::vector<double> TimingPointV::get_value_v() const {
-	std::vector<double> value_v = {};
+QVector<double> TimingPointV::get_value_v() const {
+    QVector<double> value_v = {};
 	for (const auto &tp : object_v) {
 		value_v.push_back(tp.get_value());
 	}
@@ -69,7 +69,7 @@ double TimingPointV::get_average_sv_value() const {
     return get_average_value(false);
 }
 
-double TimingPointV::get_average_bpvalue() const {
+double TimingPointV::get_average_bpm_value() const {
     return get_average_value(true);
 }
 
@@ -137,7 +137,7 @@ void TimingPointV::operator -=(double par) {
 
 double TimingPointV::get_average_value(bool is_bpm) const {
 
-    TimingPointV tp_v = is_bpm ? get_bponly() : get_sv_only();
+    TimingPointV tp_v = is_bpm ? get_bpm_only() : get_sv_only();
     if (tp_v.size() <= 0) {
         return 0;
     }

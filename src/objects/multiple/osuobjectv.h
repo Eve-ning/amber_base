@@ -6,6 +6,8 @@
 #include "../singular/hitobject.h"
 #include <vector>
 #include <algorithm>
+#include <QSharedPointer>
+#include <QVector>
 
 template <class obj_type>
 class OsuObjectV
@@ -16,7 +18,7 @@ public:
 
 	// Clones the vector of shared_ptrs
 	// Any template argument will work in order to access this static function
-    static std::shared_ptr<OsuObjectV<obj_type>> clone_obj_v(OsuObjectV<obj_type> const* obj_v) {
+    static QSharedPointer<OsuObjectV<obj_type>> clone_obj_v(OsuObjectV<obj_type> const* obj_v) {
         OsuObjectV<obj_type> obj_v_copy;
 
 		// This makes a copy of the obj_sptr_v by dereferencing every element and creating
@@ -32,11 +34,11 @@ public:
 	//// Explicit Loading
 
 	// Loads from a sptr vector
-	virtual void load_obj_sptr(std::vector<std::shared_ptr<OsuObject>> obj_sptr_v) {
+    virtual void load_obj_sptr(QVector<QSharedPointer<OsuObject>> obj_sptr_v) {
 		// Empty our current vector
 		object_v = {};
 
-		for (std::shared_ptr<OsuObject> obj : obj_sptr_v) {
+        for (QSharedPointer<OsuObject> obj : obj_sptr_v) {
 			object_v.push_back(*std::dynamic_pointer_cast<obj_type>(obj));
 		}
 	}
@@ -54,8 +56,8 @@ public:
 
 	// Get the vector of strings compatible to .osu format
 	// hit_object_v this will fail if keys = 0
-    std::vector<QString> get_string_raw_v() const {
-        std::vector<QString> output = {};
+    QVector<QString> get_string_raw_v() const {
+        QVector<QString> output = {};
 		std::transform(object_v.begin(), object_v.end(),
 			std::back_inserter(output), [&](const obj_type &obj) {
 			return obj.get_string_raw();
@@ -76,17 +78,17 @@ public:
 	}
 
 	// Gets the object vector
-	std::vector<obj_type> get_object_v() const {
+	QVector<obj_type> get_object_v() const {
 		return object_v;
 	}
 	// Sets the object vector
-	void set_object_v(std::vector<obj_type> object_v) {
+	void set_object_v(QVector<obj_type> object_v) {
         this->object_v = object_v;
 	}
 
 	// Specify if offset_v should have duplicates in make_unique
-	std::vector<double> get_offset_v(bool make_unique = false) const {
-		std::vector<double> offset_v = {};
+	QVector<double> get_offset_v(bool make_unique = false) const {
+		QVector<double> offset_v = {};
 		std::transform(begin(), end(), std::back_inserter(offset_v), [](const obj_type &obj) {
 			return obj.get_offset();
 		});
@@ -168,7 +170,7 @@ public:
 		object_v.pop_back();
 	}
 
-    OsuObjectV& operator =(std::vector<std::shared_ptr<OsuObject>> obj_sptr_v) {
+    OsuObjectV& operator =(QVector<QSharedPointer<OsuObject>> obj_sptr_v) {
 		load_obj_sptr(obj_sptr_v);
 		return *this;
 	}
@@ -214,6 +216,7 @@ public:
 
 		while (self_it != end() && eff_it != eff_obj_v.end()) {
 
+            auto e = eff_obj_v.end();
 			// Case: self < eff
 			// Do: self ++
 			if (self_it->get_offset() < eff_it->get_offset()) {
@@ -222,8 +225,8 @@ public:
 			}
 			// Case: self >= eff_next > eff
 			// Pre-condition of checking eff_next is if it is in range
-			// Do: eff ++
-			else if (eff_it != --eff_obj_v.end() && // Make sure it isn't the last element
+            // Do: eff ++
+            else if (eff_it != --e && // Make sure it isn't the last element
 				self_it->get_offset() >= (eff_it + 1)->get_offset()) { // self >= eff_next
 				eff_it++;
 				continue;
@@ -239,10 +242,10 @@ public:
 	}
 
 	// Direct all iterator functions to the vector
-	typename std::vector<obj_type>::iterator begin() { return object_v.begin(); }
-	typename std::vector<obj_type>::iterator end() { return object_v.end(); }
-	typename std::vector<obj_type>::const_iterator begin() const { return object_v.cbegin(); }
-	typename std::vector<obj_type>::const_iterator end() const { return object_v.cend(); }
+	typename QVector<obj_type>::iterator begin() { return object_v.begin(); }
+	typename QVector<obj_type>::iterator end() { return object_v.end(); }
+	typename QVector<obj_type>::const_iterator begin() const { return object_v.cbegin(); }
+	typename QVector<obj_type>::const_iterator end() const { return object_v.cend(); }
 
 	obj_type front() const { return object_v.front(); }
 	obj_type back() const { return object_v.back(); }
@@ -257,7 +260,7 @@ public:
 
 protected:
 	
-	std::vector<obj_type> object_v;
+	QVector<obj_type> object_v;
 
 };
 

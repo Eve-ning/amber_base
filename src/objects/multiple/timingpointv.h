@@ -26,21 +26,21 @@ public:
 	//// Explicit Loading
 
 	// Loads from data from the .osu file as one whole string
-    bool load_raw_timing_point(QString str, char delimeter = '\n');
+    bool load_raw_timing_point(const QString& str, char delimeter = '\n');
 
 	// Loads from data from the .osu file as a vector
-    bool load_raw_timing_point(std::vector<QString> str_v);
+    bool load_raw_timing_point(QVector<QString> str_v);
 
 	// Gets sv only in a vector form
 	TimingPointV get_sv_only() const;
 			
 	// Gets bpm only in a vector form
-	TimingPointV get_bponly() const;
+    TimingPointV get_bpm_only() const;
 
 	// Gets all values
-	std::vector<double> get_value_v() const;
+    QVector<double> get_value_v() const;
     double get_average_sv_value() const;
-    double get_average_bpvalue() const;
+    double get_average_bpm_value() const;
 
 	// Cross multiplies the tp_vs
 	void cross_effect_multiply(TimingPointV eff_tp_v);

@@ -35,17 +35,17 @@ public:
 
 	// Loads from data from the .osu file as a vector
 	// Key count is required for conversion to columns
-    bool load_raw_hit_object(std::vector<QString> str_v, unsigned int keys);
+    bool load_raw_hit_object(QVector<QString> str_v, unsigned int keys);
 
 	//// Exporting
 
 	// Get the vector of strings compatible to .osu format
 	// This variant is to override and set the current keys if user failed the other variant
 	// Note that this will override all keys set initially
-    std::vector<QString> get_string_raw_v(unsigned int keys);
+    QVector<QString> get_string_raw_v(unsigned int keys);
 
 	// Gets column in a vector form
-	std::vector<unsigned int> get_column_v() const;
+    QVector<unsigned int> get_column_v() const;
 
 	// Gets notes only in a vector form
 	HitObjectV get_notes_only() const;

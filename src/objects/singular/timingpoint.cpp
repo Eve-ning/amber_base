@@ -25,7 +25,7 @@ bool TimingPoint::load_raw_timing_point(QString str)
     // We append this so that the while loop continues till the end
     str.push_back(',');
 
-    std::vector<QString> timing_point_comma_v = {};
+    QVector<QString> timing_point_comma_v = {};
 
 	// Split string by comma
     timing_point_comma_v = SplitString::by_delimeter(str, ',');
@@ -135,8 +135,8 @@ double TimingPoint::convert_value_to_code(double value,
 
 // Clones the object
 
-std::shared_ptr<OsuObject> TimingPoint::clone() const {
+QSharedPointer<OsuObject> TimingPoint::clone() const {
     TimingPoint tp;
 	tp = *this;
-    return std::make_shared<TimingPoint>(tp);
+    return QSharedPointer<TimingPoint>::create(tp);
 }
