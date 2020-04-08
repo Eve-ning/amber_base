@@ -7,23 +7,23 @@
 
 HitObject::HitObject() :
     column (0),
-    y_axis (192),
-    note_type (NOTE_TYPE::NORMAL),
-    hitsound_set (SAMPLE_SET::AUTO),
-    ln_end (0),
-    sample_set (SAMPLE_SET::AUTO),
-    addition_set (SAMPLE_SET::AUTO),
-    custom_set (SAMPLE_SET::AUTO),
+    yAxis (192),
+    noteType (NOTE_TYPE::NORMAL),
+    hitsoundSet (SAMPLE_SET::AUTO),
+    lnEnd (0),
+    sampleSet (SAMPLE_SET::AUTO),
+    additionSet (SAMPLE_SET::AUTO),
+    customSet (SAMPLE_SET::AUTO),
     volume (50),
-    hitsound_file (""),
+    hitsoundFile (""),
     keys (4){}
 
-bool HitObject::load_editor_hit_object(QString str,
+bool HitObject::loadEditorHitObject(QString str,
                                         unsigned int keys,
                                         unsigned int index)
 {
 	// Remove the brackets
-    if (!trim_editor_hit_object(str)){
+    if (!trimEditorHitObject(str)){
         std::cout << "This is not a valid Editor Hit Object string." << std::endl;
         return false;
     }
@@ -62,7 +62,7 @@ bool HitObject::load_editor_hit_object(QString str,
     return true;
 }
 
-bool HitObject::load_raw_hit_object(QString str,
+bool HitObject::loadRawHitObject(QString str,
                                      unsigned int keys)
 {
     int count_comma = 0;
@@ -95,31 +95,31 @@ bool HitObject::load_raw_hit_object(QString str,
 
     switch (count_colon) {
     case 4:
-        column        = convert_x_axis_to_column(hit_object_comma_v[0].toUInt(), keys);
-        y_axis        = hit_object_comma_v[1].toUInt();
+        column        = convertXAxisToColumn(hit_object_comma_v[0].toUInt(), keys);
+        yAxis        = hit_object_comma_v[1].toUInt();
         offset        = hit_object_comma_v[2].toInt();
-        note_type     = hit_object_comma_v[3].toUInt();
-        hitsound_set  = static_cast<OsuObject::SAMPLE_SET>(hit_object_comma_v[4].toInt());
-        sample_set    = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[0].toInt());
-        addition_set  = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[1].toInt());
-        custom_set    = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[2].toInt());
+        noteType     = hit_object_comma_v[3].toUInt();
+        hitsoundSet  = static_cast<OsuObject::SAMPLE_SET>(hit_object_comma_v[4].toInt());
+        sampleSet    = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[0].toInt());
+        additionSet  = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[1].toInt());
+        customSet    = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[2].toInt());
         volume        = hit_object_colon_v[3].toUInt();
-        hitsound_file = hit_object_colon_v[4];
+        hitsoundFile = hit_object_colon_v[4];
 
         // ln_end is 0 as by constructor
         break;
     case 5:
-        column        = convert_x_axis_to_column(hit_object_comma_v[0].toUInt(), keys);
-        y_axis        = hit_object_comma_v[1].toUInt();
+        column        = convertXAxisToColumn(hit_object_comma_v[0].toUInt(), keys);
+        yAxis        = hit_object_comma_v[1].toUInt();
         offset        = hit_object_comma_v[2].toDouble();
-        note_type     = hit_object_comma_v[3].toUInt();
-        hitsound_set  = static_cast<OsuObject::SAMPLE_SET>(hit_object_comma_v[4].toInt());
-        ln_end        = hit_object_colon_v[0].toDouble();
-        sample_set    = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[1].toInt());
-        addition_set  = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[2].toInt());
-        custom_set    = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[3].toInt());
+        noteType     = hit_object_comma_v[3].toUInt();
+        hitsoundSet  = static_cast<OsuObject::SAMPLE_SET>(hit_object_comma_v[4].toInt());
+        lnEnd        = hit_object_colon_v[0].toDouble();
+        sampleSet    = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[1].toInt());
+        additionSet  = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[2].toInt());
+        customSet    = static_cast<OsuObject::SAMPLE_SET>(hit_object_colon_v[3].toInt());
         volume        = hit_object_colon_v[4].toUInt();
-        hitsound_file = hit_object_colon_v[5];
+        hitsoundFile = hit_object_colon_v[5];
 
         break;
     default:
@@ -129,14 +129,14 @@ bool HitObject::load_raw_hit_object(QString str,
     return true;
 }
 
-bool HitObject::load_parameters(unsigned int column,
+bool HitObject::loadParameters(unsigned int column,
                                  double offset,
                                  unsigned int ln_end,
                                  unsigned int keys){
     this->column = column;
     this->offset = offset;
-    this->ln_end = ln_end;
-    if (ln_end != 0) note_type = NOTE_TYPE::LN;
+    this->lnEnd = ln_end;
+    if (ln_end != 0) noteType = NOTE_TYPE::LN;
     if (ln_end != 0 && ln_end < offset){
         // Throw if Long Note End is before Long Note Head unless it's 0
         QString ln_end_str = QString::number(ln_end),
@@ -148,7 +148,7 @@ bool HitObject::load_parameters(unsigned int column,
     return true;
 }
 
-void HitObject::load_parameters(unsigned int column,
+void HitObject::loadParameters(unsigned int column,
                                  unsigned int y_axis,
                                  double offset,
                                  unsigned int note_type,
@@ -161,92 +161,92 @@ void HitObject::load_parameters(unsigned int column,
                                  QString hitsound_file,
                                  unsigned int keys) {
     this->column = column;
-    this->y_axis = y_axis;
+    this->yAxis = y_axis;
     this->offset = offset;
-    this->note_type = note_type;
-    this->hitsound_set = hitsound_set;
-    this->ln_end = ln_end;
-    this->sample_set = sample_set;
-    this->addition_set = addition_set;
-    this->custom_set = custom_set;
+    this->noteType = note_type;
+    this->hitsoundSet = hitsound_set;
+    this->lnEnd = ln_end;
+    this->sampleSet = sample_set;
+    this->additionSet = addition_set;
+    this->customSet = custom_set;
     this->volume = volume;
-    this->hitsound_file = hitsound_file;
+    this->hitsoundFile = hitsound_file;
     this->keys = keys;
 }
 
 bool HitObject::operator ==(const HitObject & ho) const {
 	return (
 		column == ho.column &&
-		y_axis == ho.y_axis &&
-		note_type == ho.note_type &&
-		hitsound_set == ho.hitsound_set &&
-        qFuzzyCompare(ln_end, ho.ln_end) &&
-        sample_set == ho.sample_set &&
-		addition_set == ho.addition_set &&
-        custom_set == ho.custom_set &&
+		yAxis == ho.yAxis &&
+		noteType == ho.noteType &&
+		hitsoundSet == ho.hitsoundSet &&
+        qFuzzyCompare(lnEnd, ho.lnEnd) &&
+        sampleSet == ho.sampleSet &&
+		additionSet == ho.additionSet &&
+        customSet == ho.customSet &&
 		volume == ho.volume &&
-		hitsound_file == ho.hitsound_file &&
+		hitsoundFile == ho.hitsoundFile &&
 		keys == ho.keys
 		);
 }
 
-QString HitObject::get_string_raw() const
+QString HitObject::getStringRaw() const
 {
     QString output =
-        QString::number(convert_column_to_x_axis(column, keys)) + "," +
-        QString::number(y_axis) + "," +
+        QString::number(convertColumnToXAxis(column, keys)) + "," +
+        QString::number(yAxis) + "," +
         QString::number(offset) + "," +
-        QString::number(note_type) + "," +
-        QString::number(static_cast<unsigned int>(hitsound_set)) + "," +
-        (ln_end == 0.0 ? "" : (QString::number(ln_end) + ":")) + // If it's a note, ln_end == 0
-        QString::number(static_cast<unsigned int>(sample_set)) + ":" +
-        QString::number(static_cast<unsigned int>(addition_set)) + ":" +
-        QString::number(static_cast<unsigned int>(custom_set)) + ":" +
+        QString::number(noteType) + "," +
+        QString::number(static_cast<unsigned int>(hitsoundSet)) + "," +
+        (lnEnd == 0.0 ? "" : (QString::number(lnEnd) + ":")) + // If it's a note, ln_end == 0
+        QString::number(static_cast<unsigned int>(sampleSet)) + ":" +
+        QString::number(static_cast<unsigned int>(additionSet)) + ":" +
+        QString::number(static_cast<unsigned int>(customSet)) + ":" +
         QString::number(volume) + ":" +
-		hitsound_file;
+		hitsoundFile;
 	
 	return output;
 }
 
-QString HitObject::get_string_raw(unsigned int keys){
+QString HitObject::getStringRaw(unsigned int keys){
     this->keys = keys;
-	return get_string_raw(); // Call no-arg function
+	return getStringRaw(); // Call no-arg function
 }
 
-unsigned int HitObject::get_column() const { return column; }
-void HitObject::set_column(unsigned int column){this->column = column; }
-unsigned int HitObject::get_y_axis() const { return y_axis; }
-void HitObject::set_y_axis(unsigned int y_axis){this->y_axis = y_axis; }
-unsigned int HitObject::get_note_type() const { return note_type; }
-void HitObject::set_note_type(unsigned int note_type){this->note_type = note_type; }
-OsuObject::SAMPLE_SET HitObject::get_sample_set() const { return sample_set; }
-void HitObject::set_sample_set(const SAMPLE_SET &sample_set){this->sample_set = sample_set; }
-OsuObject::SAMPLE_SET HitObject::get_addition_set() const { return addition_set; }
-void HitObject::set_addition_set(const SAMPLE_SET &addition_set){this->addition_set = addition_set; }
-OsuObject::SAMPLE_SET HitObject::get_custom_set() const { return this->custom_set; }
-void HitObject::set_custom_set(const SAMPLE_SET &custom_set){this->custom_set = custom_set; }
-unsigned int HitObject::get_volume() const { return volume; }
-void HitObject::set_volume(unsigned int volume){this->volume = volume; }
-QString HitObject::get_hitsound_file() const { return hitsound_file; }
-void HitObject::set_hitsound_file(const QString &hitsound_file){this->hitsound_file = hitsound_file; }
-unsigned int HitObject::get_keys() const { return keys; }
-void HitObject::set_keys(unsigned int keys){this->keys = keys; }
-double HitObject::get_ln_end() const { return ln_end; }
-void HitObject::set_ln_end(double ln_end){this->ln_end = ln_end; }
-bool HitObject::get_is_note() const {return (ln_end == 0.0); }
-bool HitObject::get_is_long_note() const {return !get_is_note(); }
+unsigned int HitObject::getColumn() const { return column; }
+void HitObject::setColumn(unsigned int column){this->column = column; }
+unsigned int HitObject::getYAxis() const { return yAxis; }
+void HitObject::setYAxis(unsigned int y_axis){this->yAxis = y_axis; }
+unsigned int HitObject::getNoteType() const { return noteType; }
+void HitObject::setNoteType(unsigned int note_type){this->noteType = note_type; }
+OsuObject::SAMPLE_SET HitObject::getSampleSet() const { return sampleSet; }
+void HitObject::setSampleSet(const SAMPLE_SET &sample_set){this->sampleSet = sample_set; }
+OsuObject::SAMPLE_SET HitObject::getAdditionSet() const { return additionSet; }
+void HitObject::setAdditionSet(const SAMPLE_SET &addition_set){this->additionSet = addition_set; }
+OsuObject::SAMPLE_SET HitObject::getCustomSet() const { return this->customSet; }
+void HitObject::setCustomSet(const SAMPLE_SET &custom_set){this->customSet = custom_set; }
+unsigned int HitObject::getVolume() const { return volume; }
+void HitObject::setVolume(unsigned int volume){this->volume = volume; }
+QString HitObject::getHitsoundFile() const { return hitsoundFile; }
+void HitObject::setHitsoundFile(const QString &hitsound_file){this->hitsoundFile = hitsound_file; }
+unsigned int HitObject::getKeys() const { return keys; }
+void HitObject::setKeys(unsigned int keys){this->keys = keys; }
+double HitObject::getLnEnd() const { return lnEnd; }
+void HitObject::setLnEnd(double ln_end){this->lnEnd = ln_end; }
+bool HitObject::getIsNote() const {return (lnEnd == 0.0); }
+bool HitObject::getIsLongNote() const {return !getIsNote(); }
 
-unsigned int HitObject::convert_column_to_x_axis(unsigned int column,
+unsigned int HitObject::convertColumnToXAxis(unsigned int column,
                                                   unsigned int keys) {
 	return static_cast<unsigned int>(round(((512 * column) + 256) / keys));
 }
 
-unsigned int HitObject::convert_x_axis_to_column(unsigned int x_axis,
+unsigned int HitObject::convertXAxisToColumn(unsigned int x_axis,
                                                   unsigned int keys) {
 	return static_cast<unsigned int>(round((x_axis * keys - 256) / 512));
 }
 
-bool HitObject::trim_editor_hit_object(QString& str)
+bool HitObject::trimEditorHitObject(QString& str)
 {
 	// Validate the str
 	// If either of these characters are not found, it's not valid
@@ -269,12 +269,12 @@ QSharedPointer<OsuObject> HitObject::clone() const {
     return QSharedPointer<HitObject>::create(ho);
 }
 
-OsuObject::SAMPLE_SET HitObject::get_hitsound_set() const
+OsuObject::SAMPLE_SET HitObject::getHitsoundSet() const
 {
-    return hitsound_set;
+    return hitsoundSet;
 }
 
-void HitObject::set_hitsound_set(const SAMPLE_SET &hitsound_set)
+void HitObject::setHitsoundSet(const SAMPLE_SET &hitsound_set)
 {
-    this->hitsound_set = hitsound_set;
+    this->hitsoundSet = hitsound_set;
 }

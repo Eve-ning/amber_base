@@ -27,36 +27,36 @@ public:
 	// Loads from data from the editor
 	// Do not skip keys if you want to export to .osu
 	// Specify index to use if you are inputting multiple editor hit objects
-    bool load_editor_hit_object(QString str, unsigned int keys = 0, unsigned int index = 0);
+    bool loadEditorHitObject(QString str, unsigned int keys = 0, unsigned int index = 0);
 
 	// Loads from data from the .osu file
 	// Key count is required for conversion to columns
-    bool load_raw_hit_object(QString str, unsigned int keys);
+    bool loadRawHitObject(QString str, unsigned int keys);
 
 	// Loads parameters manually (Simple)
 	// Column starts from 0
 	// ln_end = 0 for Normal Notes
 	// Do not skip keys if you want to export to .osu
-    bool load_parameters(unsigned int column,
+    bool loadParameters(unsigned int column,
                          double offset,
-                         unsigned int ln_end = 0,
+                         unsigned int lnEnd = 0,
                          unsigned int keys = 0);
 
 	// Loads parameters manually (Advanced)
 	// Column starts from 0
 	// ln_end = 0 for Normal Notes
 	// Do not skip keys if you want to export to .osu
-	void load_parameters(unsigned int column, // Starts from 0
-						 unsigned int y_axis,
+    void loadParameters(unsigned int column, // Starts from 0
+                         unsigned int yAxis,
 						 double offset,
-						 unsigned int note_type, // 1: Note, 128: Long Note
-                         SAMPLE_SET hitsound_set,
-						 double ln_end, // If note, ln_end = 0,
+                         unsigned int noteType, // 1: Note, 128: Long Note
+                         SAMPLE_SET hitsoundSet,
+                         double lnEnd, // If note, ln_end = 0,
                          SAMPLE_SET SAMPLE_SET_,
-                         SAMPLE_SET addition_set,
-                         SAMPLE_SET custom_set,
+                         SAMPLE_SET additionSet,
+                         SAMPLE_SET customSet,
 						 unsigned int volume,
-                         QString hitsound_file,
+                         QString hitsoundFile,
 						 unsigned int keys);
 
 	// Checks if all variables match
@@ -66,55 +66,55 @@ public:
 
 	// Get the string compatible to .osu format
     // This will fail if keys = 0
-    virtual QString get_string_raw() const;
+    virtual QString getStringRaw() const;
 
 	// Get the string compatible to .osu format
     // This variant is to override and set the current keys if user failed the other variant
-    virtual QString get_string_raw(unsigned int keys);
+    virtual QString getStringRaw(unsigned int keys);
 
     //// Getter and Setters
 
-    unsigned int get_column() const;
-    void set_column(unsigned int column);
+    unsigned int getColumn() const;
+    void setColumn(unsigned int column);
 
-    unsigned int get_y_axis() const;
-    void set_y_axis(unsigned int y_axis);
+    unsigned int getYAxis() const;
+    void setYAxis(unsigned int yAxis);
 
-    unsigned int get_note_type() const;
-    void set_note_type(unsigned int note_type);
+    unsigned int getNoteType() const;
+    void setNoteType(unsigned int noteType);
 
-    SAMPLE_SET get_hitsound_set() const;
-    void set_hitsound_set(const SAMPLE_SET &hitsound_set);
+    SAMPLE_SET getHitsoundSet() const;
+    void setHitsoundSet(const SAMPLE_SET &hitsoundSet);
 
-    SAMPLE_SET get_sample_set() const;
-    void set_sample_set(const SAMPLE_SET &SAMPLE_SET);
+    SAMPLE_SET getSampleSet() const;
+    void setSampleSet(const SAMPLE_SET &SAMPLE_SET);
 
-    enum SAMPLE_SET get_addition_set() const;
-    void set_addition_set(const SAMPLE_SET &addition_set);
+    enum SAMPLE_SET getAdditionSet() const;
+    void setAdditionSet(const SAMPLE_SET &additionSet);
 
-    enum SAMPLE_SET get_custom_set() const;
-    void set_custom_set(const SAMPLE_SET &custom_set);
+    enum SAMPLE_SET getCustomSet() const;
+    void setCustomSet(const SAMPLE_SET &customSet);
 
-    unsigned int get_volume() const;
-    void set_volume(unsigned int volume);
+    unsigned int getVolume() const;
+    void setVolume(unsigned int volume);
 
-    QString get_hitsound_file() const;
-    void set_hitsound_file(const QString &hitsound_file);
+    QString getHitsoundFile() const;
+    void setHitsoundFile(const QString &hitsoundFile);
 
-    unsigned int get_keys() const;
-    void set_keys(unsigned int keys);
+    unsigned int getKeys() const;
+    void setKeys(unsigned int keys);
 
-    double get_ln_end() const;
-    void set_ln_end(double ln_end);
+    double getLnEnd() const;
+    void setLnEnd(double lnEnd);
 
-	bool get_is_note() const;
-	bool get_is_long_note() const;
+    bool getIsNote() const;
+    bool getIsLongNote() const;
 
-	static unsigned int convert_column_to_x_axis(unsigned int column, unsigned int keys);
-	static unsigned int convert_x_axis_to_column(unsigned int x_axis, unsigned int keys);
+    static unsigned int convertColumnToXAxis(unsigned int column, unsigned int keys);
+    static unsigned int convertXAxisToColumn(unsigned int x_axis, unsigned int keys);
 
 	// Removes the brackets on the editor hitobject
-    static bool trim_editor_hit_object(QString& str);
+    static bool trimEditorHitObject(QString& str);
 
 	// Clones the object
     virtual QSharedPointer<OsuObject> clone() const;
@@ -127,15 +127,15 @@ public:
 private:
 
     unsigned int column; // Starts from 0
-    unsigned int y_axis;
-    unsigned int note_type; // 1: Note, 128: Long Note
-    SAMPLE_SET hitsound_set;
-    double ln_end; // If note, ln_end = 0;
-    SAMPLE_SET sample_set;
-    SAMPLE_SET addition_set;
-    SAMPLE_SET custom_set;
+    unsigned int yAxis;
+    unsigned int noteType; // 1: Note, 128: Long Note
+    SAMPLE_SET hitsoundSet;
+    double lnEnd; // If note, ln_end = 0;
+    SAMPLE_SET sampleSet;
+    SAMPLE_SET additionSet;
+    SAMPLE_SET customSet;
     unsigned int volume;
-    QString hitsound_file;
+    QString hitsoundFile;
     unsigned int keys;
 
 };

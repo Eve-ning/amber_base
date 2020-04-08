@@ -13,16 +13,16 @@ TimingPointV::TimingPointV(unsigned int amount) {
 	load_defaults(amount);
 }
 
-bool TimingPointV::load_raw_timing_point(const QString &str,
+bool TimingPointV::loadRawTimingPoint(const QString &str,
                                          char delimeter) {
-    return load_raw_timing_point(SplitString::by_delimeter(str, delimeter));
+    return loadRawTimingPoint(SplitString::by_delimeter(str, delimeter));
 }
 
-bool TimingPointV::load_raw_timing_point(QVector<QString> str_v)
+bool TimingPointV::loadRawTimingPoint(QVector<QString> str_v)
 {
     for (QString str : str_v) {
         TimingPoint tp;
-        if (!tp.load_raw_timing_point(str)) {
+        if (!tp.loadRawTimingPoint(str)) {
             return false;
         }; // Load by string
 		object_v.push_back(tp); // Push back to private member
@@ -32,10 +32,10 @@ bool TimingPointV::load_raw_timing_point(QVector<QString> str_v)
 
 // Gets sv only in a vector form
 
-TimingPointV TimingPointV::get_sv_only() const {
+TimingPointV TimingPointV::getSvOnly() const {
     TimingPointV output = TimingPointV();
 	for (const auto &tp : object_v) {
-		if (tp.get_is_sv()) {
+        if (tp.getIsSv()) {
 			output.push_back(tp);
 		}
 	}
@@ -44,10 +44,10 @@ TimingPointV TimingPointV::get_sv_only() const {
 
 // Gets bpm only in a vector form
 
-TimingPointV TimingPointV::get_bpm_only() const {
+TimingPointV TimingPointV::getBpmOnly() const {
     TimingPointV output = TimingPointV();
 	for (const auto &tp : object_v) {
-		if (tp.get_is_bpm()) {
+        if (tp.getIsBpm()) {
 			output.push_back(tp);
 		}
 	}
@@ -56,34 +56,34 @@ TimingPointV TimingPointV::get_bpm_only() const {
 
 // Gets all values
 
-QVector<double> TimingPointV::get_value_v() const {
+QVector<double> TimingPointV::getValueV() const {
     QVector<double> value_v = {};
 	for (const auto &tp : object_v) {
-		value_v.push_back(tp.get_value());
+        value_v.push_back(tp.getValue());
 	}
 
 	return value_v;
 }
 
-double TimingPointV::get_average_sv_value() const {
+double TimingPointV::getAverageSvValue() const {
     return get_average_value(false);
 }
 
-double TimingPointV::get_average_bpm_value() const {
+double TimingPointV::getAverageBpmValue() const {
     return get_average_value(true);
 }
 
 // Cross multiplies the tp_vs
-void TimingPointV::cross_effect_multiply(TimingPointV eff_tp_v) {
+void TimingPointV::crossEffectMultiply(TimingPointV eff_tp_v) {
     cross_effect(eff_tp_v, [](TimingPoint self, TimingPoint eff) {
-		self.set_value(self.get_value() * eff.get_value());
+		self.setValue(self.getValue() * eff.getValue());
 		return self;
 	});
 }
 // Cross add the tp_vs
-void TimingPointV::cross_effect_add(TimingPointV eff_tp_v) {
+void TimingPointV::crossEffectAdd(TimingPointV eff_tp_v) {
     cross_effect(eff_tp_v, [](TimingPoint self, TimingPoint eff) {
-		self.set_value(self.get_value() + eff.get_value());
+		self.setValue(self.getValue() + eff.getValue());
 		return self;
 	});
 }
@@ -135,14 +135,22 @@ void TimingPointV::operator -=(double par) {
     }).get_object_v();
 }
 
+TimingPointV TimingPointV::value_arithmetic(double parameter, double (*oper)(double, double)) {
+    auto tp_v = *this;
+    for (auto &tp : tp_v) {
+        tp.setValue(oper(tp.getValue(), parameter));
+    }
+    return tp_v;
+}
+
 double TimingPointV::get_average_value(bool is_bpm) const {
 
-    TimingPointV tp_v = is_bpm ? get_bpm_only() : get_sv_only();
+    TimingPointV tp_v = is_bpm ? getBpmOnly() : getSvOnly();
     if (tp_v.size() <= 0) {
         return 0;
     }
     else if (tp_v.size() == 1) {
-		return tp_v[0].get_value();
+        return tp_v[0].getValue();
 	}
 
 	double offset = 0;
@@ -152,8 +160,8 @@ double TimingPointV::get_average_value(bool is_bpm) const {
 
 	// Loop through all pairs excluding the last invalid pair
 	for (auto tp_it = tp_v.begin(); tp_it != tp_v.end() - 1; tp_it++) {
-		offset += (tp_it + 1)->get_offset() - tp_it->get_offset();
-		distance += ((tp_it + 1)->get_offset() - tp_it->get_offset()) * tp_it->get_value();
+        offset += (tp_it + 1)->getOffset() - tp_it->getOffset();
+        distance += ((tp_it + 1)->getOffset() - tp_it->getOffset()) * tp_it->getValue();
 	}
 	return distance / offset;
 }

@@ -22,26 +22,26 @@ public:
     //// Explicit Loading
 
 	// Loads from data from the .osu file
-    bool load_raw_timing_point(QString str);
+    bool loadRawTimingPoint(QString str);
 
 	// Loads parameters manually (Simple)
 	// value is dependent on is_bpm
-    bool load_parameters(double offset,
+    bool loadParameters(double offset,
 						 double value,
-                         bool is_bpm,
-                         bool is_kiai = false,
+                         bool isBpm,
+                         bool isKiai = false,
                          unsigned int metronome = 4);
 
 	// Loads parameters manually (Advanced)
 	// value is dependent on is_bpm
-    bool load_parameters(double offset,
+    bool loadParameters(double offset,
 						 double value,
 						 unsigned int metronome,
 						 SAMPLE_SET SAMPLE_SET_,
 						 unsigned int SAMPLE_SET_index,
 						 unsigned int volume,
-						 bool is_bpm,
-						 bool is_kiai);
+                         bool isBpm,
+                         bool isKiai);
 
 	// Checks if all variables match
     bool operator ==(const TimingPoint &tp) const;
@@ -49,36 +49,36 @@ public:
     //// Exporting
 
 	// Get the string compatible to .osu format
-    virtual QString get_string_raw() const;
+    virtual QString getStringRaw() const;
 
     //// Getters & Setters
 
-    double get_value() const;
-    void set_value(double value);
+    double getValue() const;
+    void setValue(double value);
 
-    unsigned int get_metronome() const;
-    void set_metronome(unsigned int metronome);
+    unsigned int getMetronome() const;
+    void setMetronome(unsigned int metronome);
 
-    SAMPLE_SET get_sample_set() const;
-    void set_sample_set(const SAMPLE_SET &SAMPLE_SET);
+    SAMPLE_SET getSampleSet() const;
+    void setSampleSet(const SAMPLE_SET &sampleSet);
 
-    unsigned int get_sample_set_index() const;
-    void set_sample_set_index(unsigned int SAMPLE_SET_index);
+    unsigned int getSampleSetIndex() const;
+    void setSampleSetIndex(unsigned int sampleSetIndex);
 
-    unsigned int get_volume() const;
-    void set_volume(unsigned int volume);
+    unsigned int getVolume() const;
+    void setVolume(unsigned int volume);
 
-    bool get_is_kiai() const;
-    void set_is_kiai(bool is_kiai);
+    bool getIsKiai() const;
+    void setIsKiai(bool isKiai);
 
-    bool get_is_bpm() const;
-    void set_is_bpm(bool is_bpm);
+    bool getIsBpm() const;
+    void setIsBpm(bool isBpm);
 
-	bool get_is_sv() const;
-	void set_is_sv(bool is_sv);
+    bool getIsSv() const;
+    void setIsSv(bool is_sv);
 
-	static double convert_code_to_value(double code, bool is_bpm);
-	static double convert_value_to_code(double value, bool is_bpm);
+    static double convertCodeToValue(double code, bool isBpm);
+    static double convertValueToCode(double value, bool isBpm);
 
 	// Clones the object
     virtual QSharedPointer<OsuObject> clone() const;
@@ -87,9 +87,9 @@ private:
 
     double value; // Usually it's a positive value for the SV/BPM variant
     unsigned int metronome;
-    SAMPLE_SET sample_set;
-    unsigned int sample_set_index;
+    SAMPLE_SET sampleSet;
+    unsigned int sampleSetIndex;
     unsigned int volume;
-	bool is_bpm; // Defines if it's the SV/BPM variant
-    bool is_kiai;
+    bool isBpm; // Defines if it's the SV/BPM variant
+    bool isKiai;
 };

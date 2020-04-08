@@ -27,29 +27,29 @@ public:
 
 	// Loads from data from the editor
 	// Do not skip keys if you want to export to .osu
-    bool load_editor_hit_object(QString str, unsigned int keys = 0);
+    bool loadEditorHitObject(QString str, unsigned int keys = 0);
 
 	// Loads from data from the .osu file as one whole string
 	// Key count is required for conversion to columns
-    bool load_raw_hit_object(QString str, unsigned int keys, char delimeter = '\n');
+    bool loadRawHitObject(QString str, unsigned int keys, char delimeter = '\n');
 
 	// Loads from data from the .osu file as a vector
 	// Key count is required for conversion to columns
-    bool load_raw_hit_object(QVector<QString> str_v, unsigned int keys);
+    bool loadRawHitObject(QVector<QString> str_v, unsigned int keys);
 
 	//// Exporting
 
 	// Get the vector of strings compatible to .osu format
 	// This variant is to override and set the current keys if user failed the other variant
 	// Note that this will override all keys set initially
-    QVector<QString> get_string_raw_v(unsigned int keys);
+    QVector<QString> getStringRawV(unsigned int keys);
 
 	// Gets column in a vector form
-    QVector<unsigned int> get_column_v() const;
+    QVector<unsigned int> getColumnV() const;
 
 	// Gets notes only in a vector form
-	HitObjectV get_notes_only() const;
+    HitObjectV getNotesOnly() const;
 
 	// Gets long notes only in a vector form
-	HitObjectV get_long_notes_only() const;
+    HitObjectV getLongNotesOnly() const;
 };

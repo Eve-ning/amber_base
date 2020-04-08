@@ -15,8 +15,8 @@ class AMBER_BASE OsuObject
 {
 public:
 
-	double get_offset() const;
-    void set_offset(double value);
+    double getOffset() const;
+    void setOffset(double value);
 
     virtual QSharedPointer<OsuObject> clone() const = 0;
 
@@ -30,7 +30,7 @@ public:
     bool operator <(const OsuObject &ho) const;
     bool operator ==(const OsuObject &ho) const;
 
-    virtual QString get_string_raw() const = 0;
+    virtual QString getStringRaw() const = 0;
 
 protected: // only allow inherited classes use the constructor
 

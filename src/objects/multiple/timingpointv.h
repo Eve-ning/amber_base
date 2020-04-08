@@ -26,26 +26,26 @@ public:
 	//// Explicit Loading
 
 	// Loads from data from the .osu file as one whole string
-    bool load_raw_timing_point(const QString& str, char delimeter = '\n');
+    bool loadRawTimingPoint(const QString& str, char delimeter = '\n');
 
 	// Loads from data from the .osu file as a vector
-    bool load_raw_timing_point(QVector<QString> str_v);
+    bool loadRawTimingPoint(QVector<QString> str_v);
 
 	// Gets sv only in a vector form
-	TimingPointV get_sv_only() const;
+    TimingPointV getSvOnly() const;
 			
 	// Gets bpm only in a vector form
-    TimingPointV get_bpm_only() const;
+    TimingPointV getBpmOnly() const;
 
 	// Gets all values
-    QVector<double> get_value_v() const;
-    double get_average_sv_value() const;
-    double get_average_bpm_value() const;
+    QVector<double> getValueV() const;
+    double getAverageSvValue() const;
+    double getAverageBpmValue() const;
 
 	// Cross multiplies the tp_vs
-	void cross_effect_multiply(TimingPointV eff_tp_v);
+    void crossEffectMultiply(TimingPointV eff_tp_v);
 	// Cross add the tp_vs
-	void cross_effect_add(TimingPointV eff_tp_v);
+    void crossEffectAdd(TimingPointV eff_tp_v);
 
     TimingPointV operator *(double par);
     TimingPointV operator /(double par);
@@ -59,13 +59,7 @@ public:
 
 protected:
 
-	TimingPointV value_arithmetic(double parameter,double(*oper)(double value, double parameter)) {
-		auto tp_v = *this;
-		for (auto &tp : tp_v) {
-			tp.set_value(oper(tp.get_value(), parameter));
-		}
-		return tp_v;
-	}
+    TimingPointV value_arithmetic(double parameter,double(*oper)(double value, double parameter));
 private:
 	double get_average_value(bool is_bpm) const;
 };

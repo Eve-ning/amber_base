@@ -538,7 +538,7 @@ namespace amber_f
         // include_with defines if the created tps exports alongside the original
 
         TimingPointV output = include_with ? tp_v : TimingPointV();
-        tp_v = tp_v.get_bpm_only();
+        tp_v = tp_v.getBpmOnly();
 		if (tp_v.size() == 0) {
             throw ReamberException("tp_v BPM size is 0");
 		}
@@ -594,8 +594,8 @@ namespace amber_f
 
                 TimingPoint begin_tp, threshold_tp;
 
-				begin_tp.load_parameters(*offset_it_begin, initial, is_bpm);
-				threshold_tp.load_parameters(*offset_it_threshold, threshold, is_bpm);
+				begin_tp.loadParameters(*offset_it_begin, initial, is_bpm);
+				threshold_tp.loadParameters(*offset_it_threshold, threshold, is_bpm);
 
 				tp_v.push_back(begin_tp);
 				tp_v.push_back(threshold_tp);
@@ -604,7 +604,7 @@ namespace amber_f
 			if (offset_it_end == (offset_v.end() - 1)) {
 				// indicates it's the last pair
                 TimingPoint end_tp;
-				end_tp.load_parameters(*offset_it_end, average, is_bpm);
+				end_tp.loadParameters(*offset_it_end, average, is_bpm);
 
 				tp_v.push_back(end_tp);
 				break;
@@ -710,14 +710,14 @@ namespace amber_f
 			// <--C--><--A--><--M--><--A--> 
 			// <--C--><---------B--------->
 			// B - 2A = to_move
-			double to_move = ((tp_v_2 + 1)->get_offset() - tp_v_2->get_offset()) - (tp_v_2->get_offset() - tp_v_1->get_offset());
-			tp_v_2->set_offset(tp_v_2->get_offset() + to_move);
+			double to_move = ((tp_v_2 + 1)->getOffset() - tp_v_2->getOffset()) - (tp_v_2->getOffset() - tp_v_1->getOffset());
+			tp_v_2->setOffset(tp_v_2->getOffset() + to_move);
 
 			// Swap offsets
 			double offset_buffer;
-			offset_buffer = tp_v_2->get_offset();
-			tp_v_2->set_offset(tp_v_1->get_offset());
-			tp_v_1->set_offset(offset_buffer);
+			offset_buffer = tp_v_2->getOffset();
+			tp_v_2->setOffset(tp_v_1->getOffset());
+			tp_v_1->setOffset(offset_buffer);
 
 			output.push_back(*tp_v_1);
 			output.push_back(*tp_v_2);

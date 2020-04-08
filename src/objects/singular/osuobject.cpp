@@ -1,12 +1,12 @@
 #include "osuobject.h"
 #include <QtGlobal>
 
-double OsuObject::get_offset() const
+double OsuObject::getOffset() const
 {
     return offset;
 }
 
-void OsuObject::set_offset(double value)
+void OsuObject::setOffset(double value)
 {
     offset = value;
 }
@@ -28,4 +28,14 @@ OsuObject::OsuObject(double new_offset) : offset(new_offset)
 
 OsuObject::OsuObject(const OsuObject &obj) {
     offset = obj.offset;
+}
+
+double OsuObject::getOffset() const
+{
+    return offset;
+}
+
+void OsuObject::setOffset(double value)
+{
+    offset = value;
 }
