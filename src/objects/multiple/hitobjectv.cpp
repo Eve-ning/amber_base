@@ -1,6 +1,6 @@
 #include "hitobjectv.h"
 #include <algorithm>
-#include "../../amber_privf/split_string.h"
+#include "../../amber_privf/splitstring.h"
 #include <iostream>
 
 HitObjectV::HitObjectV() : OsuObjectV()
@@ -22,12 +22,12 @@ bool HitObjectV::load_editor_hit_object(std::string str, unsigned int keys) {
         return false;
     }; // Shed the brackets
 
-	std::vector<std::string> str_comma_v = split_string::by_delimeter(str, ','); // Split by comma
+    std::vector<std::string> str_comma_v = SplitString::by_delimeter(str, ','); // Split by comma
 	std::vector<std::string> str_bar_v = {};
 
 	for (std::string str_comma : str_comma_v) {
         HitObject ho;
-		str_bar_v = split_string::by_delimeter(str_comma, '|'); // Split each comma token by bar
+        str_bar_v = SplitString::by_delimeter(str_comma, '|'); // Split each comma token by bar
 
         if (!ho.load_parameters( // Load in by parameter
             static_cast<unsigned int>(std::stoi(str_bar_v[1])),  // Column
@@ -46,19 +46,16 @@ bool HitObjectV::load_editor_hit_object(std::string str, unsigned int keys) {
 // Where if the user loads in the whole thing as a string
 
 bool HitObjectV::load_raw_hit_object(std::string str,
-                                       unsigned int keys,
-                                       char delimeter) {
-    return load_raw_hit_object(split_string::by_delimeter(str, delimeter), keys); // Use the vector variant of this function
+                                     unsigned int keys,
+                                     char delimeter) {
+    return load_raw_hit_object(SplitString::by_delimeter(str, delimeter), keys); // Use the vector variant of this function
 }
 
 bool HitObjectV::load_raw_hit_object(std::vector<std::string> str_v, unsigned int keys)
 {
 	for (std::string str : str_v) { // For each str in the string vector
         HitObject ho;
-        if (!ho.load_raw_hit_object(str, keys)) {
-            return false;
-        }
-
+        if (!ho.load_raw_hit_object(str, keys)) return false;
 		object_v.push_back(ho); // Append to our private hit_object vector
 	}
     return true;
@@ -88,9 +85,7 @@ std::vector<unsigned int> HitObjectV::get_column_v() const {
 HitObjectV HitObjectV::get_notes_only() const {
     HitObjectV output = HitObjectV();
 	for (const auto &ho : object_v) {
-		if (ho.get_is_note()) {
-			output.push_back(ho);
-		}
+        if (ho.get_is_note()) output.push_back(ho);
 	}
 	return output;
 }
@@ -100,9 +95,7 @@ HitObjectV HitObjectV::get_notes_only() const {
 HitObjectV HitObjectV::get_long_notes_only() const {
     HitObjectV output = HitObjectV();
 	for (const auto &ho : object_v) {
-		if (ho.get_is_long_note()) {
-			output.push_back(ho);
-		}
+        if (ho.get_is_long_note()) output.push_back(ho);
 	}
 	return output;
 }

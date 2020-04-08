@@ -1,6 +1,6 @@
 #include "timingpointv.h"
 #include <algorithm>
-#include "../../amber_privf/split_string.h"
+#include "../../amber_privf/splitstring.h"
 
 TimingPointV::TimingPointV() : OsuObjectV()
 {
@@ -15,7 +15,7 @@ TimingPointV::TimingPointV(unsigned int amount) {
 bool TimingPointV::load_raw_timing_point(std::string str,
                                            char delimeter)
 {
-    return load_raw_timing_point(split_string::by_delimeter(str, delimeter));
+    return load_raw_timing_point(SplitString::by_delimeter(str, delimeter));
 }
 
 bool TimingPointV::load_raw_timing_point(std::vector<std::string> str_v)

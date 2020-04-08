@@ -3,7 +3,7 @@
 #include "../objects/singular/osuobject.h"
 #include "../objects/multiple/hitobjectv.h"
 #include "../objects/multiple/timingpointv.h"
-#include "../exceptions/reamber_exception.h"
+#include "../exceptions/reamberexception.h"
 #include <vector>
 // Here we declare all common functions that amber_base will include
 
@@ -51,7 +51,7 @@ namespace amber_f
         // This will return a vector that has a -1 size
 		// [0] REJECT
 		if (obj_v->size() <= 1) {
-			throw reamber_exception("obj_v size must be at least 2 for the function to work");
+            throw ReamberException("obj_v size must be at least 2 for the function to work");
 		}
 
 		// const [0][1][2] ---> [0][1][2]
@@ -91,7 +91,7 @@ namespace amber_f
         ObjV<T> output = ObjV<T>();
 
 		if (copy_to_v.size() == 0) {
-			throw reamber_exception("copy_to_v is empty");
+            throw ReamberException("copy_to_v is empty");
 		}
 
 		// [0][2][1][3]
@@ -219,7 +219,7 @@ namespace amber_f
         // [0][1][2][3][4] OUT
 
 		if (offset_v.size() <= 1) {
-			throw reamber_exception("offset_v size must be at least 2 for the function to work");
+            throw ReamberException("offset_v size must be at least 2 for the function to work");
 		}
 
         doublev offset_v_c = include ? offset_v : doublev();
@@ -295,7 +295,7 @@ namespace amber_f
 
         // [0] REJECT
         if (offset_v.size() <= 1) {
-            throw reamber_exception("offset_v size must be at least 2 for the function to work");
+            throw ReamberException("offset_v size must be at least 2 for the function to work");
         }
 
         doublev offset_v_c = include ? offset_v : doublev();
@@ -371,10 +371,10 @@ namespace amber_f
 
 		// [0] REJECT
 		if (offset_v.size() <= 1) {
-			throw reamber_exception("offset_v size must be at least 2 for the function to work");
+            throw ReamberException("offset_v size must be at least 2 for the function to work");
 		}
 		if (relativity <= 0) {
-			throw reamber_exception("relativity must be non-zero and positive");
+            throw ReamberException("relativity must be non-zero and positive");
 		}
 
         doublev offset_v_c = include ? offset_v : doublev();
@@ -447,10 +447,10 @@ namespace amber_f
 
 		// [0] REJECT
 		if (offset_v.size() <= 1) {
-			throw reamber_exception("offset_v size must be at least 2 for the function to work");
+            throw ReamberException("offset_v size must be at least 2 for the function to work");
 		}
 		if (relativity <= 0) {
-			throw reamber_exception("relativity must be non-zero and positive");
+            throw ReamberException("relativity must be non-zero and positive");
 		}
 
 		// <0><0><1><2><2> 
@@ -540,7 +540,7 @@ namespace amber_f
         TimingPointV output = include_with ? tp_v : TimingPointV();
         tp_v = tp_v.get_bponly();
 		if (tp_v.size() == 0) {
-			throw reamber_exception("tp_v BPM size is 0");
+            throw ReamberException("tp_v BPM size is 0");
 		}
 
 		for (auto tp : tp_v) {
@@ -564,7 +564,7 @@ namespace amber_f
 
 		if (offset_v.size() % 2 != 1) {
 			// only works on odd
-			throw reamber_exception("stutter can only be done on odd number of offset");
+            throw ReamberException("stutter can only be done on odd number of offset");
 		}
 
 		std::sort(offset_v.begin(), offset_v.end());
@@ -695,7 +695,7 @@ namespace amber_f
 
 		if (tp_v.size() % 2 != 1) {
 			// only works on odd
-			throw reamber_exception("stutter can only be done on odd number of offset");
+            throw ReamberException("stutter can only be done on odd number of offset");
 		}
 
 		auto tp_v_1 = tp_v.begin();
@@ -742,7 +742,7 @@ namespace amber_f
                                          uint offset = 0) {
 
 		if (n <= 0) {
-			throw reamber_exception("n cannot be less than or equal to 0");
+            throw ReamberException("n cannot be less than or equal to 0");
 		}
 
         ObjV<T> obj_v_c;
@@ -759,7 +759,7 @@ namespace amber_f
                                         uint offset = 0) {
 
 		if (n <= 0) {
-			throw reamber_exception("n cannot be less than or equal to 0");
+            throw ReamberException("n cannot be less than or equal to 0");
 		}
 
         ObjV<T> obj_v_c;

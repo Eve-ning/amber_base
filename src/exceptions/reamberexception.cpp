@@ -1,16 +1,16 @@
-#include "reamber_exception.h"
+#include "reamberexception.h"
 
-reamber_exception::reamber_exception(const char *msg) : m(msg) {}
+ReamberException::ReamberException(const char *msg) : m(msg) {}
 
-reamber_exception::~reamber_exception() {
+ReamberException::~ReamberException() {
 
 }
 
-const char *reamber_exception::what() const noexcept {
+const char *ReamberException::what() const noexcept {
     return m.c_str();
 }
 
-reamber_exception::reamber_exception()
+ReamberException::ReamberException()
 {
 
 }

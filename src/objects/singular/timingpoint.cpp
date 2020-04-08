@@ -1,6 +1,6 @@
 #include "timingpoint.h"
-#include "../../exceptions/reamber_exception.h"
-#include "../../amber_privf/split_string.h"
+#include "../../exceptions/reamberexception.h"
+#include "../../amber_privf/splitstring.h"
 #include <vector>
 #include <iostream>
 
@@ -28,7 +28,7 @@ bool TimingPoint::load_raw_timing_point(std::string str)
     std::vector<std::string> timing_point_comma_v = {};
 
 	// Split string by comma
-    timing_point_comma_v = split_string::by_delimeter(str, ',');
+    timing_point_comma_v = SplitString::by_delimeter(str, ',');
 
     offset = std::stod(timing_point_comma_v[0]);
     metronome = static_cast<unsigned int>(std::stoi(timing_point_comma_v[2]));

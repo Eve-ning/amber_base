@@ -1,4 +1,4 @@
-#include "split_string.h"
+#include "splitstring.h"
 #include <algorithm>
 
 std::vector<std::string> SplitString::by_delimeter(std::string str,

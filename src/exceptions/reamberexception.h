@@ -11,12 +11,12 @@
 
 // Handles all of reamber's exceptions
 
-class AMBER_BASE reamber_exception : public std::exception
+class AMBER_BASE ReamberException : public std::exception
 {
 public:
-    reamber_exception(const char* msg);
+    ReamberException(const char* msg);
 
-    virtual ~reamber_exception() noexcept;
+    virtual ~ReamberException() noexcept;
 
     const char* what() const noexcept;
 
@@ -24,5 +24,5 @@ protected:
     std::string m;
 
 private:
-    reamber_exception();
+    ReamberException();
 };

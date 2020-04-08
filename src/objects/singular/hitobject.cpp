@@ -1,9 +1,9 @@
 #include "hitobject.h"
-#include "../../amber_privf/split_string.h"
+#include "../../amber_privf/splitstring.h"
 #include <cmath>
 #include <vector>
 #include <iostream>
-#include "../../exceptions/reamber_exception.h"
+#include "../../exceptions/reamberexception.h"
 
 HitObject::HitObject() :
     column (0),
@@ -36,13 +36,13 @@ bool HitObject::load_editor_hit_object(std::string str,
     std::string note = "";
 
 	// We first split it by comma
-    std::vector<std::string> str_comma_v = split_string::by_delimeter(str, ',');
+    std::vector<std::string> str_comma_v = SplitString::by_delimeter(str, ',');
 
 	// Then for each element split by comma
 	for (std::string str_comma : str_comma_v) {
 
 		// We split by bar
-        std::vector<std::string> str_bar_v = split_string::by_delimeter(str_comma, '|');
+        std::vector<std::string> str_bar_v = SplitString::by_delimeter(str_comma, '|');
 
 		// We push back the data after conversion
 		try {
@@ -86,10 +86,10 @@ bool HitObject::load_raw_hit_object(std::string str,
     std::string temp_;
 
 	// We split by comma
-	hit_object_comma_v = split_string::by_delimeter(str, ',');
+    hit_object_comma_v = SplitString::by_delimeter(str, ',');
 
 	// Last token of comma contains the data for colon, we split that by colon
-	hit_object_colon_v = split_string::by_delimeter(hit_object_comma_v.back(), ':');
+    hit_object_colon_v = SplitString::by_delimeter(hit_object_comma_v.back(), ':');
 
 	hit_object_comma_v.pop_back(); // Remove the last token as it's already split by colon
 
@@ -123,7 +123,7 @@ bool HitObject::load_raw_hit_object(std::string str,
 
         break;
     default:
-        throw reamber_exception("Raw Hit Object is not valid. [INVALID ERROR]");
+        throw ReamberException("Raw Hit Object is not valid. [INVALID ERROR]");
     }
 
     return true;
@@ -142,7 +142,7 @@ bool HitObject::load_parameters(unsigned int column,
     if (ln_end != 0 && ln_end < offset){
         // Throw if Long Note End is before Long Note Head unless it's 0
         std::string ln_end_str = std::to_string(ln_end), offset_str = std::to_string(offset);
-        throw reamber_exception(std::string("Long Note End (" + ln_end_str + ")"
+        throw ReamberException(std::string("Long Note End (" + ln_end_str + ")"
                                             "is before Head (" + offset_str + ")").c_str());
     }
     this->keys = keys;
