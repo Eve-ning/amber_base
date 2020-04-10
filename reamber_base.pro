@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 INCLUDEPATH += \
+$$_PRO_FILE_PWD_ \
 $$PWD/src \
 $$PWD/includes
 
@@ -31,6 +32,7 @@ unix {
 
 HEADERS += \
     include/algorithm/algorithm.h \
+    include/algorithm/algorithm.ipp \
     include/helper/splitstring.h \
     include/exception/reamberexception.h \
     include/object/multiple/hitobjectv.h \
