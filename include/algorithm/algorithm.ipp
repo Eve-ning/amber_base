@@ -14,7 +14,7 @@ namespace algorithm
         // Note that notes on the same offset will be regarded as 1 offset
         // This will return a vector that has a -1 size
         // [0] REJECT
-        if (objV.size() <= 1) throw ReamberException("objV size must be at least 2 for the function to work");
+        if (objV->size() <= 1) throw ReamberException("objV size must be at least 2 for the function to work");
 
         // [0][2][1] ---> [0][1][2]
         objV->sortByOffset(true);
@@ -68,10 +68,10 @@ namespace algorithm
     }
 
     template <typename T>
-    ObjV<T> copy(ObjV<T> const* objV,
-                                  VDouble copyToV,
-                                  bool anchorFront,
-                                  bool sort) {
+    ObjV<T> copy(QSPtr<ObjV<T>> const objV,
+                 VDouble copyToV,
+                 bool anchorFront,
+                 bool sort) {
         // [0]   [2]	IN
         // <0><1>		IN
         //  0  1
@@ -81,7 +81,7 @@ namespace algorithm
         ObjV<T> output = ObjV<T>();
 
         // const [0][1][2] ---> [0][1][2]
-        auto objVCopy = ObjV<T>::cloneObjV(objV);
+        auto objVCopy = QSPtr<ObjV<T>>::create(*objV);
 
         // [0][4][2]
         for (double copyTo : copyToV) {
@@ -101,7 +101,7 @@ namespace algorithm
     }
 
     template <typename T>
-    ObjV<T> copyDelay(ObjV<T> const* objV,
+    ObjV<T> copyDelay(QSPtr<ObjV<T>> const objV,
                       VDouble offsetV,
                       bool include) {
         // <0>   <1>   <2> IN
@@ -110,7 +110,7 @@ namespace algorithm
         // <0><0><1><1><2> OUT
         //  0  1  2  3  4
 
-        ObjV<T> objVC = *ObjV<T>::cloneObjV(objV);
+        ObjV<T> objVC = ObjV<T>(*objV);
         objVC.sortByOffset();
         std::sort(offsetV.begin(), offsetV.end());
 
@@ -170,9 +170,7 @@ namespace algorithm
         // [0]   [2]   [4] IN
         // [0][1][2][3][4] OUT
 
-        if (offsetV.size() <= 1) {
-            throw ReamberException("offsetV size must be at least 2 for the function to work");
-        }
+        if (offsetV.size() <= 1) throw ReamberException("offsetV size must be at least 2 for the function to work");
 
         VDouble offsetVC = include ? offsetV : VDouble();
 
@@ -214,7 +212,7 @@ namespace algorithm
     }
 
     template <typename T>
-    ObjV<T> copySubdBy(ObjV<T> const* objV,
+    ObjV<T> copySubdBy(QSPtr<ObjV<T>> objV,
                        uint subdivisions,
                        bool include) {
         // <0>   <1>   <2> IN
@@ -246,9 +244,7 @@ namespace algorithm
         // [0]   [2]   [4][5] OUT
 
         // [0] REJECT
-        if (offsetV.size() <= 1) {
-            throw ReamberException("offsetV size must be at least 2 for the function to work");
-        }
+        if (offsetV.size() <= 1) throw ReamberException("offsetV size must be at least 2 for the function to work");
 
         VDouble offsetVC = include ? offsetV : VDouble();
 
@@ -291,7 +287,7 @@ namespace algorithm
     }
 
     template <typename T>
-    ObjV<T> copySubdTo(ObjV<T> const* objV,
+    ObjV<T> copySubdTo(QSPtr<ObjV<T>> objV,
                        uint subdLength,
                        bool include) {
         // <0>   <1>   <2> IN
@@ -364,7 +360,7 @@ namespace algorithm
     }
 
     template <typename T>
-    ObjV<T> copyRel(ObjV<T> const* objV,
+    ObjV<T> copyRel(QSPtr<ObjV<T>> objV,
                     double relativity,
                     bool include) {
         // <0>   <1>   <2> IN
@@ -452,7 +448,7 @@ namespace algorithm
 
 
     template <typename T>
-    ObjV<T> copyAbs(ObjV<T> const* objV,
+    ObjV<T> copyAbs(QSPtr<ObjV<T>> objV,
                     double relativity,
                     bool include,
                     bool relativeFromFront,
@@ -682,7 +678,7 @@ namespace algorithm
     }
 
     template <typename T>
-    ObjV<T> extractNth(ObjV<T> const* objV,
+    ObjV<T> extractNth(QSPtr<ObjV<T>> objV,
                        uint n,
                        uint offset) {
 
@@ -696,7 +692,7 @@ namespace algorithm
         return objVC;
     }
     template <typename T>
-    ObjV<T> deleteNth(ObjV<T> const* objV,
+    ObjV<T> deleteNth(QSPtr<ObjV<T>> objV,
                       uint n,
                       uint offset) {
 

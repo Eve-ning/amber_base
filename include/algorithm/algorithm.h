@@ -39,7 +39,7 @@ typedef unsigned int uint;
 namespace algorithm
 {
 	// NOTATION
-	// [0] OFFSET on 0ms
+    // [0] OFFSET on 0ms
     // <0> OBJECT 0 on 0ms
 	//  0
 
@@ -52,13 +52,13 @@ namespace algorithm
                  bool sort = true);
 
     template <typename T>
-    ObjV<T> copy(ObjV<T> const* objV,
+    ObjV<T> copy(QSPtr<ObjV<T>> const objV,
                  VDouble copyToV,
                  bool anchorFront = true,
                  bool sort = true);
 
 	template <typename T>
-    ObjV<T> copyDelay(ObjV<T> const* objV,
+    ObjV<T> copyDelay(QSPtr<ObjV<T>> objV,
                       VDouble offsetV,
                       bool include);
 
@@ -73,7 +73,7 @@ namespace algorithm
                        bool include);
 
 	template <typename T>
-    ObjV<T> copySubdBy(ObjV<T> const* objV,
+    ObjV<T> copySubdBy(QSPtr<ObjV<T>> const objV,
                        uint subdivisions,
                        bool include);
 
@@ -88,7 +88,7 @@ namespace algorithm
                        bool include);
 
     template <typename T>
-    ObjV<T> copySubdTo(ObjV<T> const* objV,
+    ObjV<T> copySubdTo(QSPtr<ObjV<T>> const objV,
                        uint subdLength,
                        bool include);
 
@@ -104,7 +104,7 @@ namespace algorithm
                     bool include);
 
 	template <typename T>
-    ObjV<T> copyRel(ObjV<T> const* objV,
+    ObjV<T> copyRel(QSPtr<ObjV<T>> const objV,
                     double relativity,
                     bool include);
 
@@ -126,7 +126,7 @@ namespace algorithm
 
 
 	template <typename T>
-    ObjV<T> copyAbs(ObjV<T> const* objV,
+    ObjV<T> copyAbs(QSPtr<ObjV<T>> const objV,
                     double relativity,
                     bool include,
                     bool relativeFromFront = true,
@@ -174,12 +174,12 @@ namespace algorithm
     TimingPointV stutterSwap(TimingPointV tpV);
 
 	template <typename T>
-    ObjV<T> extractNth(ObjV<T> const* objV,
+    ObjV<T> extractNth(QSPtr<ObjV<T>> const objV,
                        uint n,
                        uint offset = 0);
 
 	template <typename T>
-    ObjV<T> deleteNth(ObjV<T> const* objV,
+    ObjV<T> deleteNth(QSPtr<ObjV<T>> objV,
                       uint n,
                       uint offset = 0);
 
