@@ -39,8 +39,8 @@ namespace algorithm
 
     template <typename T>
     ObjV<T> copy(T obj,
-                   const VDouble& copyToV,
-                   bool sort) {
+                 const VDouble& copyToV,
+                 bool sort) {
         // [0][1] IN
         // <0>	  IN
         //  0
@@ -54,7 +54,7 @@ namespace algorithm
         for (double copyTo : copyToV) {
             // FOR [0]
             // <X> ---> <0>
-            obj.set_offset(copyTo);
+            obj.setOffset(copyTo);
             // [<0>, <2>, <1>, <3>]
             output.pushBack(obj);
         }
@@ -81,16 +81,16 @@ namespace algorithm
         ObjV<T> output = ObjV<T>();
 
         // const [0][1][2] ---> [0][1][2]
-        auto objV_copy = ObjV<T>::cloneObjV(objV);
+        auto objVCopy = ObjV<T>::cloneObjV(objV);
 
         // [0][4][2]
         for (double copyTo : copyToV) {
             // FOR [0]
             // [<X>,<X+1> ---> <0>,<1>]
-            objV_copy->adjustOffsetTo(copyTo, anchorFront);
+            objVCopy->adjustOffsetTo(copyTo, anchorFront);
 
             // [<0>, <1>, <4>, <5>, <2>, <3>]
-            output.pushBack(*objV_copy);
+            output.pushBack(*objVCopy);
         }
         if (sort) {
             // [<0>, <1>, <2>, <3>, <4>, <5>]
@@ -102,7 +102,7 @@ namespace algorithm
 
     template <typename T>
     ObjV<T> copyDelay(ObjV<T> const* objV,
-                      VDouble offset_v,
+                      VDouble offsetV,
                       bool include) {
         // <0>   <1>   <2> IN
         //  0     2     4
@@ -110,12 +110,12 @@ namespace algorithm
         // <0><0><1><1><2> OUT
         //  0  1  2  3  4
 
-        ObjV<T> objV_c = *ObjV<T>::cloneObjV(objV);
-        objV_c.sortByOffset();
-        std::sort(offset_v.begin(), offset_v.end());
+        ObjV<T> objVC = *ObjV<T>::cloneObjV(objV);
+        objVC.sortByOffset();
+        std::sort(offsetV.begin(), offsetV.end());
 
-        auto offset_v_it = offset_v.begin();
-        auto objV_it = objV_c.begin();
+        auto offsetVIt = offsetV.begin();
+        auto objVIt = objVC.begin();
 
         ObjV<T> output;
 
@@ -125,10 +125,10 @@ namespace algorithm
             //              v
             // <0><0><2><2><4>
             // BREAK
-            if (offset_v_it == (offset_v.end() - 1)) {
+            if (offsetVIt == (offsetV.end() - 1)) {
                 if (include) {
-                    T obj = *(objV_it + 1);
-                    obj.set_offset(*offset_v_it);
+                    T obj = *(objVIt + 1);
+                    obj.setOffset(*offsetVIt);
                     output.pushBack(obj);
                 }
                 break;
@@ -140,9 +140,7 @@ namespace algorithm
             //        v
             // <0>   <1>   <2>
             // MOVE OBJ_IT
-            if (*offset_v_it == (objV_it + 1)->getOffset()) {
-                objV_it++;
-            }
+            if (*offsetVIt == (objVIt + 1)->getOffset()) objVIt++;
 
             // IF SAME OFFSET, REJECT IF !INCLUDE
             //  v
@@ -154,59 +152,57 @@ namespace algorithm
             //      ==  !=
             //  INC  T   T
             // !INC  F   T
-            if (include || (*offset_v_it != objV_it->getOffset())) {
-                T obj = *objV_it;
-                obj.set_offset(*offset_v_it);
+            if (include || (*offsetVIt != objVIt->getOffset())) {
+                T obj = *objVIt;
+                obj.setOffset(*offsetVIt);
                 output.pushBack(obj);
             }
-            offset_v_it++;
-
-
+            offsetVIt++;
         }
 
         return output;
     }
 
 
-    VDouble copySubdBy(VDouble offset_v,
+    VDouble copySubdBy(VDouble offsetV,
                        uint subdivisions,
                        bool include) {
         // [0]   [2]   [4] IN
         // [0][1][2][3][4] OUT
 
-        if (offset_v.size() <= 1) {
-            throw ReamberException("offset_v size must be at least 2 for the function to work");
+        if (offsetV.size() <= 1) {
+            throw ReamberException("offsetV size must be at least 2 for the function to work");
         }
 
-        VDouble offset_v_c = include ? offset_v : VDouble();
+        VDouble offsetVC = include ? offsetV : VDouble();
 
         // [0][1][2][3]
         // <------->
-        for (auto start = offset_v.begin(); start != (offset_v.end() - 1); start++) {
+        for (auto start = offsetV.begin(); start != (offsetV.end() - 1); start++) {
 
             // EG. 3 SUBDIVISIONS
             //     0   1   2   3   E
             //     O   |   |   |   O
             //     <--->
             //       ^ slice_distance
-            double slice_distance = (*(start + 1) - *(start)) / (subdivisions + 1);
+            double sliceDistance = (*(start + 1) - *(start)) / (subdivisions + 1);
 
             //     0   1   2   3   E
             //     O   |   |   |   O
             //     <-1->
             //     <---2--->
             //     <-----3----->
-            for (uint slice = 1; slice <= subdivisions; slice++) {
-                offset_v_c.push_back((*start) + slice_distance * slice);
-            }
+            for (uint slice = 1; slice <= subdivisions; slice++)
+                offsetVC.push_back((*start) + sliceDistance * slice);
+
         }
-        return offset_v_c;
+        return offsetVC;
     }
 
 
     template <typename T>
-    ObjV<T> copySubdBy(VDouble offset_v,
-                       const T& obj_define,
+    ObjV<T> copySubdBy(VDouble offsetV,
+                       const T& objDefine,
                        uint subdivisions,
                        bool include) {
         // [0]   [2]   [4] IN
@@ -214,7 +210,7 @@ namespace algorithm
         //  0
         // <0><0><0><0><0> OUT
         //  0  1  2  3  4
-        return copy(obj_define, copySubdBy(offset_v, subdivisions, include));
+        return copy(objDefine, copySubdBy(offsetV, subdivisions, include));
     }
 
     template <typename T>
@@ -229,36 +225,36 @@ namespace algorithm
         // <0>   <1>   <2>
         //  0     2     4
         // [0][1][2][3][4]
-        auto offset_v = copySubdBy(objV->getOffsetV(true), subdivisions, true);
+        auto offsetV = copySubdBy(objV->getOffsetV(true), subdivisions, true);
 
         // <0>   <2>   <4>
         //  0     2     4
         // [0][1][2][3][4]
         // <0><0><2><2><4>
         //  0  1  2  3  4
-        auto output = copyDelay(objV, offset_v, include);
+        auto output = copyDelay(objV, offsetV, include);
 
         return output;
     }
 
 
-    VDouble copySubdTo(VDouble offset_v,
-                       uint subdivision_len,
+    VDouble copySubdTo(VDouble offsetV,
+                       uint subdLength,
                        bool include) {
         // [0]            [5] IN
         // SUBDIV_LEN 2
         // [0]   [2]   [4][5] OUT
 
         // [0] REJECT
-        if (offset_v.size() <= 1) {
-            throw ReamberException("offset_v size must be at least 2 for the function to work");
+        if (offsetV.size() <= 1) {
+            throw ReamberException("offsetV size must be at least 2 for the function to work");
         }
 
-        VDouble offset_v_c = include ? offset_v : VDouble();
+        VDouble offsetVC = include ? offsetV : VDouble();
 
         // [0][1][2][3]
         // <------->
-        for (auto start = offset_v.begin(); start != (offset_v.end() - 1); start++) {
+        for (auto start = offsetV.begin(); start != (offsetV.end() - 1); start++) {
 
             // EG. 2 SUBDIV_LEN
             //     0   1   2   3   4   E
@@ -272,18 +268,18 @@ namespace algorithm
             //     <-------2------->
             //     <-----------3-----------> // REJECT by FLOOR
             for (uint slice = 1;
-                 ((*start) + subdivision_len * slice) < *(start + 1);
+                 ((*start) + subdLength * slice) < *(start + 1);
                  slice++) {
-                offset_v_c.push_back((*start) + subdivision_len * slice);
+                offsetVC.push_back((*start) + subdLength * slice);
             }
         }
-        return offset_v_c;
+        return offsetVC;
     }
 
     template <typename T>
-    ObjV<T> copySubdTo(VDouble offset_v,
-                       const T& obj_define,
-                       uint subdivision_len,
+    ObjV<T> copySubdTo(VDouble offsetV,
+                       const T& objDefine,
+                       uint subdLength,
                        bool include) {
         // [0]   [2]   [4] IN
         // <0>             IN
@@ -291,12 +287,12 @@ namespace algorithm
         // <0><0><0><0><0> OUT
         //  0  1  2  3  4
 
-        return copy(obj_define, copySubdTo(offset_v, subdivision_len, include));
+        return copy(objDefine, copySubdTo(offsetV, subdLength, include));
     }
 
     template <typename T>
     ObjV<T> copySubdTo(ObjV<T> const* objV,
-                       uint subdivision_len,
+                       uint subdLength,
                        bool include) {
         // <0>   <1>   <2> IN
         //  0     2     4
@@ -306,55 +302,55 @@ namespace algorithm
         // <0>   <1>   <2>
         //  0     2     4
         // [0][1][2][3][4]
-        auto offset_v = copySubdTo(objV->getOffsetV(true), subdivision_len, true);
+        auto offsetV = copySubdTo(objV->getOffsetV(true), subdLength, true);
 
         // <0>   <2>   <4>
         //  0     2     4
         // [0][1][2][3][4]
         // <0><0><2><2><4>
         //  0  1  2  3  4
-        auto output = copyDelay(objV, offset_v, include);
+        auto output = copyDelay(objV, offsetV, include);
 
         return output;
     }
 
 
-    VDouble copyRel(VDouble offset_v,
+    VDouble copyRel(VDouble offsetV,
                     double relativity,
                     bool include) {
         // [0]   [2]   [4] IN
         // [0][%][2][%][4] OUT
 
         // [0] REJECT
-        if (offset_v.size() <= 1) {
-            throw ReamberException("offset_v size must be at least 2 for the function to work");
-        }
-        if (relativity <= 0) {
-            throw ReamberException("relativity must be non-zero and positive");
-        }
+        if (offsetV.size() <= 1)
+            throw ReamberException("offsetV size must be at least 2 for the function to work");
 
-        VDouble offset_v_c = include ? offset_v : VDouble();
+        if (relativity <= 0)
+            throw ReamberException("relativity must be non-zero and positive");
+
+
+        VDouble offsetVC = include ? offsetV : VDouble();
 
         //	[0][1][2][3]
         //  <------->
-        for (auto start = offset_v.begin(); start != offset_v.end() - 1; start++) {
+        for (auto start = offsetV.begin(); start != offsetV.end() - 1; start++) {
             //     v           v
             // [0][1][___|___][2][3]
             //     <----->
             //       REL
-            double offset_relative_delta = (*(start + 1) - *start) * relativity;
+            double offsetRelativeDelta = (*(start + 1) - *start) * relativity;
             //        v           v		>>
             // [0][|][1][___|___][2][3] >> [0][|][1][|][2][|][3]
             //        <----->			>>
             //  <----->     +   		>>
-            offset_v_c.push_back(*start + offset_relative_delta);
+            offsetVC.push_back(*start + offsetRelativeDelta);
         }
-        return offset_v_c;
+        return offsetVC;
     }
 
     template <typename T>
-    ObjV<T> copyRel(const VDouble offset_v,
-                    const T obj_define,
+    ObjV<T> copyRel(const VDouble offsetV,
+                    const T objDefine,
                     double relativity,
                     bool include) {
         // [0]   [2]   [4] IN
@@ -363,8 +359,8 @@ namespace algorithm
         // <0><0><2><2><4> OUT
         //  0  %  2  %  4
 
-        auto copies = copyRel(offset_v, relativity, include);
-        return copy(obj_define, copies);
+        auto copies = copyRel(offsetV, relativity, include);
+        return copy(objDefine, copies);
     }
 
     template <typename T>
@@ -380,14 +376,14 @@ namespace algorithm
         // <0>   <1>   <2>
         //  0     2     4
         // [0][%][2][%][4]
-        auto offset_v = copyRel(objV->getOffsetV(true), relativity, true);
+        auto offsetV = copyRel(objV->getOffsetV(true), relativity, true);
 
         // <0>   <2>   <4>
         //  0     2     4
         // [0][%][2][%][4]
         // <0><0><2><2><4>
         //  0  %  2  %  4
-        auto output = copyDelay(objV, offset_v, include);
+        auto output = copyDelay(objV, offsetV, include);
 
         return output;
     }
@@ -402,12 +398,12 @@ namespace algorithm
         // [0][+][2][+][4] OUT
 
         // [0] REJECT
-        if (offsetV.size() <= 1) throw ReamberException("offset_v size must be at least 2 for the function to work");
+        if (offsetV.size() <= 1) throw ReamberException("offsetV size must be at least 2 for the function to work");
         if (relativity <= 0) throw ReamberException("relativity must be non-zero and positive");
 
         // <0><0><1><2><2>
         // [0][1][2]
-        VDouble offset_v_c = include ? offsetV : VDouble();
+        VDouble offsetVC = include ? offsetV : VDouble();
 
         // [0][1][2][3]
         //  <----->
@@ -431,17 +427,17 @@ namespace algorithm
                 }
             }
 
-            offset_v_c.push_back(offset);
+            offsetVC.push_back(offset);
         }
 
 
-        return offset_v_c;
+        return offsetVC;
     }
 
 
     template <typename T>
-    ObjV<T> copyAbs(const VDouble offset_v,
-                    const T obj_define,
+    ObjV<T> copyAbs(const VDouble offsetV,
+                    const T objDefine,
                     double relativity,
                     bool include,
                     bool relativeFromFront,
@@ -451,7 +447,7 @@ namespace algorithm
         //  0
         // <0><0><2><2><4> OUT
         //  0  +  2  +  4
-        return copy(obj_define, copyAbs(offset_v, relativity, include, relativeFromFront, excludeOverlap));
+        return copy(objDefine, copyAbs(offsetV, relativity, include, relativeFromFront, excludeOverlap));
     }
 
 
@@ -491,9 +487,8 @@ namespace algorithm
 
         TimingPointV output = include ? tpV : TimingPointV();
         tpV = tpV.getBpmOnly();
-        if (tpV.size() == 0) {
-            throw ReamberException("tp_v BPM size is 0");
-        }
+
+        if (tpV.size() == 0) throw ReamberException("tp_v BPM size is 0");
 
         for (auto tp : tpV) {
             tp.setValue(reference / tp.getValue());
@@ -555,10 +550,10 @@ namespace algorithm
 
             if (offsetItEnd == (offsetV.end() - 1)) {
                 // indicates it's the last pair
-                TimingPoint end_tp;
-                end_tp.loadParameters(*offsetItEnd, average, isBpm);
+                TimingPoint endTp;
+                endTp.loadParameters(*offsetItEnd, average, isBpm);
 
-                tpV.pushBack(end_tp);
+                tpV.pushBack(endTp);
                 break;
             }
 
@@ -613,7 +608,7 @@ namespace algorithm
     }
 
 
-    TimingPointV stutterRel(const VDouble &offset_v,
+    TimingPointV stutterRel(const VDouble &offsetV,
                             double initial,
                             double relativity,
                             double average,
@@ -623,12 +618,12 @@ namespace algorithm
         // Stutter creation will chain on more than 2 offsets
 
         // force inclusion of inits
-        auto offset_v_c = copyRel(offset_v, relativity, true);
-        return stutter(offset_v_c, initial, average, isBpm, skipOnInvalid);
+        auto offsetVC = copyRel(offsetV, relativity, true);
+        return stutter(offsetVC, initial, average, isBpm, skipOnInvalid);
     }
 
 
-    TimingPointV stutterAbs(const VDouble &offset_v,
+    TimingPointV stutterAbs(const VDouble &offsetV,
                             double initial,
                             double relativity,
                             double average,
@@ -639,7 +634,7 @@ namespace algorithm
         // Stutter creation will chain on more than 2 offsets
 
         // force inclusion of inits
-        auto offsetVC = copyAbs(offset_v, relativity, true, relativeFromFront, skipOnInvalid);
+        auto offsetVC = copyAbs(offsetV, relativity, true, relativeFromFront, skipOnInvalid);
         return stutter(offsetVC, initial, average, isBpm, skipOnInvalid);
     }
 
@@ -662,14 +657,14 @@ namespace algorithm
             // <--C--><--A--><--M--><--A-->
             // <--C--><---------B--------->
             // B - 2A = to_move
-            double to_move = ((tpV_2 + 1)->getOffset() - tpV_2->getOffset()) - (tpV_2->getOffset() - tpV_1->getOffset());
-            tpV_2->setOffset(tpV_2->getOffset() + to_move);
+            double toMove = ((tpV_2 + 1)->getOffset() - tpV_2->getOffset()) - (tpV_2->getOffset() - tpV_1->getOffset());
+            tpV_2->setOffset(tpV_2->getOffset() + toMove);
 
             // Swap offsets
-            double offset_buffer;
-            offset_buffer = tpV_2->getOffset();
+            double offsetBuffer;
+            offsetBuffer = tpV_2->getOffset();
             tpV_2->setOffset(tpV_1->getOffset());
-            tpV_1->setOffset(offset_buffer);
+            tpV_1->setOffset(offsetBuffer);
 
             output.pushBack(*tpV_1);
             output.pushBack(*tpV_2);
@@ -681,9 +676,7 @@ namespace algorithm
         //     ^  ^
         //     ----> ^  ^ BREAK
         // Need to push back [5]
-        if (tpV_2 == tpV.end()) {
-            output.pushBack(*tpV_1);
-        }
+        if (tpV_2 == tpV.end()) output.pushBack(*tpV_1);
 
         return output;
     }
@@ -693,15 +686,12 @@ namespace algorithm
                        uint n,
                        uint offset) {
 
-        if (n <= 0) {
-            throw ReamberException("n cannot be less than or equal to 0");
-        }
+        if (n <= 0) throw ReamberException("n cannot be less than or equal to 0");
 
         ObjV<T> objVC;
 
-        for (uint i = offset; i < objV->size(); i += n) {
+        for (uint i = offset; i < objV->size(); i += n)
             objVC.pushBack(objV->getIndex(i));
-        }
 
         return objVC;
     }
@@ -710,9 +700,8 @@ namespace algorithm
                       uint n,
                       uint offset) {
 
-        if (n <= 0) {
-            throw ReamberException("n cannot be less than or equal to 0");
-        }
+        if (n <= 0) throw ReamberException("n cannot be less than or equal to 0");
+
 
         ObjV<T> objVC;
 
@@ -722,12 +711,10 @@ namespace algorithm
         // n = 3
 
         for (uint i = 0; i < objV->size(); i ++) {
-            if (
-                    i < offset || // Push back any element < offset
-                    (i - offset + 1) % n != 0 // Only push back those not in the nth sequence
-                    ) {
-                objVC.pushBack(objV->getIndex(i));
-            }
+            if (i < offset || // Push back any element < offset
+                (i - offset + 1) % n != 0 // Only push back those not in the nth sequence
+               ) objVC.pushBack(objV->getIndex(i));
+
         }
 
         return objVC;

@@ -59,17 +59,16 @@ namespace algorithm
 
 	template <typename T>
     ObjV<T> copyDelay(ObjV<T> const* objV,
-                      VDouble offset_v,
+                      VDouble offsetV,
                       bool include);
 
-    VDouble copySubdBy(VDouble offset_v,
+    VDouble copySubdBy(VDouble offsetV,
                        uint subdivisions,
                        bool include);
 
-
 	template <typename T>
-    ObjV<T> copySubdBy(VDouble offset_v,
-                       const T& obj_define,
+    ObjV<T> copySubdBy(VDouble offsetV,
+                       const T& objDefine,
                        uint subdivisions,
                        bool include);
 
@@ -78,29 +77,29 @@ namespace algorithm
                        uint subdivisions,
                        bool include);
 
-    VDouble copySubdTo(VDouble offset_v,
-                       uint subdivision_len,
+    VDouble copySubdTo(VDouble offsetV,
+                       uint subdLength,
                        bool include);
 
     template <typename T>
-    ObjV<T> copySubdTo(VDouble offset_v,
-                       const T& obj_define,
-                       uint subdivision_len,
+    ObjV<T> copySubdTo(VDouble offsetV,
+                       const T& objDefine,
+                       uint subdLength,
                        bool include);
 
     template <typename T>
     ObjV<T> copySubdTo(ObjV<T> const* objV,
-                       uint subdivision_len,
+                       uint subdLength,
                        bool include);
 
 
-    VDouble copyRel(VDouble offset_v,
+    VDouble copyRel(VDouble offsetV,
                     double relativity,
                     bool include);
 
 	template <typename T>
-    ObjV<T> copyRel(const VDouble offset_v,
-                    const T obj_define,
+    ObjV<T> copyRel(const VDouble offsetV,
+                    const T objDefine,
                     double relativity,
                     bool include);
 
@@ -110,20 +109,20 @@ namespace algorithm
                     bool include);
 
 
-    VDouble copyAbs(const VDouble offset_v,
+    VDouble copyAbs(const VDouble offsetV,
                     double relativity,
                     bool include,
-                    bool relative_from_front = true,
+                    bool relativeFromFront = true,
                     bool excludeOverlap = true);
 
 
 	template <typename T>
-    ObjV<T> copyAbs(const VDouble offset_v,
-                    const T obj_define,
+    ObjV<T> copyAbs(const VDouble offsetV,
+                    const T objDefine,
                     double relativity,
                     bool include,
-                    bool relative_frofront = true,
-                    bool exclude_overlap = true);
+                    bool relativeFromFront = true,
+                    bool excludeOverlap = true);
 
 
 	template <typename T>
@@ -134,7 +133,7 @@ namespace algorithm
                     bool excludeOverlap = true);
 
 
-    TimingPointV normalize(TimingPointV tp_v,
+    TimingPointV normalize(TimingPointV tpV,
                            const double &reference,
                            bool include = false);
 
