@@ -9,12 +9,14 @@
 #include <QString>
 #include <QSharedPointer>
 
+// May be dangerous but i don't think there's a scenario where it's an issue for now
+#define QSPtr QSharedPointer
+
 // Defines the any object in the rhythm game
 
 class AMBER_BASE OsuObject
 {
 public:
-
     double getOffset() const;
     void setOffset(double value);
 

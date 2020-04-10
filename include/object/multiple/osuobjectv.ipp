@@ -14,11 +14,11 @@ OsuObjectV<objType>::OsuObjectV(const OsuObjectV<objType> &o) {
 }
 
 template<class objType>
-void OsuObjectV<objType>::loadObjSptr(QVector<QSharedPointer<OsuObject>> objSptrV) {
+void OsuObjectV<objType>::loadObjSptr(QVector<QSPtr<OsuObject>> objSptrV) {
     // Empty our current vector
     objectV.clear();
 
-    for (QSharedPointer<OsuObject> obj : objSptrV) {
+    for (QSPtr<OsuObject> obj : objSptrV) {
         objectV.push_back(*obj.dynamicCast<objType>());
     }
 }
@@ -144,7 +144,7 @@ void OsuObjectV<objType>::popBack() {
 }
 
 template<class objType>
-OsuObjectV<objType> &OsuObjectV<objType>::operator =(QVector<QSharedPointer<OsuObject> > obj_sptr_v) {
+OsuObjectV<objType> &OsuObjectV<objType>::operator =(QVector<QSPtr<OsuObject> > obj_sptr_v) {
     loadObjSptr(obj_sptr_v);
     return *this;
 }

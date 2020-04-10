@@ -4,7 +4,6 @@
 // All vectors will inherit from this, so polymorphism on vectors will be possible
 #include "include/object/singular/osuobject.h"
 #include "include/object/singular/hitobject.h"
-#include <QSharedPointer>
 #include <QVector>
 
 template <class objType>
@@ -15,11 +14,10 @@ public:
     OsuObjectV() : objectV({}) {}
     OsuObjectV& operator= (const OsuObjectV<objType>& o);
     OsuObjectV(const OsuObjectV<objType>& o);
-
 	//// Explicit Loading
 
 	// Loads from a sptr vector
-    virtual void loadObjSptr(QVector<QSharedPointer<OsuObject>> objSptrV);
+    virtual void loadObjSptr(QVector<QSPtr<OsuObject>> objSptrV);
     virtual void loadDefaults(unsigned int amount);
 	
 	//// Getters & Setters
@@ -71,7 +69,7 @@ public:
 	// Removes the last element of the vector
     void popBack();
 
-    OsuObjectV& operator =(QVector<QSharedPointer<OsuObject>> obj_sptr_v);
+    OsuObjectV& operator =(QVector<QSPtr<OsuObject>> obj_sptr_v);
     bool operator ==(const OsuObjectV &obj_v) const;
 
     objType getIndex(unsigned index) const;
