@@ -18,8 +18,6 @@ public:
     double getOffset() const;
     void setOffset(double value);
 
-    virtual QSharedPointer<OsuObject> clone() const = 0;
-
     enum class SAMPLE_SET {
         AUTO,
         NORMAL,
@@ -37,5 +35,7 @@ protected: // only allow inherited classes use the constructor
     OsuObject();
     OsuObject(double new_offset);
     OsuObject(const OsuObject &obj);
+    OsuObject& operator=(const OsuObject& o);
+
     double offset; // defines the offset in ms
 };

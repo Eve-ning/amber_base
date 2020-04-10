@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../objects/singular/osuobject.h"
-#include "../objects/multiple/hitobjectv.h"
-#include "../objects/multiple/timingpointv.h"
-#include "../exceptions/reamberexception.h"
+#include "objects/singular/osuobject.h"
+#include "objects/multiple/hitobjectv.h"
+#include "objects/multiple/timingpointv.h"
+#include "exceptions/reamberexception.h"
 #include <vector>
 // Here we declare all common functions that amber_base will include
 
@@ -37,7 +37,7 @@ using ObjV = OsuObjectV<T>;
 typedef QVector<double> doublev;
 typedef unsigned int uint;
 
-namespace amber_f
+namespace Amber
 {
 	// NOTATION
 	// [0] OFFSET on 0ms
@@ -45,22 +45,22 @@ namespace amber_f
 	//  0
 
 	template <typename T>
-    doublev offset_diff(ObjV<T> const* obj_v) {
+    doublev offset_diff(ObjV<T> const* objV) {
         // Gets the difference in all offset difference in a vector form
         // Note that notes on the same offset will be regarded as 1 offset
         // This will return a vector that has a -1 size
 		// [0] REJECT
-		if (obj_v->size() <= 1) {
+        if (objV->size() <= 1) {
             throw ReamberException("obj_v size must be at least 2 for the function to work");
 		}
 
 		// const [0][1][2] ---> [0][1][2]
-        auto obj_v_copy = ObjV<T>::cloneObjV(obj_v);
+        auto obj_v_copy = ObjV<T>::cloneObjV(objV);
 
 		// [0][2][1] ---> [0][1][2]
 		obj_v_copy->sortByOffset(true);
 
-        double offset_buffer = obj_v->getIndex(0).getOffset();
+        double offset_buffer = objV->getIndex(0).getOffset();
         doublev output = {};
 
 		

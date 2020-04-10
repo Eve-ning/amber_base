@@ -4,7 +4,9 @@
 #
 #-------------------------------------------------
 
-INCLUDEPATH += D:/qtdoc/reamber_base/src
+INCLUDEPATH += \
+$$PWD/src \
+$$PWD/includes
 
 TARGET = reamber_base
 TEMPLATE = lib
@@ -28,24 +30,25 @@ unix {
 }
 
 HEADERS += \
-    src/amber_privf/splitstring.h \
-    src/exceptions/reamberexception.h \
-    src/objects/multiple/hitobjectv.h \
-    src/objects/multiple/osuobjectv.h \
-    src/objects/multiple/timingpointv.h \
-    src/objects/singular/hitobject.h \
-    src/objects/singular/osuobject.h \
-    src/amber_f/amber_f.h \
-    src/objects/singular/timingpoint.h
+    include/algorithm/algorithm.h \
+    include/helper/splitstring.h \
+    include/exception/reamberexception.h \
+    include/object/multiple/hitobjectv.h \
+    include/object/multiple/osuobjectv.h \
+    include/object/multiple/osuobjectv.ipp \
+    include/object/multiple/timingpointv.h \
+    include/object/singular/hitobject.h \
+    include/object/singular/osuobject.h \
+    include/object/singular/timingpoint.h
 
 
 SOURCES += \
-    src/amber_privf/splitstring.cpp \
-    src/exceptions/reamberexception.cpp \
-    src/objects/multiple/hitobjectv.cpp \
-    src/objects/multiple/osuobjectv.cpp \
-    src/objects/multiple/timingpointv.cpp \
-    src/objects/singular/hitobject.cpp \
-    src/objects/singular/osuobject.cpp \
-    src/amber_f/amber_f.cpp \
-    src/objects/singular/timingpoint.cpp
+    src/algorithm/algorithm.cpp \
+    src/helper/splitstring.cpp \
+    src/exception/reamberexception.cpp \
+    src/object/multiple/hitobjectv.cpp \
+    src/object/multiple/osuobjectv.cpp \
+    src/object/multiple/timingpointv.cpp \
+    src/object/singular/hitobject.cpp \
+    src/object/singular/osuobject.cpp \
+    src/object/singular/timingpoint.cpp

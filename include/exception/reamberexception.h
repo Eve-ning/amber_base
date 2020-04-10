@@ -14,6 +14,8 @@ class AMBER_BASE ReamberException : public std::exception
 {
 public:
     ReamberException(const char* msg);
+    ReamberException& operator=(const ReamberException& o);
+    ReamberException(const ReamberException& o);
 
     virtual ~ReamberException() noexcept;
 

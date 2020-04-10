@@ -1,13 +1,7 @@
 #pragma once 
 
-#ifdef AMBER_BASE_EX                                                // Declare this when compiling the library!
-    #define AMBER_BASE __declspec(dllexport)                       
-#else
-    #define AMBER_BASE __declspec(dllimport)
-#endif
-
-#include "../../objects/singular/timingpoint.h"
-#include "osuobjectv.h"
+#include "include/object/singular/timingpoint.h"
+#include "include/object/multiple/osuobjectv.h"
 
 // The list variant provides additional features to load in hit_objects and modify them.
 

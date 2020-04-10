@@ -1,11 +1,9 @@
-#include "timingpointv.h"
+#include "include/object/multiple/timingpointv.h"
 #include <algorithm>
 #include <QVector>
-#include "../../amber_privf/splitstring.h"
+#include "include/helper/splitstring.h"
 
-TimingPointV::TimingPointV() : OsuObjectV()
-{
-}
+TimingPointV::TimingPointV() : OsuObjectV() {}
 
 // Create an object with a designated amount of default constructed timing_points 
 
@@ -15,7 +13,7 @@ TimingPointV::TimingPointV(unsigned int amount) {
 
 bool TimingPointV::loadRawTimingPoint(const QString &str,
                                          char delimeter) {
-    return loadRawTimingPoint(SplitString::by_delimeter(str, delimeter));
+    return loadRawTimingPoint(SplitString::byDelimeter(str, delimeter));
 }
 
 bool TimingPointV::loadRawTimingPoint(QVector<QString> str_v)

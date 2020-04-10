@@ -3,6 +3,6 @@
 #include <QVector>
 
 namespace SplitString {
-    QVector<QString> by_delimeter(QString str, char delimeter = '\n');
+    QVector<QString> byDelimeter(QString str, char delimeter = '\n');
 }
 
