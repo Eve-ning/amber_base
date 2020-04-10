@@ -146,13 +146,15 @@ bool HitObject::loadParameters(uint column,
     this->column = column;
     this->offset = offset;
     this->lnEnd = lnEnd;
-    if (!qFuzzyCompare(lnEnd, 0)) noteType = NOTE_TYPE::LN;
-    else if (lnEnd < offset) {
-        // Throw if Long Note End is before Long Note Head unless it's 0
-        throw ReamberException(
-                    QString("Long Note End (%1) is before Head (%2)")
-                    .arg(QString::number(lnEnd), QString::number(offset))
-                    .toStdString().c_str());
+    if (qFuzzyCompare(lnEnd, 0)) noteType = NOTE_TYPE::NORMAL;
+    else {
+        noteType = NOTE_TYPE::LN;
+        if (lnEnd < offset) // Throw if Long Note End is before Long Note Head unless it's 0
+            throw ReamberException(
+                        QString("Long Note End (%1) is before Head (%2)")
+                        .arg(QString::number(lnEnd), QString::number(offset))
+                        .toStdString().c_str());
+
     }
     this->keys = keys;
     return true;
