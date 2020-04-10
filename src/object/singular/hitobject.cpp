@@ -203,18 +203,18 @@ QString HitObject::getStringRaw() const
 {
     //64, 192,61464,1,  0,      0:0:0:0:
     //320,192,61464,128,0,61668:0:0:0:0:
-    QString out = QString("%1,%2,%3,%4,%5,%6,%7:%8:%9:%10:")
+    QString out = QString("%1,%2,%3,%4,%5,%6%7:%8:%9:%10:%11")
             .arg(QString::number(convertColumnToXAxis(column, keys)),
                  QString::number(yAxis),
-                 QString::number(offset),
+                 QString::number(offset, PRINT_FORMAT, PRINT_DECIMAL_PLACES),
                  QString::number(noteType),
                  QString::number(static_cast<uint>(hitsoundSet)),
-                 (lnEnd == 0.0 ? "" : (QString::number(lnEnd) + ":")) + // If it's a note, ln_end == 0
+                 (lnEnd == 0.0 ? "" : (QString::number(lnEnd, PRINT_FORMAT, PRINT_DECIMAL_PLACES) + ":")), // If it's a note, ln_end == 0
                  QString::number(static_cast<uint>(sampleSet)),
                  QString::number(static_cast<uint>(additionSet)),
-                 QString::number(static_cast<uint>(customSet)),
-                 QString::number(volume))
-            .arg(hitsoundFile);
+                 QString::number(static_cast<uint>(customSet)))
+            .arg(QString::number(volume),
+                 hitsoundFile);
 
     return out;
 }

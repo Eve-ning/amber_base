@@ -32,6 +32,9 @@ public:
 
     virtual QString getStringRaw() const = 0;
 
+    static const int PRINT_DECIMAL_PLACES = 10;
+    static const char PRINT_FORMAT = 'g';
+
 protected: // only allow inherited classes use the constructor
 
     OsuObject();

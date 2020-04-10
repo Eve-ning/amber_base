@@ -89,8 +89,8 @@ bool TimingPoint::operator ==(const TimingPoint & tp) const {
 
 QString TimingPoint::getStringRaw() const {
     QString out = QString("%1,%2,%3,%4,%5,%6,%7,%8")
-            .arg(QString::number(offset),
-                 QString::number(convertValueToCode(value, isBpm)),
+            .arg(QString::number(offset, PRINT_FORMAT, PRINT_DECIMAL_PLACES),
+                 QString::number(convertValueToCode(value, isBpm), PRINT_FORMAT, PRINT_DECIMAL_PLACES),
                  QString::number(metronome),
                  QString::number(static_cast<uint>(sampleSet)),
                  QString::number(sampleSetIndex),
