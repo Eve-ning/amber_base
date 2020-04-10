@@ -1,5 +1,10 @@
 #pragma once
 #include "include/object/multiple/osuobjectv.h"
+#include <QtGlobal>
+
+template<class objType>
+OsuObjectV<objType>::OsuObjectV() : objectV({}) {}
+
 
 template<class objType>
 OsuObjectV<objType> &OsuObjectV<objType>::operator=(const OsuObjectV<objType> &o) {
@@ -12,6 +17,17 @@ template<class objType>
 OsuObjectV<objType>::OsuObjectV(const OsuObjectV<objType> &o) {
     this->objectV = QVector<objType>(o.objectV);
 }
+
+template<class objType>
+OsuObjectV<objType> &OsuObjectV<objType>::operator=(OsuObjectV<objType> &&o) noexcept {
+    qSwap(objectV, o.objectV);
+    return *this;
+}
+
+template<class objType>
+OsuObjectV<objType>::OsuObjectV(OsuObjectV<objType> &&o) noexcept :
+    objectV(std::exchange(o.objectV, QVector<objType>({}))){} // TODO: To change with qExchange on Qt 5.14
+
 
 template<class objType>
 void OsuObjectV<objType>::loadObjSptr(QVector<QSPtr<OsuObject>> objSptrV) {

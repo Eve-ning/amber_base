@@ -4,6 +4,7 @@
 // All vectors will inherit from this, so polymorphism on vectors will be possible
 #include "include/object/singular/osuobject.h"
 #include "include/object/singular/hitobject.h"
+#include <QtGlobal>
 #include <QVector>
 
 template <class objType>
@@ -11,9 +12,12 @@ class OsuObjectV
 {
 public:
 
-    OsuObjectV() : objectV({}) {}
+    OsuObjectV();
     OsuObjectV& operator= (const OsuObjectV<objType>& o);
+    OsuObjectV& operator= (OsuObjectV<objType>&& o) noexcept;
     OsuObjectV(const OsuObjectV<objType>& o);
+    OsuObjectV(OsuObjectV<objType>&& o) noexcept;
+
 	//// Explicit Loading
 
 	// Loads from a sptr vector
