@@ -2,10 +2,14 @@
 
 // This acts as a middleman between the vector objects and the lib_functions
 // All vectors will inherit from this, so polymorphism on vectors will be possible
-#include "include/object/singular/osuobject.h"
-#include "include/object/singular/hitobject.h"
-#include <QtGlobal>
+
 #include <QVector>
+#include <QSharedPointer>
+
+#define QSPtr QSharedPointer
+
+class OsuObject;
+class HitObject;
 
 template <class objType>
 class OsuObjectV

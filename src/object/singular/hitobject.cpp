@@ -1,7 +1,6 @@
 #include "include/object/singular/hitobject.h"
 #include "include/helper/splitstring.h"
 #include "include/exception/reamberexception.h"
-#include <QDebug>
 
 HitObject::HitObject() :
     OsuObject   (0.0),

@@ -1,7 +1,7 @@
 #include "include/object/multiple/timingpointv.h"
+#include "include/helper/splitstring.h"
 #include <algorithm>
 #include <QVector>
-#include "include/helper/splitstring.h"
 
 TimingPointV::TimingPointV() : OsuObjectV() {}
 

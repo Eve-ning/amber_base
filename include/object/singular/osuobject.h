@@ -7,6 +7,7 @@
 #endif
 
 #include <QString>
+#include <QDebug>
 #include <QSharedPointer>
 
 // May be dangerous but i don't think there's a scenario where it's an issue for now

@@ -1,6 +1,7 @@
 #pragma once
 #include "include/object/multiple/osuobjectv.h"
-#include <QtGlobal>
+#include "include/object/singular/osuobject.h"
+#include "include/object/singular/hitobject.h"
 
 template<class objType>
 OsuObjectV<objType>::OsuObjectV() : objectV({}) {}

@@ -1,5 +1,8 @@
 #pragma once
+#include "include/exception/reamberexception.h"
 #include "include/algorithm/algorithm.h"
+#include "include/object/multiple/hitobjectv.h"
+#include "include/object/multiple/timingpointv.h"
 
 namespace algorithm
 {

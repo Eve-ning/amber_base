@@ -1,7 +1,6 @@
 #pragma once 
 
 #include "include/object/singular/osuobject.h"
-#include <string>
 
 // Defines the Hit Object/Note/Long Note in the rhythm game
 // Stems from osu_object

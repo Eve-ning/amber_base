@@ -1,8 +1,5 @@
 #pragma once
 
-#include "include/object/multiple/hitobjectv.h"
-#include "include/object/multiple/timingpointv.h"
-#include "include/exception/reamberexception.h"
 #include "include/object/multiple/osuobjectv.h"
 #include <vector>
 // Here we declare all common functions that amber_base will include
@@ -30,6 +27,9 @@
 	We are also able to shorten most library code and shift common and important implementations
 		to the class itself
 */
+
+class HitObjectV;
+class TimingPointV;
 
 template<typename T>
 using ObjV = OsuObjectV<T>;

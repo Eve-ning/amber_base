@@ -1,7 +1,6 @@
 #include "include/object/multiple/hitobjectv.h"
-#include <algorithm>
 #include "include/helper/splitstring.h"
-#include <iostream>
+#include <algorithm>
 
 HitObjectV::HitObjectV() : OsuObjectV(){}
 
@@ -15,7 +14,7 @@ bool HitObjectV::loadEditorHitObject(QString str, unsigned int keys) {
 
 	// Reject loading of empty string
     if (!HitObject::trimEditorHitObject(str)) {
-        std::cout << "Invalid Editor Hit Object Format" << std::endl;
+        qDebug() << "Invalid Editor Hit Object Format";
         return false;
     }; // Shed the brackets
 
