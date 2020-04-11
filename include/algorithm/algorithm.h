@@ -1,6 +1,6 @@
 #pragma once
 
-#include "include/object/multiple/osuobjectv.h"
+#include "object/multiple/osuobjectv.h"
 #include <vector>
 // Here we declare all common functions that amber_base will include
 
@@ -183,4 +183,4 @@ namespace algorithm
 
 };
 
-#include "include/algorithm/algorithm.ipp"
+#include "algorithm/algorithm.ipp"

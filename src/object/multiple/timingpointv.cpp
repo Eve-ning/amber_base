@@ -1,5 +1,5 @@
-#include "include/object/multiple/timingpointv.h"
-#include "include/helper/splitstring.h"
+#include "object/multiple/timingpointv.h"
+#include "helper/splitstring.h"
 #include <algorithm>
 #include <QVector>
 

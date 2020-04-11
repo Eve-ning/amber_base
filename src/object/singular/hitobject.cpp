@@ -1,6 +1,6 @@
-#include "include/object/singular/hitobject.h"
-#include "include/helper/splitstring.h"
-#include "include/exception/reamberexception.h"
+#include "object/singular/hitobject.h"
+#include "helper/splitstring.h"
+#include "exception/reamberexception.h"
 
 HitObject::HitObject() :
     OsuObject   (0.0),
@@ -113,7 +113,7 @@ bool HitObject::loadRawHitObject(const QString& str,
         additionSet  = static_cast<OsuObject::SAMPLE_SET>(hitObjectColonV[1].toInt());
         customSet    = static_cast<OsuObject::SAMPLE_SET>(hitObjectColonV[2].toInt());
         volume       = hitObjectColonV[3].toUInt();
-        hitsoundFile = hitObjectColonV[4];
+        hitsoundFile = hitObjectColonV.size() == 4 ? "" : hitObjectColonV[4];
 
         // ln_end is 0 as by constructor
         break;
@@ -128,7 +128,7 @@ bool HitObject::loadRawHitObject(const QString& str,
         additionSet  = static_cast<OsuObject::SAMPLE_SET>(hitObjectColonV[2].toInt());
         customSet    = static_cast<OsuObject::SAMPLE_SET>(hitObjectColonV[3].toInt());
         volume       = hitObjectColonV[4].toUInt();
-        hitsoundFile = hitObjectColonV[5];
+        hitsoundFile = hitObjectColonV.size() == 5 ? "" :hitObjectColonV[5];
 
         break;
     default:
@@ -250,11 +250,11 @@ void HitObject::setHitsoundSet(const SAMPLE_SET &hitsound_set)  { this->hitsound
 
 
 uint HitObject::convertColumnToXAxis(uint column, uint keys) {
-    return static_cast<uint>(round(((512 * column) + 256) / keys));
+    return static_cast<uint>(round(((512.0 * column) + 256.0) / keys));
 }
 
 uint HitObject::convertXAxisToColumn(uint x_axis, uint keys) {
-    return static_cast<uint>(round((x_axis * keys - 256) / 512));
+    return static_cast<uint>(ceil((x_axis * keys - 256.0) / 512.0));
 }
 
 bool HitObject::trimEditorHitObject(QString& str)

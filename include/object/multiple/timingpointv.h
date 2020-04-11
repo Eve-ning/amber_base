@@ -1,7 +1,7 @@
 #pragma once 
 
-#include "include/object/singular/timingpoint.h"
-#include "include/object/multiple/osuobjectv.h"
+#include "object/singular/timingpoint.h"
+#include "object/multiple/osuobjectv.h"
 
 // The list variant provides additional features to load in hit_objects and modify them.
 

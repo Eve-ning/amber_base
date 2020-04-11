@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "include/object/singular/osuobject.h"
+#include "object/singular/osuobject.h"
 
 class AMBER_BASE TimingPoint : public OsuObject
 {

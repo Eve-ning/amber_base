@@ -1,7 +1,7 @@
 #pragma once
-#include "include/object/multiple/osuobjectv.h"
-#include "include/object/singular/osuobject.h"
-#include "include/object/singular/hitobject.h"
+#include "object/multiple/osuobjectv.h"
+#include "object/singular/osuobject.h"
+#include "object/singular/hitobject.h"
 
 template<class objType>
 OsuObjectV<objType>::OsuObjectV() : objectV({}) {}

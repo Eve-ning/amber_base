@@ -1,4 +1,4 @@
-#include "include/object/singular/osuobject.h"
+#include "object/singular/osuobject.h"
 #include <QtGlobal>
 
 OsuObject::OsuObject() : offset(-1){}

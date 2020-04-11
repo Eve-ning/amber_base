@@ -1,6 +1,6 @@
-#include "include/object/singular/timingpoint.h"
-#include "include/exception/reamberexception.h"
-#include "include/helper/splitstring.h"
+#include "object/singular/timingpoint.h"
+#include "exception/reamberexception.h"
+#include "helper/splitstring.h"
 
 TimingPoint::TimingPoint() :
     value(1),

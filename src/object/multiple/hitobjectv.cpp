@@ -1,5 +1,5 @@
-#include "include/object/multiple/hitobjectv.h"
-#include "include/helper/splitstring.h"
+#include "object/multiple/hitobjectv.h"
+#include "helper/splitstring.h"
 #include <algorithm>
 
 HitObjectV::HitObjectV() : OsuObjectV(){}
