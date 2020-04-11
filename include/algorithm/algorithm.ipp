@@ -12,7 +12,7 @@ namespace algorithm
     //  0
 
     template <typename T>
-    VDouble offsetDiff(QSPtr<ObjV<T>> const objV) {
+    QVector<double> offsetDiff(QSPtr<ObjV<T>> const objV) {
         // Gets the difference in all offset difference in a vector form
         // Note that notes on the same offset will be regarded as 1 offset
         // This will return a vector that has a -1 size
@@ -23,7 +23,7 @@ namespace algorithm
         objV->sortByOffset(true);
 
         double offsetPrev = objV->getIndex(0).getOffset();
-        VDouble output = {};
+        QVector<double> output = {};
 
         for (const T &obj : *objV) {
 
@@ -42,7 +42,7 @@ namespace algorithm
 
     template <typename T>
     ObjV<T> copy(T obj,
-                 const VDouble& copyToV,
+                 const QVector<double>& copyToV,
                  bool sort) {
         // [0][1] IN
         // <0>	  IN
@@ -72,7 +72,7 @@ namespace algorithm
 
     template <typename T>
     ObjV<T> copy(QSPtr<ObjV<T>> const objV,
-                 VDouble copyToV,
+                 QVector<double> copyToV,
                  bool anchorFront,
                  bool sort) {
         // [0]   [2]	IN
@@ -105,7 +105,7 @@ namespace algorithm
 
     template <typename T>
     ObjV<T> copyDelay(QSPtr<ObjV<T>> const objV,
-                      VDouble offsetV,
+                      QVector<double> offsetV,
                       bool include) {
         // <0>   <1>   <2> IN
         //  0     2     4
@@ -167,7 +167,7 @@ namespace algorithm
     }
 
 
-    VDouble copySubdBy(VDouble offsetV,
+    QVector<double> copySubdBy(QVector<double> offsetV,
                        uint subdivisions,
                        bool include) {
         // [0]   [2]   [4] IN
@@ -175,7 +175,7 @@ namespace algorithm
 
         if (offsetV.size() <= 1) throw ReamberException("offsetV size must be at least 2 for the function to work");
 
-        VDouble offsetVC = include ? offsetV : VDouble();
+        QVector<double> offsetVC = include ? offsetV : QVector<double>();
 
         // [0][1][2][3]
         // <------->
@@ -202,7 +202,7 @@ namespace algorithm
 
 
     template <typename T>
-    ObjV<T> copySubdBy(VDouble offsetV,
+    ObjV<T> copySubdBy(QVector<double> offsetV,
                        const T& objDefine,
                        uint subdivisions,
                        bool include) {
@@ -239,7 +239,7 @@ namespace algorithm
     }
 
 
-    VDouble copySubdTo(VDouble offsetV,
+    QVector<double> copySubdTo(QVector<double> offsetV,
                        uint subdLength,
                        bool include) {
         // [0]            [5] IN
@@ -249,7 +249,7 @@ namespace algorithm
         // [0] REJECT
         if (offsetV.size() <= 1) throw ReamberException("offsetV size must be at least 2 for the function to work");
 
-        VDouble offsetVC = include ? offsetV : VDouble();
+        QVector<double> offsetVC = include ? offsetV : QVector<double>();
 
         // [0][1][2][3]
         // <------->
@@ -276,7 +276,7 @@ namespace algorithm
     }
 
     template <typename T>
-    ObjV<T> copySubdTo(VDouble offsetV,
+    ObjV<T> copySubdTo(QVector<double> offsetV,
                        const T& objDefine,
                        uint subdLength,
                        bool include) {
@@ -314,7 +314,7 @@ namespace algorithm
     }
 
 
-    VDouble copyRel(VDouble offsetV,
+    QVector<double> copyRel(QVector<double> offsetV,
                     double relativity,
                     bool include) {
         // [0]   [2]   [4] IN
@@ -328,7 +328,7 @@ namespace algorithm
             throw ReamberException("relativity must be non-zero and positive");
 
 
-        VDouble offsetVC = include ? offsetV : VDouble();
+        QVector<double> offsetVC = include ? offsetV : QVector<double>();
 
         //	[0][1][2][3]
         //  <------->
@@ -348,7 +348,7 @@ namespace algorithm
     }
 
     template <typename T>
-    ObjV<T> copyRel(const VDouble offsetV,
+    ObjV<T> copyRel(const QVector<double> offsetV,
                     const T objDefine,
                     double relativity,
                     bool include) {
@@ -388,7 +388,7 @@ namespace algorithm
     }
 
 
-    VDouble copyAbs(const VDouble offsetV,
+    QVector<double> copyAbs(const QVector<double> offsetV,
                     double relativity,
                     bool include,
                     bool relativeFromFront,
@@ -402,7 +402,7 @@ namespace algorithm
 
         // <0><0><1><2><2>
         // [0][1][2]
-        VDouble offsetVC = include ? offsetV : VDouble();
+        QVector<double> offsetVC = include ? offsetV : QVector<double>();
 
         // [0][1][2][3]
         //  <----->
@@ -435,7 +435,7 @@ namespace algorithm
 
 
     template <typename T>
-    ObjV<T> copyAbs(const VDouble offsetV,
+    ObjV<T> copyAbs(const QVector<double> offsetV,
                     const T objDefine,
                     double relativity,
                     bool include,
@@ -499,7 +499,7 @@ namespace algorithm
     }
 
 
-    TimingPointV stutter(VDouble offsetV,
+    TimingPointV stutter(QVector<double> offsetV,
                          double initial,
                          double average,
                          bool isBpm,
@@ -568,7 +568,7 @@ namespace algorithm
     }
 
 
-    VDouble stutterRelInitLimits(double threshold,
+    QVector<double> stutterRelInitLimits(double threshold,
                                  double average,
                                  double thresholdMin,
                                  double thresholdMax) {
@@ -583,7 +583,7 @@ namespace algorithm
         double init_1 = thresholdMin + ((average - thresholdMin) / threshold);
         double init_2 = thresholdMax + ((average - thresholdMax) / threshold);
 
-        VDouble output;
+        QVector<double> output;
         if (init_1 < init_2) {
             output.push_back(init_1);
             output.push_back(init_2);
@@ -596,7 +596,7 @@ namespace algorithm
     }
 
 
-    VDouble stutterAbsInitLimits(double threshold,
+    QVector<double> stutterAbsInitLimits(double threshold,
                                  double average,
                                  double distance,
                                  double thresholdMin,
@@ -607,7 +607,7 @@ namespace algorithm
     }
 
 
-    TimingPointV stutterRel(const VDouble &offsetV,
+    TimingPointV stutterRel(const QVector<double> &offsetV,
                             double initial,
                             double relativity,
                             double average,
@@ -622,7 +622,7 @@ namespace algorithm
     }
 
 
-    TimingPointV stutterAbs(const VDouble &offsetV,
+    TimingPointV stutterAbs(const QVector<double> &offsetV,
                             double initial,
                             double relativity,
                             double average,
