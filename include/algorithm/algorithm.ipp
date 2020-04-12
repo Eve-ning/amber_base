@@ -1,6 +1,6 @@
 #pragma once
-#include "exception/reamberexception.h"
 #include "algorithm/algorithm.h"
+#include "exception/reamberexception.h"
 #include "object/multiple/hitobjectv.h"
 #include "object/multiple/timingpointv.h"
 
@@ -503,7 +503,8 @@ namespace algorithm
                          double initial,
                          double average,
                          bool isBpm,
-                         bool skipOnInvalid) {
+                         bool skipOnInvalid,
+                         bool skipLast) {
         // [0][1][2][3][4]
         // <I><T><I><T><A>
         // I: INITIAL, T: THRESHOLD, A: AVERAGE
@@ -552,7 +553,7 @@ namespace algorithm
                 TimingPoint endTp;
                 endTp.loadParameters(*offsetItEnd, average, isBpm);
 
-                tpV.pushBack(endTp);
+                if (!skipLast) tpV.pushBack(endTp);
                 break;
             }
 
@@ -612,13 +613,14 @@ namespace algorithm
                             double relativity,
                             double average,
                             bool isBpm,
-                            bool skipOnInvalid) {
+                            bool skipOnInvalid,
+                            bool skipLast) {
         // Creates a simple Act - CounterAct - Normalize movement
         // Stutter creation will chain on more than 2 offsets
 
         // force inclusion of inits
         auto offsetVC = copyRel(offsetV, relativity, true);
-        return stutter(offsetVC, initial, average, isBpm, skipOnInvalid);
+        return stutter(offsetVC, initial, average, isBpm, skipOnInvalid, skipLast);
     }
 
 
@@ -628,17 +630,18 @@ namespace algorithm
                             double average,
                             bool isBpm,
                             bool relativeFromFront,
-                            bool skipOnInvalid) {
+                            bool skipOnInvalid,
+                            bool skipLast) {
         // Creates a simple Act - CounterAct - Normalize movement
         // Stutter creation will chain on more than 2 offsets
 
         // force inclusion of inits
         auto offsetVC = copyAbs(offsetV, relativity, true, relativeFromFront, skipOnInvalid);
-        return stutter(offsetVC, initial, average, isBpm, skipOnInvalid);
+        return stutter(offsetVC, initial, average, isBpm, skipOnInvalid, skipLast);
     }
 
     TimingPointV stutterSwap(TimingPointV tpV) {
-
+        // Basically reverses the stutter
         if (tpV.size() % 2 != 1) {
             // only works on odd
             throw ReamberException("stutter can only be done on odd number of offset");

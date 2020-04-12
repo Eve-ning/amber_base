@@ -1,7 +1,10 @@
 #pragma once
 
 #include "object/multiple/osuobjectv.h"
-#include <vector>
+#include "exception/reamberexception.h"
+#include "object/multiple/hitobjectv.h"
+#include "object/multiple/timingpointv.h"
+
 // Here we declare all common functions that amber_base will include
 
 /*	REPRESENTING A VECTOR OF OSU_OBJECTs
@@ -42,72 +45,72 @@ namespace algorithm
 	//  0
 
 	template <typename T>
-    QVector<double> offsetDiff(QSPtr<ObjV<T>> const objV);
+    inline QVector<double> offsetDiff(QSPtr<ObjV<T>> const objV);
 
     template <typename T>
-    ObjV<T> copy(T obj,
+    inline ObjV<T> copy(T obj,
                  const QVector<double>& copyToV,
                  bool sort = true);
 
     template <typename T>
-    ObjV<T> copy(QSPtr<ObjV<T>> const objV,
+    inline ObjV<T> copy(QSPtr<ObjV<T>> const objV,
                  QVector<double> copyToV,
                  bool anchorFront = true,
                  bool sort = true);
 
 	template <typename T>
-    ObjV<T> copyDelay(QSPtr<ObjV<T>> objV,
+    inline ObjV<T> copyDelay(QSPtr<ObjV<T>> objV,
                       QVector<double> offsetV,
                       bool include);
 
-    QVector<double> copySubdBy(QVector<double> offsetV,
+    inline QVector<double> copySubdBy(QVector<double> offsetV,
                        uint subdivisions,
                        bool include);
 
 	template <typename T>
-    ObjV<T> copySubdBy(QVector<double> offsetV,
+    inline ObjV<T> copySubdBy(QVector<double> offsetV,
                        const T& objDefine,
                        uint subdivisions,
                        bool include);
 
 	template <typename T>
-    ObjV<T> copySubdBy(QSPtr<ObjV<T>> const objV,
+    inline ObjV<T> copySubdBy(QSPtr<ObjV<T>> const objV,
                        uint subdivisions,
                        bool include);
 
-    QVector<double> copySubdTo(QVector<double> offsetV,
+    inline QVector<double> copySubdTo(QVector<double> offsetV,
                        uint subdLength,
                        bool include);
 
     template <typename T>
-    ObjV<T> copySubdTo(QVector<double> offsetV,
+    inline ObjV<T> copySubdTo(QVector<double> offsetV,
                        const T& objDefine,
                        uint subdLength,
                        bool include);
 
     template <typename T>
-    ObjV<T> copySubdTo(QSPtr<ObjV<T>> const objV,
+    inline ObjV<T> copySubdTo(QSPtr<ObjV<T>> const objV,
                        uint subdLength,
                        bool include);
 
 
-    QVector<double> copyRel(QVector<double> offsetV,
+    inline QVector<double> copyRel(QVector<double> offsetV,
                     double relativity,
                     bool include);
 
 	template <typename T>
-    ObjV<T> copyRel(const QVector<double> offsetV,
+    inline ObjV<T> copyRel(const QVector<double> offsetV,
                     const T objDefine,
                     double relativity,
                     bool include);
 
 	template <typename T>
-    ObjV<T> copyRel(QSPtr<ObjV<T>> const objV,
+    inline ObjV<T> copyRel(QSPtr<ObjV<T>> const objV,
                     double relativity,
                     bool include);
 
 
-    QVector<double> copyAbs(const QVector<double> offsetV,
+    inline QVector<double> copyAbs(const QVector<double> offsetV,
                     double relativity,
                     bool include,
                     bool relativeFromFront = true,
@@ -115,7 +118,7 @@ namespace algorithm
 
 
 	template <typename T>
-    ObjV<T> copyAbs(const QVector<double> offsetV,
+    inline ObjV<T> copyAbs(const QVector<double> offsetV,
                     const T objDefine,
                     double relativity,
                     bool include,
@@ -124,63 +127,67 @@ namespace algorithm
 
 
 	template <typename T>
-    ObjV<T> copyAbs(QSPtr<ObjV<T>> const objV,
+    inline ObjV<T> copyAbs(QSPtr<ObjV<T>> const objV,
                     double relativity,
                     bool include,
                     bool relativeFromFront = true,
                     bool excludeOverlap = true);
 
 
-    TimingPointV normalize(TimingPointV tpV,
+    inline TimingPointV normalize(TimingPointV tpV,
                            const double &reference,
                            bool include = false);
 
 
-    TimingPointV stutter(QVector<double> offsetV,
+    inline TimingPointV stutter(QVector<double> offsetV,
                          double initial,
                          double average = 1.0,
                          bool isBpm = false,
-                         bool skipOnInvalid = true);
+                         bool skipOnInvalid = true,
+                         bool skipLast = false);
 
-    QVector<double> stutterRelInitLimits(double threshold,
+    inline QVector<double> stutterRelInitLimits(double threshold,
                                  double average,
-                                 double thresholdMin = 0.1,
+                                 double thresholdMin = 0.01,
                                  double thresholdMax = 10.0);
 
 
-    QVector<double> stutterAbsInitLimits(double threshold,
+    inline QVector<double> stutterAbsInitLimits(double threshold,
                                  double average,
                                  double distance,
-                                 double thresholdMin = 0.1,
+                                 double thresholdMin = 0.01,
                                  double thresholdMax = 10.0);
 
-    TimingPointV stutterRel(const QVector<double> &offset_v,
+    inline TimingPointV stutterRel(const QVector<double> &offset_v,
                             double initial,
                             double relativity,
                             double average = 1.0,
                             bool isBpm = false,
-                            bool skipOnInvalid = true);
+                            bool skipOnInvalid = true,
+                            bool skipLast = false);
 
-    TimingPointV stutterAbs(const QVector<double> &offset_v,
+    inline TimingPointV stutterAbs(const QVector<double> &offset_v,
                             double initial,
                             double relativity,
                             double average = 1.0,
                             bool isBpm = false,
                             bool relativeFromFront = true,
-                            bool skipOnInvalid = true);
+                            bool skipOnInvalid = true,
+                            bool skipLast = false);
 
-    TimingPointV stutterSwap(TimingPointV tpV);
+    inline TimingPointV stutterSwap(TimingPointV tpV);
 
 	template <typename T>
-    ObjV<T> extractNth(QSPtr<ObjV<T>> const objV,
+    inline ObjV<T> extractNth(QSPtr<ObjV<T>> const objV,
                        uint n,
                        uint offset = 0);
 
 	template <typename T>
-    ObjV<T> deleteNth(QSPtr<ObjV<T>> objV,
+    inline ObjV<T> deleteNth(QSPtr<ObjV<T>> objV,
                       uint n,
                       uint offset = 0);
 
 };
+
 
 #include "algorithm/algorithm.ipp"
