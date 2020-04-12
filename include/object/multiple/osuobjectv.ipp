@@ -242,6 +242,11 @@ void OsuObjectV<objType>::cross_effect(OsuObjectV<objType> eff_obj_v, objType (*
 }
 
 template<class objType>
+bool OsuObjectV<objType>::empty() const {
+    return objectV.empty();
+}
+
+template<class objType>
 typename QVector<objType>::iterator OsuObjectV<objType>::begin() { return objectV.begin(); }
 
 template<class objType>

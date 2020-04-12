@@ -86,6 +86,8 @@ public:
     objType operator [](unsigned int i) const;
     objType & operator [](unsigned int i);
 
+    bool empty() const;
+
     void cross_effect(OsuObjectV eff_obj_v, objType (*effect)(objType self, objType eff));
 
 	// Direct all iterator functions to the vector
