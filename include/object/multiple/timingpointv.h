@@ -20,10 +20,10 @@ public:
 	//// Explicit Loading
 
 	// Loads from data from the .osu file as one whole string
-    bool loadRawTimingPoint(const QString& str, char delimeter = '\n');
+    bool loadRaw(const QString& str, char delimeter = '\n');
 
 	// Loads from data from the .osu file as a vector
-    bool loadRawTimingPoint(QVector<QString> str_v);
+    bool loadRaw(QVector<QString> str_v);
 
 	// Gets sv only in a vector form
     TimingPointV getSvOnly() const;

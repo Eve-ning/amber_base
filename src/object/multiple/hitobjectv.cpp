@@ -10,10 +10,10 @@ HitObjectV::HitObjectV(unsigned int amount) {
     loadDefaults(amount);
 }
 
-bool HitObjectV::loadEditorHitObject(QString str, unsigned int keys) {
+bool HitObjectV::loadEditor(QString str, unsigned int keys) {
 
 	// Reject loading of empty string
-    if (!HitObject::trimEditorHitObject(str)) {
+    if (!HitObject::trimEditor(str)) {
         qDebug() << "Invalid Editor Hit Object Format";
         return false;
     }; // Shed the brackets
@@ -39,16 +39,16 @@ bool HitObjectV::loadEditorHitObject(QString str, unsigned int keys) {
 
 // Where if the user loads in the whole thing as a string
 
-bool HitObjectV::loadRawHitObject(QString str,
+bool HitObjectV::loadRaw(QString str,
                                      unsigned int keys,
                                      char delimeter) {
-    return loadRawHitObject(SplitString::byDelimeter(str, delimeter), keys); // Use the vector variant of this function
+    return loadRaw(SplitString::byDelimeter(str, delimeter), keys); // Use the vector variant of this function
 }
 
-bool HitObjectV::loadRawHitObject(QVector<QString> str_v, unsigned int keys) {
+bool HitObjectV::loadRaw(QVector<QString> str_v, unsigned int keys) {
     for (QString str : str_v) { // For each str in the string vector
         HitObject ho;
-        if (!ho.loadRawHitObject(str, keys)) return false;
+        if (!ho.loadRaw(str, keys)) return false;
         objectV.push_back(ho); // Append to our private hit_object vector
 	}
     return true;
@@ -77,7 +77,7 @@ QVector<unsigned int> HitObjectV::getColumnV() const {
 HitObjectV HitObjectV::getNotesOnly() const {
     HitObjectV output = HitObjectV();
     for (const auto &ho : objectV) {
-        if (ho.getIsNote()) output.pushBack(ho);
+        if (ho.isNote()) output.pushBack(ho);
 	}
 	return output;
 }
@@ -87,7 +87,7 @@ HitObjectV HitObjectV::getNotesOnly() const {
 HitObjectV HitObjectV::getLongNotesOnly() const {
     HitObjectV output = HitObjectV();
     for (const auto &ho : objectV) {
-        if (ho.getIsLongNote()) output.pushBack(ho);
+        if (ho.isLongNote()) output.pushBack(ho);
 	}
 	return output;
 }

@@ -30,12 +30,12 @@ HitObject::HitObject(const HitObject &o):
     hitsoundFile(o.hitsoundFile),
     keys        (o.keys){}
 
-bool HitObject::loadEditorHitObject(QString str,
+bool HitObject::loadEditor(QString str,
                                     uint keys,
                                     uint index)
 {
     // Remove the brackets
-    if (!trimEditorHitObject(str)){
+    if (!trimEditor(str)){
         qDebug() << "This is not a valid Editor Hit Object string.";
         return false;
     }
@@ -73,7 +73,7 @@ bool HitObject::loadEditorHitObject(QString str,
     return true;
 }
 
-bool HitObject::loadRawHitObject(const QString& str,
+bool HitObject::loadRaw(const QString& str,
                                  uint keys)
 {
     int count_comma = 0;
@@ -243,8 +243,8 @@ uint HitObject::getKeys() const     { return keys; }
 void HitObject::setKeys(uint keys)  { this->keys = keys; }
 double HitObject::getLnEnd() const      { return lnEnd; }
 void HitObject::setLnEnd(double ln_end) { this->lnEnd = ln_end; }
-bool HitObject::getIsNote() const       { return (lnEnd == 0.0); }
-bool HitObject::getIsLongNote() const   { return !getIsNote(); }
+bool HitObject::isNote() const       { return (lnEnd == 0.0); }
+bool HitObject::isLongNote() const   { return !isNote(); }
 OsuObject::SAMPLE_SET HitObject::getHitsoundSet() const         { return hitsoundSet; }
 void HitObject::setHitsoundSet(const SAMPLE_SET &hitsound_set)  { this->hitsoundSet = hitsound_set;}
 
@@ -257,7 +257,7 @@ uint HitObject::convertXAxisToColumn(uint x_axis, uint keys) {
     return static_cast<uint>(ceil((x_axis * keys - 256.0) / 512.0));
 }
 
-bool HitObject::trimEditorHitObject(QString& str)
+bool HitObject::trimEditor(QString& str)
 {
 	// Validate the str
 	// If either of these characters are not found, it's not valid

@@ -5,11 +5,11 @@
 TimingPoint::TimingPoint() :
     value(1),
     metronome(4),
-    sampleSet(OsuObject::SAMPLE_SET::AUTO),
+    sampleSet(SAMPLE_SET::AUTO),
     sampleSetIndex(0),
     volume(25),
-    isBpm(false),
-    isKiai(false) {}
+    pointType(SV),
+    kiai(false) {}
 
 TimingPoint::TimingPoint(const TimingPoint &o) :
     OsuObject       (o.offset),
@@ -18,10 +18,10 @@ TimingPoint::TimingPoint(const TimingPoint &o) :
     sampleSet       (o.sampleSet),
     sampleSetIndex  (o.sampleSetIndex),
     volume          (o.volume),
-    isBpm           (o.isBpm),
-    isKiai          (o.isKiai) {}
+    pointType       (o.pointType),
+    kiai            (o.kiai) {}
 
-bool TimingPoint::loadRawTimingPoint(QString str)
+bool TimingPoint::loadRaw(QString str)
 {
     // Validate the str
     // If either of these characters are not found, it's not valid
@@ -37,25 +37,32 @@ bool TimingPoint::loadRawTimingPoint(QString str)
 
     offset          = timingPointCommaV[0].toDouble();
     metronome       = timingPointCommaV[2].toUInt();
-    sampleSet       = static_cast<OsuObject::SAMPLE_SET>(timingPointCommaV[3].toInt());
+    sampleSet       = static_cast<SAMPLE_SET>(timingPointCommaV[3].toInt());
     sampleSetIndex  = timingPointCommaV[4].toUInt();
     volume          = timingPointCommaV[5].toUInt();
-    isBpm           = (timingPointCommaV[6] == "1");
-    isKiai          = (timingPointCommaV[7] == "1");
+    pointType       = static_cast<POINT_TYPE>(timingPointCommaV[6].toInt());
+    kiai            = (timingPointCommaV[7] == "1");
 
 	// Dependent on is_bpm
-    value = convertCodeToValue(timingPointCommaV[1].toDouble(), isBpm);
+    value = convertCodeToValue(timingPointCommaV[1].toDouble(), pointType);
 
     return true;
 }
 
-bool TimingPoint::loadParameters(double offset, double value, bool isBpm, bool isKiai, uint metronome){
-    this->offset = offset;
-    this->value = value;
-    this->isBpm = isBpm;
-    this->isKiai = isKiai;
-    this->metronome = metronome;
+bool TimingPoint::loadParameters(double offset, double value, bool isBpm, bool isKiai, uint metronome) {
+    return loadParameters(offset,value, isBpm ? BPM : SV, isKiai, metronome);
+}
 
+bool TimingPoint::loadParameters(double offset, double value, uint metronome, OsuObject::SAMPLE_SET sampleSet, uint sampleSetIndex, uint volume, bool isBpm, bool isKiai) {
+    return loadParameters(offset, value, metronome, sampleSet, sampleSetIndex, volume, isBpm ? BPM : SV, isKiai);
+}
+
+bool TimingPoint::loadParameters(double offset, double value, POINT_TYPE pointType, bool isKiai, uint metronome){
+    this->offset    = offset;
+    this->value     = value;
+    this->pointType = pointType;
+    this->kiai      = isKiai;
+    this->metronome = metronome;
     return true;
 }
 
@@ -65,9 +72,9 @@ bool TimingPoint::loadParameters(double offset,
                                  SAMPLE_SET sampleSet,
                                  uint sampleSetIndex,
                                  uint volume,
-                                 bool isBpm,
+                                 POINT_TYPE pointType,
                                  bool isKiai) {
-    loadParameters(offset, value, isBpm, isKiai, metronome);
+    loadParameters(offset, value, pointType, isKiai, metronome);
     this->sampleSet = sampleSet;
     this->sampleSetIndex = sampleSetIndex;
     this->volume = volume;
@@ -82,21 +89,21 @@ bool TimingPoint::operator ==(const TimingPoint & tp) const {
         this->sampleSet == tp.sampleSet &&
         this->sampleSetIndex == tp.sampleSetIndex &&
 		volume == tp.volume &&
-        isKiai == tp.isKiai &&
-        isBpm == tp.isBpm
+        kiai == tp.kiai &&
+        pointType == tp.pointType
 		);
 }
 
 QString TimingPoint::getStringRaw() const {
     QString out = QString("%1,%2,%3,%4,%5,%6,%7,%8")
             .arg(QString::number(offset, PRINT_FORMAT, PRINT_DECIMAL_PLACES),
-                 QString::number(convertValueToCode(value, isBpm), PRINT_FORMAT, PRINT_DECIMAL_PLACES),
+                 QString::number(convertValueToCode(value, pointType), PRINT_FORMAT, PRINT_DECIMAL_PLACES),
                  QString::number(metronome),
                  QString::number(static_cast<uint>(sampleSet)),
                  QString::number(sampleSetIndex),
                  QString::number(volume),
-                 (isBpm ? "1" : "0"),
-                 (isKiai ? "1" : "0"));
+                 (pointType == BPM ? "1" : "0"),
+                 (kiai ? "1" : "0"));
     return out;
 }
 
@@ -111,21 +118,28 @@ uint TimingPoint::getSampleSetIndex() const               { return sampleSetInde
 void TimingPoint::setSampleSetIndex(uint sampleSetIndex)  { this->sampleSetIndex = sampleSetIndex; }
 uint TimingPoint::getVolume() const     { return volume; }
 void TimingPoint::setVolume(uint volume){ this->volume = volume; }
-bool TimingPoint::getIsKiai() const     { return isKiai;}
-void TimingPoint::setIsKiai(bool isKiai){ this->isKiai = isKiai; }
-bool TimingPoint::getIsBpm() const      { return isBpm; }
-void TimingPoint::setIsBpm(bool isBpm)  { this->isBpm = isBpm; }
-bool TimingPoint::getIsSv() const       { return !getIsBpm(); }
-void TimingPoint::setIsSv(bool isSv)    { setIsBpm(!isSv); }
+bool TimingPoint::isKiai() const        { return kiai;}
+void TimingPoint::setIsKiai(bool isKiai){ this->kiai = isKiai; }
+bool TimingPoint::isBpm() const         { return pointType == BPM; }
+void TimingPoint::setIsBpm(bool isBpm)  { pointType = isBpm ? BPM : SV; }
+bool TimingPoint::isSv() const          { return !isBpm(); }
+void TimingPoint::setIsSv(bool isSv)    { pointType = isSv ? SV : BPM;}
 
 double TimingPoint::convertCodeToValue(double code, bool isBpm) {
     if (isBpm) return 60000.0 / code;
     else return -100.0 / code; // Means it's an SV
+}
 
+double TimingPoint::convertCodeToValue(double code, TimingPoint::POINT_TYPE pointType) {
+    return convertCodeToValue(code, pointType == BPM);
 }
 
 double TimingPoint::convertValueToCode(double value, bool isBpm) {
     if (isBpm) return 60000.0 / value;
     else return -100.0 / value; // Means it's an SV
+}
+
+double TimingPoint::convertValueToCode(double value, TimingPoint::POINT_TYPE pointType) {
+    return convertValueToCode(value, pointType == BPM);
 }
 

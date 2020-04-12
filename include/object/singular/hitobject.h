@@ -26,11 +26,11 @@ public:
 	// Loads from data from the editor
 	// Do not skip keys if you want to export to .osu
 	// Specify index to use if you are inputting multiple editor hit objects
-    bool loadEditorHitObject(QString str, uint keys = 0, uint index = 0);
+    bool loadEditor(QString str, uint keys = 0, uint index = 0);
 
 	// Loads from data from the .osu file
 	// Key count is required for conversion to columns
-    bool loadRawHitObject(const QString &str, uint keys);
+    bool loadRaw(const QString &str, uint keys);
 
 	// Loads parameters manually (Simple)
 	// Column starts from 0
@@ -107,14 +107,14 @@ public:
     double getLnEnd() const;
     void setLnEnd(double lnEnd);
 
-    bool getIsNote() const;
-    bool getIsLongNote() const;
+    bool isNote() const;
+    bool isLongNote() const;
 
     static uint convertColumnToXAxis(uint column, uint keys);
     static uint convertXAxisToColumn(uint x_axis, uint keys);
 
 	// Removes the brackets on the editor hitobject
-    static bool trimEditorHitObject(QString& str);
+    static bool trimEditor(QString& str);
 
 
 private:

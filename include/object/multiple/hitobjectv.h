@@ -21,15 +21,15 @@ public:
 
 	// Loads from data from the editor
 	// Do not skip keys if you want to export to .osu
-    bool loadEditorHitObject(QString str, unsigned int keys = 0);
+    bool loadEditor(QString str, unsigned int keys = 0);
 
 	// Loads from data from the .osu file as one whole string
 	// Key count is required for conversion to columns
-    bool loadRawHitObject(QString str, unsigned int keys, char delimeter = '\n');
+    bool loadRaw(QString str, unsigned int keys, char delimeter = '\n');
 
 	// Loads from data from the .osu file as a vector
 	// Key count is required for conversion to columns
-    bool loadRawHitObject(QVector<QString> str_v, unsigned int keys);
+    bool loadRaw(QVector<QString> str_v, unsigned int keys);
 
 	//// Exporting
 

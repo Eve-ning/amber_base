@@ -11,18 +11,15 @@ TimingPointV::TimingPointV(unsigned int amount) {
     loadDefaults(amount);
 }
 
-bool TimingPointV::loadRawTimingPoint(const QString &str,
-                                         char delimeter) {
-    return loadRawTimingPoint(SplitString::byDelimeter(str, delimeter));
+bool TimingPointV::loadRaw(const QString &str, char delimeter) {
+    return loadRaw(SplitString::byDelimeter(str, delimeter));
 }
 
-bool TimingPointV::loadRawTimingPoint(QVector<QString> str_v)
+bool TimingPointV::loadRaw(QVector<QString> str_v)
 {
     for (QString str : str_v) {
         TimingPoint tp;
-        if (!tp.loadRawTimingPoint(str)) {
-            return false;
-        }; // Load by string
+        if (!tp.loadRaw(str)) return false; // Load by string
         objectV.push_back(tp); // Push back to private member
     }
     return true;
@@ -33,9 +30,7 @@ bool TimingPointV::loadRawTimingPoint(QVector<QString> str_v)
 TimingPointV TimingPointV::getSvOnly() const {
     TimingPointV output = TimingPointV();
     for (const auto &tp : objectV) {
-        if (tp.getIsSv()) {
-            output.pushBack(tp);
-		}
+        if (tp.isSv())  output.pushBack(tp);
 	}
 	return output;
 }
@@ -45,9 +40,7 @@ TimingPointV TimingPointV::getSvOnly() const {
 TimingPointV TimingPointV::getBpmOnly() const {
     TimingPointV output = TimingPointV();
     for (const auto &tp : objectV) {
-        if (tp.getIsBpm()) {
-            output.pushBack(tp);
-		}
+        if (tp.isBpm()) output.pushBack(tp);
 	}
 	return output;
 }
@@ -56,10 +49,7 @@ TimingPointV TimingPointV::getBpmOnly() const {
 
 QVector<double> TimingPointV::getValueV() const {
     QVector<double> value_v = {};
-    for (const auto &tp : objectV) {
-        value_v.push_back(tp.getValue());
-	}
-
+    for (const auto &tp : objectV) value_v.push_back(tp.getValue());
 	return value_v;
 }
 
@@ -135,21 +125,15 @@ void TimingPointV::operator -=(double par) {
 
 TimingPointV TimingPointV::value_arithmetic(double parameter, double (*oper)(double, double)) {
     auto tp_v = *this;
-    for (auto &tp : tp_v) {
-        tp.setValue(oper(tp.getValue(), parameter));
-    }
+    for (auto &tp : tp_v) tp.setValue(oper(tp.getValue(), parameter));
     return tp_v;
 }
 
 double TimingPointV::get_average_value(bool is_bpm) const {
 
     TimingPointV tp_v = is_bpm ? getBpmOnly() : getSvOnly();
-    if (tp_v.size() <= 0) {
-        return 0;
-    }
-    else if (tp_v.size() == 1) {
-        return tp_v[0].getValue();
-	}
+    if      (tp_v.size() <= 0) return 0;
+    else if (tp_v.size() == 1) return tp_v[0].getValue();
 
 	double offset = 0;
 	double distance = 0;
