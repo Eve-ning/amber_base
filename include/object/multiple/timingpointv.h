@@ -15,7 +15,16 @@ public:
     TimingPointV();
 
 	// Create an object with a designated amount of default constructed timing_points 
-	TimingPointV(unsigned int amount);
+    TimingPointV(uint amount);
+
+    TimingPointV& operator= (const TimingPointV& o);
+    TimingPointV& operator= (TimingPointV&& o) noexcept;
+    TimingPointV(const TimingPointV& o);
+    TimingPointV(TimingPointV&& o) noexcept;
+    TimingPointV(const QVector<QString>& o);
+    TimingPointV(QVector<QString>&& o) noexcept;
+    TimingPointV(const QString& o);
+    TimingPointV(QString&& o) noexcept;
 
 	//// Explicit Loading
 

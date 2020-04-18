@@ -18,6 +18,12 @@ public:
     TimingPoint();
     TimingPoint(const TimingPoint& o);
 
+    TimingPoint& operator= (const TimingPoint& o);
+    TimingPoint& operator= (TimingPoint&& o) noexcept;
+    TimingPoint(TimingPoint&& o) noexcept;
+    TimingPoint(const QString& o);
+    TimingPoint(QString&& o) noexcept;
+
     //// Explicit Loading
 
 	// Loads from data from the .osu file

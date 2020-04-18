@@ -21,11 +21,49 @@ TimingPoint::TimingPoint(const TimingPoint &o) :
     pointType       (o.pointType),
     kiai            (o.kiai) {}
 
-bool TimingPoint::loadRaw(QString str)
-{
+TimingPoint &TimingPoint::operator=(const TimingPoint &o) {
+    if (this == &o) return *this;
+    loadParameters(o.offset, o.value, o.metronome, o.sampleSet, o.sampleSetIndex, o.volume, o.pointType, o.isKiai());
+    return *this;
+}
+
+TimingPoint &TimingPoint::operator=(TimingPoint &&o) noexcept {
+    if (this == &o) return *this;
+    qSwap(offset,        o.offset        );
+    qSwap(value,         o.value         );
+    qSwap(metronome,     o.metronome     );
+    qSwap(sampleSet,     o.sampleSet     );
+    qSwap(sampleSetIndex,o.sampleSetIndex);
+    qSwap(volume,        o.volume        );
+    qSwap(pointType,     o.pointType     );
+    qSwap(kiai,          o.kiai          );
+    return *this;
+}
+
+TimingPoint::TimingPoint(TimingPoint &&o) noexcept {
+    if (this == &o) return;
+    qSwap(offset,        o.offset        );
+    qSwap(value,         o.value         );
+    qSwap(metronome,     o.metronome     );
+    qSwap(sampleSet,     o.sampleSet     );
+    qSwap(sampleSetIndex,o.sampleSetIndex);
+    qSwap(volume,        o.volume        );
+    qSwap(pointType,     o.pointType     );
+    qSwap(kiai,          o.kiai          );
+}
+
+TimingPoint::TimingPoint(const QString &o) {
+    loadRaw(o);
+}
+
+TimingPoint::TimingPoint(QString &&o) noexcept {
+    loadRaw(o);
+}
+
+bool TimingPoint::loadRaw(QString str) {
     // Validate the str
     // If either of these characters are not found, it's not valid
-    if (!str.contains(',')) throw ReamberException("This is not a valid Editor Hit Object string.");
+    if (!str.contains(',')) qDebug() << "This is not a valid Editor Hit Object string.";
 
     // We append this so that the while loop continues till the end
     str += ',';

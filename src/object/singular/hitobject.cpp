@@ -30,10 +30,62 @@ HitObject::HitObject(const HitObject &o):
     hitsoundFile(o.hitsoundFile),
     keys        (o.keys){}
 
+
+HitObject &HitObject::operator=(const HitObject &o) {
+    if (this == &o) return *this;
+    loadParameters(o.column, o.yAxis, o.offset, o.noteType, o.hitsoundSet, o.lnEnd,
+                   o.sampleSet, o.additionSet, o.customSet, o.volume, o.hitsoundFile, o.keys);
+    return *this;
+}
+
+HitObject &HitObject::operator=(HitObject &&o) noexcept {
+    qSwap(column,      o.column      );
+    qSwap(yAxis,       o.yAxis       );
+    qSwap(offset,      o.offset      );
+    qSwap(noteType,    o.noteType    );
+    qSwap(hitsoundSet, o.hitsoundSet );
+    qSwap(lnEnd,       o.lnEnd       );
+    qSwap(sampleSet,   o.sampleSet   );
+    qSwap(additionSet, o.additionSet );
+    qSwap(customSet,   o.customSet   );
+    qSwap(volume,      o.volume      );
+    qSwap(hitsoundFile,o.hitsoundFile);
+    qSwap(keys,        o.keys        );
+    return *this;
+}
+
+HitObject::HitObject(HitObject &&o) noexcept {
+    qSwap(column,      o.column      );
+    qSwap(yAxis,       o.yAxis       );
+    qSwap(offset,      o.offset      );
+    qSwap(noteType,    o.noteType    );
+    qSwap(hitsoundSet, o.hitsoundSet );
+    qSwap(lnEnd,       o.lnEnd       );
+    qSwap(sampleSet,   o.sampleSet   );
+    qSwap(additionSet, o.additionSet );
+    qSwap(customSet,   o.customSet   );
+    qSwap(volume,      o.volume      );
+    qSwap(hitsoundFile,o.hitsoundFile);
+    qSwap(keys,        o.keys        );
+}
+
+HitObject::HitObject(const QString &o, HitObject::TYPE type, uint keys) :
+    HitObject() {
+    if (type == TYPE::EDITOR) loadEditor(o, keys);
+    else if (keys != 0) { loadRaw(o, keys); }
+    else qDebug() << "Keys required when loading raw";
+}
+
+HitObject::HitObject(QString &&o, HitObject::TYPE type, uint keys) noexcept :
+    HitObject() {
+    if (type == TYPE::EDITOR) loadEditor(o, keys);
+    else if (keys != 0) { loadRaw(o, keys); }
+    else qDebug() << "Keys required when loading raw";
+}
+
 bool HitObject::loadEditor(QString str,
-                                    uint keys,
-                                    uint index)
-{
+                           uint keys,
+                           uint index) {
     // Remove the brackets
     if (!trimEditor(str)){
         qDebug() << "This is not a valid Editor Hit Object string.";
@@ -62,7 +114,7 @@ bool HitObject::loadEditor(QString str,
             columnV.push_back(static_cast<uint>(str_bar_v[1].toInt()));
 		}
 		catch (...) {
-            throw ReamberException("Editor Hit Object content is corrupt.");
+            qDebug() << ("Editor Hit Object content is corrupt.");
 		}
 	}
 
@@ -74,7 +126,7 @@ bool HitObject::loadEditor(QString str,
 }
 
 bool HitObject::loadRaw(const QString& str,
-                                 uint keys)
+                        uint keys)
 {
     int count_comma = 0;
     for (const QChar& c: str) if (c == ',') { count_comma++; }
@@ -83,7 +135,7 @@ bool HitObject::loadRaw(const QString& str,
     int count_colon = 0;
     for (const QChar& c: str) if (c == ':') { count_colon++; }
 
-    // If it's invalid we throw
+    // If it's invalid we display message
     if (count_colon < 4 || count_colon > 5 || count_comma != 5) {
         qDebug() << "Raw Hit Object is not valid.";
         return false;
@@ -91,48 +143,48 @@ bool HitObject::loadRaw(const QString& str,
 
     this->keys = keys;
 
-    QVector<QString> hitObjectCommaV = {};
-    QVector<QString> hitObjectColonV = {};
+    QVector<QString> hoCommaV = {};
+    QVector<QString> hoColonV = {};
 
 	// We split by comma
-    hitObjectCommaV = SplitString::byDelimeter(str, ',');
+    hoCommaV = SplitString::byDelimeter(str, ',');
 
 	// Last token of comma contains the data for colon, we split that by colon
-    hitObjectColonV = SplitString::byDelimeter(hitObjectCommaV.back(), ':');
+    hoColonV = SplitString::byDelimeter(hoCommaV.back(), ':');
 
-    hitObjectCommaV.pop_back(); // Remove the last token as it's already split by colon
+    hoCommaV.pop_back(); // Remove the last token as it's already split by colon
 
     switch (count_colon) {
     case 4:
-        column       = convertXAxisToColumn(hitObjectCommaV[0].toUInt(), keys);
-        yAxis        = hitObjectCommaV[1].toUInt();
-        offset       = hitObjectCommaV[2].toInt();
-        noteType     = static_cast<HitObject::NOTE_TYPE>(hitObjectCommaV[3].toInt());
-        hitsoundSet  = static_cast<OsuObject::SAMPLE_SET>(hitObjectCommaV[4].toInt());
-        sampleSet    = static_cast<OsuObject::SAMPLE_SET>(hitObjectColonV[0].toInt());
-        additionSet  = static_cast<OsuObject::SAMPLE_SET>(hitObjectColonV[1].toInt());
-        customSet    = static_cast<OsuObject::SAMPLE_SET>(hitObjectColonV[2].toInt());
-        volume       = hitObjectColonV[3].toUInt();
-        hitsoundFile = hitObjectColonV.size() == 4 ? "" : hitObjectColonV[4];
+        column       = convertXAxisToColumn(hoCommaV[0].toUInt(), keys);
+        yAxis        = hoCommaV[1].toUInt();
+        offset       = hoCommaV[2].toInt();
+        noteType     = static_cast<HitObject::NOTE_TYPE>(hoCommaV[3].toInt());
+        hitsoundSet  = static_cast<OsuObject::SAMPLE_SET>(hoCommaV[4].toInt());
+        sampleSet    = static_cast<OsuObject::SAMPLE_SET>(hoColonV[0].toInt());
+        additionSet  = static_cast<OsuObject::SAMPLE_SET>(hoColonV[1].toInt());
+        customSet    = static_cast<OsuObject::SAMPLE_SET>(hoColonV[2].toInt());
+        volume       = hoColonV[3].toUInt();
+        hitsoundFile = hoColonV.size() == 4 ? "" : hoColonV[4];
 
         // ln_end is 0 as by constructor
         break;
     case 5:
-        column       = convertXAxisToColumn(hitObjectCommaV[0].toUInt(), keys);
-        yAxis        = hitObjectCommaV[1].toUInt();
-        offset       = hitObjectCommaV[2].toDouble();
-        noteType     = static_cast<HitObject::NOTE_TYPE>(hitObjectCommaV[3].toInt());
-        hitsoundSet  = static_cast<OsuObject::SAMPLE_SET>(hitObjectCommaV[4].toInt());
-        lnEnd        = hitObjectColonV[0].toDouble();
-        sampleSet    = static_cast<OsuObject::SAMPLE_SET>(hitObjectColonV[1].toInt());
-        additionSet  = static_cast<OsuObject::SAMPLE_SET>(hitObjectColonV[2].toInt());
-        customSet    = static_cast<OsuObject::SAMPLE_SET>(hitObjectColonV[3].toInt());
-        volume       = hitObjectColonV[4].toUInt();
-        hitsoundFile = hitObjectColonV.size() == 5 ? "" :hitObjectColonV[5];
+        column       = convertXAxisToColumn(hoCommaV[0].toUInt(), keys);
+        yAxis        = hoCommaV[1].toUInt();
+        offset       = hoCommaV[2].toDouble();
+        noteType     = static_cast<HitObject::NOTE_TYPE>(hoCommaV[3].toInt());
+        hitsoundSet  = static_cast<OsuObject::SAMPLE_SET>(hoCommaV[4].toInt());
+        lnEnd        = hoColonV[0].toDouble();
+        sampleSet    = static_cast<OsuObject::SAMPLE_SET>(hoColonV[1].toInt());
+        additionSet  = static_cast<OsuObject::SAMPLE_SET>(hoColonV[2].toInt());
+        customSet    = static_cast<OsuObject::SAMPLE_SET>(hoColonV[3].toInt());
+        volume       = hoColonV[4].toUInt();
+        hitsoundFile = hoColonV.size() == 5 ? "" :hoColonV[5];
 
         break;
     default:
-        throw ReamberException("Raw Hit Object is not valid. [INVALID ERROR]");
+        qDebug() << "Raw Hit Object is not valid.";
     }
 
     return true;
@@ -148,11 +200,9 @@ bool HitObject::loadParameters(uint column,
     if (qFuzzyCompare(lnEnd, 0)) noteType = NOTE_TYPE::NORMAL;
     else {
         noteType = NOTE_TYPE::LN;
-        if (lnEnd < offset) // Throw if Long Note End is before Long Note Head unless it's 0
-            throw ReamberException(
-                        QString("Long Note End (%1) is before Head (%2)")
-                        .arg(QString::number(lnEnd), QString::number(offset))
-                        .toStdString().c_str());
+        if (lnEnd < offset) // if Long Note End is before Long Note Head unless it's 0
+            qDebug() << QString("Long Note End (%1) is before Head (%2)")
+                        .arg(QString::number(lnEnd), QString::number(offset));
 
     }
     this->keys = keys;
@@ -206,7 +256,7 @@ QString HitObject::getStringRaw() const
             .arg(QString::number(convertColumnToXAxis(column, keys)),
                  QString::number(yAxis),
                  QString::number(offset, PRINT_FORMAT, PRINT_DECIMAL_PLACES),
-                 QString::number(noteType),
+                 QString::number(static_cast<int>(noteType)),
                  QString::number(static_cast<uint>(hitsoundSet)),
                  (lnEnd == 0.0 ? "" : (QString::number(lnEnd, PRINT_FORMAT, PRINT_DECIMAL_PLACES) + ":")), // If it's a note, ln_end == 0
                  QString::number(static_cast<uint>(sampleSet)),

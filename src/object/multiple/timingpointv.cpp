@@ -3,13 +3,37 @@
 #include <algorithm>
 #include <QVector>
 
-TimingPointV::TimingPointV() : OsuObjectV() {}
+TimingPointV::TimingPointV() : OsuObjectV<TimingPoint>() {}
 
 // Create an object with a designated amount of default constructed timing_points 
 
-TimingPointV::TimingPointV(unsigned int amount) {
+TimingPointV::TimingPointV(uint amount) {
     loadDefaults(amount);
 }
+
+TimingPointV &TimingPointV::operator=(const TimingPointV &o){
+    if (this == &o) return *this;
+    this->objectV = o.objectV;
+    return *this;
+}
+
+TimingPointV &TimingPointV::operator=(TimingPointV &&o) noexcept {
+    qSwap(objectV, o.objectV);
+    return *this;
+}
+
+TimingPointV::TimingPointV(const TimingPointV &o){
+    this->objectV = o.objectV;
+}
+
+TimingPointV::TimingPointV(TimingPointV &&o) noexcept : // TODO: To change with qExchange on Qt 5.14
+    OsuObjectV<TimingPoint>(std::exchange(o.objectV, QVector<TimingPoint>({}))){}
+
+TimingPointV::TimingPointV(const QVector<QString> &o) { loadRaw(o); }
+TimingPointV::TimingPointV(QVector<QString> &&o) noexcept { loadRaw(o); }
+
+TimingPointV::TimingPointV(const QString &o) { loadRaw(o); }
+TimingPointV::TimingPointV(QString &&o) noexcept { loadRaw(o); }
 
 bool TimingPointV::loadRaw(const QString &str, char delimeter) {
     return loadRaw(SplitString::byDelimeter(str, delimeter));
