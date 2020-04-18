@@ -15,19 +15,28 @@ OsuObjectV<objType> &OsuObjectV<objType>::operator=(const OsuObjectV<objType> &o
 }
 
 template<class objType>
-OsuObjectV<objType>::OsuObjectV(const OsuObjectV<objType> &o) {
-    this->objectV = QVector<objType>(o.objectV);
-}
-
-template<class objType>
 OsuObjectV<objType> &OsuObjectV<objType>::operator=(OsuObjectV<objType> &&o) noexcept {
     qSwap(objectV, o.objectV);
     return *this;
 }
 
 template<class objType>
+OsuObjectV<objType>::OsuObjectV(const OsuObjectV<objType> &o) {
+    this->objectV = QVector<objType>(o.objectV);
+}
+
+template<class objType>
 OsuObjectV<objType>::OsuObjectV(OsuObjectV<objType> &&o) noexcept :
     objectV(std::exchange(o.objectV, QVector<objType>({}))){} // TODO: To change with qExchange on Qt 5.14
+
+template<class objType>
+OsuObjectV<objType>::OsuObjectV(const QVector<objType>& o) {
+    this->objectV = o;
+}
+
+template<class objType>
+OsuObjectV<objType>::OsuObjectV(QVector<objType>&& o) noexcept :
+    objectV(std::exchange(o, QVector<objType>({}))){} // TODO: To change with qExchange on Qt 5.14
 
 
 template<class objType>

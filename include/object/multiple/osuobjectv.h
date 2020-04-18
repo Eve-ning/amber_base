@@ -17,6 +17,8 @@ class OsuObjectV
 public:
 
     OsuObjectV();
+    OsuObjectV(const QVector<objType>& o);
+    OsuObjectV(QVector<objType>&& o) noexcept;
     OsuObjectV& operator= (const OsuObjectV<objType>& o);
     OsuObjectV& operator= (OsuObjectV<objType>&& o) noexcept;
     OsuObjectV(const OsuObjectV<objType>& o);

@@ -6,11 +6,42 @@ HitObjectV::HitObjectV() : OsuObjectV(){}
 
 // Create an object with a designated amount of default constructed hit_objects
 
-HitObjectV::HitObjectV(unsigned int amount) {
+HitObjectV::HitObjectV(uint amount) {
     loadDefaults(amount);
 }
+HitObjectV &HitObjectV::operator=(const HitObjectV &o) {
+    if (this == &o) return *this;
+    this->objectV = o.objectV;
+    return *this;
+}
+HitObjectV &HitObjectV::operator=(HitObjectV &&o) noexcept {
+    qSwap(objectV, o.objectV);
+    return *this;
+}
+HitObjectV::HitObjectV(const HitObjectV &o) {
+    this->objectV = o.objectV;
+}
+HitObjectV::HitObjectV(HitObjectV &&o)noexcept : // TODO: To change with qExchange on Qt 5.14
+    OsuObjectV<HitObject>(std::exchange(o.objectV, QVector<HitObject>({}))){}
+HitObjectV::HitObjectV(const QVector<QString> &o, uint keys) {
+    loadRaw(o, keys);
+}
+HitObjectV::HitObjectV(QVector<QString> &&o, uint keys) noexcept {
+    loadRaw(o, keys);
+}
+HitObjectV::HitObjectV(const QString &o, HitObject::TYPE type, uint keys) {
+    if      (type == HitObject::TYPE::EDITOR)  loadEditor(o, keys);
+    else if (keys != 0)                        loadRaw(o, keys);
+    else    qDebug() << "Keys cannot be 0 when loading raw";
+}
+HitObjectV::HitObjectV(QString &&o, HitObject::TYPE type, uint keys) noexcept {
+    if      (type == HitObject::TYPE::EDITOR)  loadEditor(o, keys);
+    else if (keys != 0)                        loadRaw(o, keys);
+    else    qDebug() << "Keys cannot be 0 when loading raw";
+}
 
-bool HitObjectV::loadEditor(QString str, unsigned int keys) {
+
+bool HitObjectV::loadEditor(QString str, uint keys) {
 
 	// Reject loading of empty string
     if (!HitObject::trimEditor(str)) {
@@ -18,16 +49,16 @@ bool HitObjectV::loadEditor(QString str, unsigned int keys) {
         return false;
     }; // Shed the brackets
 
-    QVector<QString> str_comma_v = SplitString::byDelimeter(str, ','); // Split by comma
-    QVector<QString> str_bar_v = {};
+    QVector<QString> strCommaV = SplitString::byDelimeter(str, ','); // Split by comma
+    QVector<QString> strBarV = {};
 
-    for (QString str_comma : str_comma_v) {
+    for (QString strComma : strCommaV) {
         HitObject ho;
-        str_bar_v = SplitString::byDelimeter(str_comma, '|'); // Split each comma token by bar
+        strBarV = SplitString::byDelimeter(strComma, '|'); // Split each comma token by bar
 
         if (!ho.loadParameters( // Load in by parameter
-            str_bar_v[1].toUInt(),  // Column
-            str_bar_v[0].toDouble(),  // Offset
+            strBarV[1].toUInt(),  // Column
+            strBarV[0].toDouble(),  // Offset
 			0,                        // LN End (default to 0)
             keys)){ // Keys
             return false;
@@ -40,13 +71,13 @@ bool HitObjectV::loadEditor(QString str, unsigned int keys) {
 // Where if the user loads in the whole thing as a string
 
 bool HitObjectV::loadRaw(QString str,
-                                     unsigned int keys,
-                                     char delimeter) {
+                         uint keys,
+                         char delimeter) {
     return loadRaw(SplitString::byDelimeter(str, delimeter), keys); // Use the vector variant of this function
 }
 
-bool HitObjectV::loadRaw(QVector<QString> str_v, unsigned int keys) {
-    for (QString str : str_v) { // For each str in the string vector
+bool HitObjectV::loadRaw(QVector<QString> strV, uint keys) {
+    for (QString str : strV) { // For each str in the string vector
         HitObject ho;
         if (!ho.loadRaw(str, keys)) return false;
         objectV.push_back(ho); // Append to our private hit_object vector
@@ -54,7 +85,7 @@ bool HitObjectV::loadRaw(QVector<QString> str_v, unsigned int keys) {
     return true;
 }
 
-QVector<QString> HitObjectV::getStringRawV(unsigned int keys) {
+QVector<QString> HitObjectV::getStringRawV(uint keys) {
     QVector<QString> output = {};
     std::transform(objectV.begin(), objectV.end(), std::back_inserter(output), [&](HitObject &ho) {
 		return ho.getStringRaw(keys);
@@ -64,12 +95,12 @@ QVector<QString> HitObjectV::getStringRawV(unsigned int keys) {
 
 // Gets column in a vector form
 
-QVector<unsigned int> HitObjectV::getColumnV() const {
-    QVector<unsigned int> column_v = {};
-    std::transform(begin(), end(), std::back_inserter(column_v), [](const HitObject &ho) {
+QVector<uint> HitObjectV::getColumnV() const {
+    QVector<uint> columnV = {};
+    std::transform(begin(), end(), std::back_inserter(columnV), [](const HitObject &ho) {
 		return ho.getColumn();
 	});
-	return column_v;
+    return columnV;
 }
 
 // Gets notes only in a vector form

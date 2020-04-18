@@ -9,7 +9,11 @@ class AMBER_BASE HitObject : public OsuObject
 {
 public:
 
-    enum NOTE_TYPE {
+    enum class TYPE {
+        EDITOR,
+        RAW
+    };
+    enum class NOTE_TYPE {
         NORMAL = 1,
         LN = 128
     };
@@ -20,6 +24,12 @@ public:
 	// Load in via the load_<functions>
     HitObject();
     HitObject(const HitObject &o);
+
+    HitObject& operator= (const HitObject& o);
+    HitObject& operator= (HitObject&& o) noexcept;
+    HitObject(HitObject&& o) noexcept;
+    HitObject(const QString& o, TYPE type, uint keys = 0);
+    HitObject(QString&& o, TYPE type, uint keys = 0) noexcept;
 
     //// Explicit Loading
 
@@ -78,7 +88,6 @@ public:
 
     uint getYAxis() const;
     void setYAxis(uint yAxis);
-
 
     NOTE_TYPE getNoteType() const;
     void setNoteType(NOTE_TYPE noteType);
