@@ -1,5 +1,7 @@
 #include "helper/splitstring.h"
 #include <algorithm>
+#include <QVector>
+#include <QString>
 
 QVector<QString> SplitString::byDelimeter(QString str, char delimeter) {
     QVector<QString> output = {};
