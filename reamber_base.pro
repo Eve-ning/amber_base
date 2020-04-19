@@ -31,7 +31,6 @@ unix {
 HEADERS += \
     include/algorithm/algorithm.h \
     include/algorithm/algorithm.ipp \
-    include/helper/splitstring.h \
     include/exception/reamberexception.h \
     include/object/multiple/hitobjectv.h \
     include/object/multiple/osuobjectv.h \
@@ -44,7 +43,6 @@ HEADERS += \
 
 SOURCES += \
     src/algorithm/algorithm.cpp \
-    src/helper/splitstring.cpp \
     src/exception/reamberexception.cpp \
     src/object/multiple/hitobjectv.cpp \
     src/object/multiple/osuobjectv.cpp \
