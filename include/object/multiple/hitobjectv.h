@@ -29,6 +29,8 @@ public:
 
 	//// Explicit Loading
 
+    bool load(QString str, uint keys = 0, char delimeter = '\n');
+
 	// Loads from data from the editor
 	// Do not skip keys if you want to export to .osu
     bool loadEditor(QString str, uint keys = 0);

@@ -40,6 +40,11 @@ HitObjectV::HitObjectV(QString &&o, HitObject::TYPE type, uint keys) noexcept {
     else    qDebug() << "Keys cannot be 0 when loading raw";
 }
 
+bool HitObjectV::load(QString str, uint keys, char delimeter) {
+    // Determines if it's editor or raw
+    if (str.indexOf(',') == -1) return loadEditor(str, keys);
+    else return loadRaw(str, keys, delimeter);
+}
 
 bool HitObjectV::loadEditor(QString str, uint keys) {
 
