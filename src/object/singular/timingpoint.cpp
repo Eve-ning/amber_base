@@ -1,6 +1,5 @@
 #include "object/singular/timingpoint.h"
 #include "exception/reamberexception.h"
-#include "helper/splitstring.h"
 
 TimingPoint::TimingPoint() :
     value(1),
@@ -67,7 +66,7 @@ bool TimingPoint::loadRaw(QString str) {
     QVector<QString> timingPointCommaV = {};
 
 	// Split string by comma
-    timingPointCommaV = SplitString::byDelimeter(str, ',');
+    timingPointCommaV = str.split(",", QString::KeepEmptyParts).toVector();
 
     offset          = timingPointCommaV[0].toDouble();
     metronome       = timingPointCommaV[2].toUInt();
