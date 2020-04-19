@@ -1,5 +1,4 @@
 #include "object/multiple/timingpointv.h"
-#include "helper/splitstring.h"
 #include <algorithm>
 #include <QVector>
 
@@ -35,8 +34,8 @@ TimingPointV::TimingPointV(QVector<QString> &&o) noexcept { loadRaw(o); }
 TimingPointV::TimingPointV(const QString &o) { loadRaw(o); }
 TimingPointV::TimingPointV(QString &&o) noexcept { loadRaw(o); }
 
-bool TimingPointV::loadRaw(const QString &str, char delimeter) {
-    return loadRaw(SplitString::byDelimeter(str, delimeter));
+bool TimingPointV::loadRaw(const QString &str, const QString &delimeter) {
+    return loadRaw(str.split(delimeter, QString::KeepEmptyParts).toVector());
 }
 
 bool TimingPointV::loadRaw(QVector<QString> str_v)

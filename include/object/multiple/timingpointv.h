@@ -29,7 +29,7 @@ public:
 	//// Explicit Loading
 
 	// Loads from data from the .osu file as one whole string
-    bool loadRaw(const QString& str, char delimeter = '\n');
+    bool loadRaw(const QString& str, const QString &delimeter = "\n");
 
 	// Loads from data from the .osu file as a vector
     bool loadRaw(QVector<QString> str_v);

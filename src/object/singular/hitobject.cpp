@@ -95,13 +95,13 @@ bool HitObject::loadEditor(QString str,
     QString note = "";
 
 	// We first split it by comma
-    QVector<QString> strCommaV = SplitString::byDelimeter(str, ',');
+    QVector<QString> strCommaV = str.split(",", QString::KeepEmptyParts).toVector();
 
 	// Then for each element split by comma
     for (QString strComma : strCommaV) {
 
 		// We split by bar
-        QVector<QString> str_bar_v = SplitString::byDelimeter(strComma, '|');
+        QVector<QString> str_bar_v = strComma.split("|", QString::KeepEmptyParts).toVector();
 
 		// We push back the data after conversion
 		try {
