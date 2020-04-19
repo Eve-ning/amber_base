@@ -37,18 +37,18 @@ public:
 
 	// Loads from data from the .osu file as one whole string
 	// Key count is required for conversion to columns
-    bool loadRaw(QString str, uint keys, char delimeter = '\n');
+    bool loadRaw(const QString &str, uint keys, char delimeter = '\n');
 
 	// Loads from data from the .osu file as a vector
 	// Key count is required for conversion to columns
-    bool loadRaw(QVector<QString> str_v, uint keys);
+    bool loadRaw(const QVector<QString> &str_v, uint keys);
 
 	//// Exporting
 
 	// Get the vector of strings compatible to .osu format
 	// This variant is to override and set the current keys if user failed the other variant
 	// Note that this will override all keys set initially
-    QVector<QString> getStringRawV(uint keys);
+    QVector<QString> getStringRawV(uint keys) const;
 
 	// Gets column in a vector form
     QVector<uint> getColumnV() const;
