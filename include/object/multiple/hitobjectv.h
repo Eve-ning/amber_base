@@ -24,6 +24,8 @@ public:
     HitObjectV(HitObjectV&& o) noexcept;
     HitObjectV(const QVector<QString>& o, uint keys);
     HitObjectV(QVector<QString>&& o, uint keys) noexcept;
+    HitObjectV(const QString& o, uint keys = 0);
+    HitObjectV(QString&& o, uint keys = 0) noexcept;
     HitObjectV(const QString& o, HitObject::TYPE isEditor, uint keys = 0);
     HitObjectV(QString&& o, HitObject::TYPE isEditor, uint keys = 0) noexcept;
 
