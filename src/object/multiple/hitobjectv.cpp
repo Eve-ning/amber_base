@@ -47,10 +47,10 @@ HitObjectV::HitObjectV(QString &&o, HitObject::TYPE type, uint keys) noexcept {
 
 bool HitObjectV::load(const QString & str, uint keys, const QString & delimeter) {
     // Determines if it's editor or raw
-    if (str.indexOf(',') == -1) return loadEditor(str, keys);
-    else return loadRaw(str, keys, delimeter);
+    if      (str.indexOf(',') == -1) return loadEditor(str, keys);
+    else if (str.indexOf('|') == -1) return loadRaw(str, keys, delimeter);
+    else                             return false;
 }
-
 bool HitObjectV::loadEditor(QString str, uint keys) {
 
 	// Reject loading of empty string
@@ -80,9 +80,7 @@ bool HitObjectV::loadEditor(QString str, uint keys) {
 
 // Where if the user loads in the whole thing as a string
 
-bool HitObjectV::loadRaw(const QString & str,
-                         uint keys,
-                         const QString & delimeter) {
+bool HitObjectV::loadRaw(const QString & str, uint keys, const QString & delimeter) {
     return loadRaw(str.split(delimeter, QString::KeepEmptyParts).toVector(), keys); // Use the vector variant of this function
 }
 

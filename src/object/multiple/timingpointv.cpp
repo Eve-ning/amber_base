@@ -38,8 +38,7 @@ bool TimingPointV::loadRaw(const QString &str, const QString &delimeter) {
     return loadRaw(str.split(delimeter, QString::KeepEmptyParts).toVector());
 }
 
-bool TimingPointV::loadRaw(QVector<QString> str_v)
-{
+bool TimingPointV::loadRaw(QVector<QString> str_v) {
     for (QString str : str_v) {
         TimingPoint tp;
         if (!tp.loadRaw(str)) return false; // Load by string
