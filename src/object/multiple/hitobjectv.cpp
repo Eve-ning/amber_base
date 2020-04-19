@@ -29,6 +29,12 @@ HitObjectV::HitObjectV(const QVector<QString> &o, uint keys) {
 HitObjectV::HitObjectV(QVector<QString> &&o, uint keys) noexcept {
     loadRaw(o, keys);
 }
+HitObjectV::HitObjectV(const QString &o, uint keys) {
+    load(o, keys);
+}
+HitObjectV::HitObjectV(QString &&o, uint keys) noexcept {
+    load(o, keys);
+}
 HitObjectV::HitObjectV(const QString &o, HitObject::TYPE type, uint keys) {
     if      (type == HitObject::TYPE::EDITOR)  loadEditor(o, keys);
     else if (keys != 0)                        loadRaw(o, keys);
@@ -75,14 +81,14 @@ bool HitObjectV::loadEditor(QString str, uint keys) {
 
 // Where if the user loads in the whole thing as a string
 
-bool HitObjectV::loadRaw(QString str,
+bool HitObjectV::loadRaw(const QString & str,
                          uint keys,
                          char delimeter) {
     return loadRaw(SplitString::byDelimeter(str, delimeter), keys); // Use the vector variant of this function
 }
 
-bool HitObjectV::loadRaw(QVector<QString> strV, uint keys) {
-    for (QString str : strV) { // For each str in the string vector
+bool HitObjectV::loadRaw(const QVector<QString> & strV, uint keys) {
+    for (const QString & str : strV) { // For each str in the string vector
         HitObject ho;
         if (!ho.loadRaw(str, keys)) return false;
         objectV.push_back(ho); // Append to our private hit_object vector
@@ -90,7 +96,7 @@ bool HitObjectV::loadRaw(QVector<QString> strV, uint keys) {
     return true;
 }
 
-QVector<QString> HitObjectV::getStringRawV(uint keys) {
+QVector<QString> HitObjectV::getStringRawV(uint keys) const {
     QVector<QString> output = {};
     std::transform(objectV.begin(), objectV.end(), std::back_inserter(output), [&](HitObject &ho) {
 		return ho.getStringRaw(keys);
