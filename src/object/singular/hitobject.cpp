@@ -1,5 +1,4 @@
 #include "object/singular/hitobject.h"
-#include "helper/splitstring.h"
 #include "exception/reamberexception.h"
 
 HitObject::HitObject() :
@@ -142,10 +141,10 @@ bool HitObject::loadRaw(const QString& str,
     QVector<QString> hoColonV = {};
 
 	// We split by comma
-    hoCommaV = SplitString::byDelimeter(str, ',');
+    hoCommaV = str.split(",", QString::KeepEmptyParts).toVector();
 
 	// Last token of comma contains the data for colon, we split that by colon
-    hoColonV = SplitString::byDelimeter(hoCommaV.back(), ':');
+    hoColonV = hoCommaV.last().split(":", QString::SplitBehavior::KeepEmptyParts).toVector();
 
     hoCommaV.pop_back(); // Remove the last token as it's already split by colon
 

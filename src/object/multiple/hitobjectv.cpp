@@ -46,7 +46,7 @@ HitObjectV::HitObjectV(QString &&o, HitObject::TYPE type, uint keys) noexcept {
     else    qDebug() << "Keys cannot be 0 when loading raw";
 }
 
-bool HitObjectV::load(QString str, uint keys, char delimeter) {
+bool HitObjectV::load(const QString & str, uint keys, const QString & delimeter) {
     // Determines if it's editor or raw
     if (str.indexOf(',') == -1) return loadEditor(str, keys);
     else return loadRaw(str, keys, delimeter);
@@ -60,12 +60,12 @@ bool HitObjectV::loadEditor(QString str, uint keys) {
         return false;
     }; // Shed the brackets
 
-    QVector<QString> strCommaV = SplitString::byDelimeter(str, ','); // Split by comma
+    QVector<QString> strCommaV = str.split(",", QString::KeepEmptyParts).toVector(); // Split by comma
     QVector<QString> strBarV = {};
 
     for (QString strComma : strCommaV) {
         HitObject ho;
-        strBarV = SplitString::byDelimeter(strComma, '|'); // Split each comma token by bar
+        strBarV = strComma.split('|', QString::KeepEmptyParts).toVector(); // Split each comma token by bar
 
         if (!ho.loadParameters( // Load in by parameter
             strBarV[1].toUInt(),  // Column
@@ -83,8 +83,8 @@ bool HitObjectV::loadEditor(QString str, uint keys) {
 
 bool HitObjectV::loadRaw(const QString & str,
                          uint keys,
-                         char delimeter) {
-    return loadRaw(SplitString::byDelimeter(str, delimeter), keys); // Use the vector variant of this function
+                         const QString & delimeter) {
+    return loadRaw(str.split(delimeter, QString::KeepEmptyParts).toVector(), keys); // Use the vector variant of this function
 }
 
 bool HitObjectV::loadRaw(const QVector<QString> & strV, uint keys) {
@@ -96,7 +96,7 @@ bool HitObjectV::loadRaw(const QVector<QString> & strV, uint keys) {
     return true;
 }
 
-QVector<QString> HitObjectV::getStringRawV(uint keys) const {
+QVector<QString> HitObjectV::getStringRawV(uint keys) {
     QVector<QString> output = {};
     std::transform(objectV.begin(), objectV.end(), std::back_inserter(output), [&](HitObject &ho) {
 		return ho.getStringRaw(keys);

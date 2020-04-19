@@ -30,8 +30,7 @@ public:
     HitObjectV(QString&& o, HitObject::TYPE isEditor, uint keys = 0) noexcept;
 
 	//// Explicit Loading
-
-    bool load(QString str, uint keys = 0, char delimeter = '\n');
+    bool load(const QString &str, uint keys = 0, const QString & delimeter = "\n");
 
 	// Loads from data from the editor
 	// Do not skip keys if you want to export to .osu
@@ -39,7 +38,7 @@ public:
 
 	// Loads from data from the .osu file as one whole string
 	// Key count is required for conversion to columns
-    bool loadRaw(const QString &str, uint keys, char delimeter = '\n');
+    bool loadRaw(const QString &str, uint keys, const QString & delimeter = "\n");
 
 	// Loads from data from the .osu file as a vector
 	// Key count is required for conversion to columns
@@ -50,7 +49,7 @@ public:
 	// Get the vector of strings compatible to .osu format
 	// This variant is to override and set the current keys if user failed the other variant
 	// Note that this will override all keys set initially
-    QVector<QString> getStringRawV(uint keys) const;
+    QVector<QString> getStringRawV(uint keys);
 
 	// Gets column in a vector form
     QVector<uint> getColumnV() const;
