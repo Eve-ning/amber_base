@@ -37,7 +37,6 @@ HitObject &HitObject::operator=(const HitObject &o) {
                    o.sampleSet, o.additionSet, o.customSet, o.volume, o.hitsoundFile, o.keys);
     return *this;
 }
-
 HitObject &HitObject::operator=(HitObject &&o) noexcept {
     qSwap(column,      o.column      );
     qSwap(yAxis,       o.yAxis       );
@@ -53,7 +52,6 @@ HitObject &HitObject::operator=(HitObject &&o) noexcept {
     qSwap(keys,        o.keys        );
     return *this;
 }
-
 HitObject::HitObject(HitObject &&o) noexcept {
     qSwap(column,      o.column      );
     qSwap(yAxis,       o.yAxis       );
@@ -68,14 +66,12 @@ HitObject::HitObject(HitObject &&o) noexcept {
     qSwap(hitsoundFile,o.hitsoundFile);
     qSwap(keys,        o.keys        );
 }
-
 HitObject::HitObject(const QString &o, HitObject::TYPE type, uint keys) :
     HitObject() {
     if (type == TYPE::EDITOR) loadEditor(o, keys);
     else if (keys != 0) { loadRaw(o, keys); }
     else qDebug() << "Keys required when loading raw";
 }
-
 HitObject::HitObject(QString &&o, HitObject::TYPE type, uint keys) noexcept :
     HitObject() {
     if (type == TYPE::EDITOR) loadEditor(o, keys);
@@ -126,8 +122,7 @@ bool HitObject::loadEditor(QString str,
 }
 
 bool HitObject::loadRaw(const QString& str,
-                        uint keys)
-{
+                        uint keys) {
     int count_comma = 0;
     for (const QChar& c: str) if (c == ',') { count_comma++; }
 
@@ -273,49 +268,45 @@ QString HitObject::getStringRaw(uint keys){
 	return getStringRaw(); // Call no-arg function
 }
 
-uint HitObject::getColumn() const       { return column; }
-void HitObject::setColumn(uint column)  { this->column = column; }
-uint HitObject::getYAxis() const        { return yAxis; }
-void HitObject::setYAxis(uint y_axis)   { this->yAxis = y_axis; }
-HitObject::NOTE_TYPE HitObject::getNoteType() const         { return noteType; }
-void HitObject::setNoteType(HitObject::NOTE_TYPE note_type) { this->noteType = note_type; }
-OsuObject::SAMPLE_SET HitObject::getSampleSet() const       { return sampleSet; }
-void HitObject::setSampleSet(const SAMPLE_SET &sample_set)  { this->sampleSet = sample_set; }
+uint HitObject::getColumn() const                               { return column; }
+void HitObject::setColumn(uint column)                          { this->column = column; }
+uint HitObject::getYAxis() const                                { return yAxis; }
+void HitObject::setYAxis(uint yAxis)                            { this->yAxis = yAxis; }
+HitObject::NOTE_TYPE HitObject::getNoteType() const             { return noteType; }
+void HitObject::setNoteType(HitObject::NOTE_TYPE noteType)      { this->noteType = noteType; }
+OsuObject::SAMPLE_SET HitObject::getSampleSet() const           { return sampleSet; }
+void HitObject::setSampleSet(const SAMPLE_SET &sampleSet)       { this->sampleSet = sampleSet; }
 OsuObject::SAMPLE_SET HitObject::getAdditionSet() const         { return additionSet; }
-void HitObject::setAdditionSet(const SAMPLE_SET &addition_set)  { this->additionSet = addition_set; }
-OsuObject::SAMPLE_SET HitObject::getCustomSet() const       { return this->customSet; }
-void HitObject::setCustomSet(const SAMPLE_SET &custom_set)  { this->customSet = custom_set; }
-uint HitObject::getVolume() const       { return volume; }
-void HitObject::setVolume(uint volume)  { this->volume = volume; }
+void HitObject::setAdditionSet(const SAMPLE_SET &additionSet)   { this->additionSet = additionSet; }
+OsuObject::SAMPLE_SET HitObject::getCustomSet() const           { return this->customSet; }
+void HitObject::setCustomSet(const SAMPLE_SET &customSet)       { this->customSet = customSet; }
+uint HitObject::getVolume() const                               { return volume; }
+void HitObject::setVolume(uint volume)                          { this->volume = volume; }
 QString HitObject::getHitsoundFile() const                      { return hitsoundFile; }
 void HitObject::setHitsoundFile(const QString &hitsound_file)   { this->hitsoundFile = hitsound_file; }
-uint HitObject::getKeys() const     { return keys; }
-void HitObject::setKeys(uint keys)  { this->keys = keys; }
-double HitObject::getLnEnd() const      { return lnEnd; }
-void HitObject::setLnEnd(double ln_end) { this->lnEnd = ln_end; }
-bool HitObject::isNote() const       { return (lnEnd == 0.0); }
-bool HitObject::isLongNote() const   { return !isNote(); }
+uint HitObject::getKeys() const                                 { return keys; }
+void HitObject::setKeys(uint keys)                              { this->keys = keys; }
+double HitObject::getLnEnd() const                              { return lnEnd; }
+void HitObject::setLnEnd(double lnEnd)                          { this->lnEnd = lnEnd; }
+bool HitObject::isNote() const                                  { return (lnEnd == 0.0); }
+bool HitObject::isLongNote() const                              { return !isNote(); }
 OsuObject::SAMPLE_SET HitObject::getHitsoundSet() const         { return hitsoundSet; }
 void HitObject::setHitsoundSet(const SAMPLE_SET &hitsound_set)  { this->hitsoundSet = hitsound_set;}
-
 
 uint HitObject::convertColumnToXAxis(uint column, uint keys) {
     return static_cast<uint>(round(((512.0 * column) + 256.0) / keys));
 }
-
-uint HitObject::convertXAxisToColumn(uint x_axis, uint keys) {
-    return static_cast<uint>(ceil((x_axis * keys - 256.0) / 512.0));
+uint HitObject::convertXAxisToColumn(uint xAxis, uint keys) {
+    return static_cast<uint>(ceil((xAxis * keys - 256.0) / 512.0));
 }
 
-bool HitObject::trimEditor(QString& str)
-{
+bool HitObject::trimEditor(QString& str) {
 	// Validate the str
 	// If either of these characters are not found, it's not valid
-    if (!str.contains('(')|| // == npos means not found
-        !str.contains(')')|| // means if any are not found, it's True
-        !str.contains('-')) {
-        return false;
-	}
+    if (!(str.contains('(') && // == npos means not found
+          str.contains(')') && // means if any are not found, it's True
+          str.contains('-'))) return false;
+
 
 	// Remove the ( AND ) brackets
     str = str.mid(str.indexOf('(') + 1,

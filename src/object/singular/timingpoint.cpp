@@ -26,7 +26,6 @@ TimingPoint &TimingPoint::operator=(const TimingPoint &o) {
     loadParameters(o.offset, o.value, o.metronome, o.sampleSet, o.sampleSetIndex, o.volume, o.pointType, o.isKiai());
     return *this;
 }
-
 TimingPoint &TimingPoint::operator=(TimingPoint &&o) noexcept {
     if (this == &o) return *this;
     qSwap(offset,        o.offset        );
@@ -39,7 +38,6 @@ TimingPoint &TimingPoint::operator=(TimingPoint &&o) noexcept {
     qSwap(kiai,          o.kiai          );
     return *this;
 }
-
 TimingPoint::TimingPoint(TimingPoint &&o) noexcept {
     if (this == &o) return;
     qSwap(offset,        o.offset        );
@@ -51,11 +49,9 @@ TimingPoint::TimingPoint(TimingPoint &&o) noexcept {
     qSwap(pointType,     o.pointType     );
     qSwap(kiai,          o.kiai          );
 }
-
 TimingPoint::TimingPoint(const QString &o) {
     loadRaw(o);
 }
-
 TimingPoint::TimingPoint(QString &&o) noexcept {
     loadRaw(o);
 }
@@ -90,11 +86,9 @@ bool TimingPoint::loadRaw(QString str) {
 bool TimingPoint::loadParameters(double offset, double value, bool isBpm, bool isKiai, uint metronome) {
     return loadParameters(offset,value, isBpm ? BPM : SV, isKiai, metronome);
 }
-
 bool TimingPoint::loadParameters(double offset, double value, uint metronome, OsuObject::SAMPLE_SET sampleSet, uint sampleSetIndex, uint volume, bool isBpm, bool isKiai) {
     return loadParameters(offset, value, metronome, sampleSet, sampleSetIndex, volume, isBpm ? BPM : SV, isKiai);
 }
-
 bool TimingPoint::loadParameters(double offset, double value, POINT_TYPE pointType, bool isKiai, uint metronome){
     this->offset    = offset;
     this->value     = value;
@@ -103,7 +97,6 @@ bool TimingPoint::loadParameters(double offset, double value, POINT_TYPE pointTy
     this->metronome = metronome;
     return true;
 }
-
 bool TimingPoint::loadParameters(double offset,
                                  double value,
                                  uint metronome,
@@ -145,38 +138,34 @@ QString TimingPoint::getStringRaw() const {
     return out;
 }
 
-
-double TimingPoint::getValue() const    { return value; }
-void TimingPoint::setValue(double value){ this->value = value; }
-uint TimingPoint::getMetronome() const          { return metronome; }
-void TimingPoint::setMetronome(uint metronome)  { this->metronome = metronome; }
+double TimingPoint::getValue() const                        { return value; }
+void TimingPoint::setValue(double value)                    { this->value = value; }
+uint TimingPoint::getMetronome() const                      { return metronome; }
+void TimingPoint::setMetronome(uint metronome)              { this->metronome = metronome; }
 OsuObject::SAMPLE_SET TimingPoint::getSampleSet() const     { return sampleSet; }
 void TimingPoint::setSampleSet(const SAMPLE_SET &sampleSet) { this->sampleSet = sampleSet; }
-uint TimingPoint::getSampleSetIndex() const               { return sampleSetIndex; }
-void TimingPoint::setSampleSetIndex(uint sampleSetIndex)  { this->sampleSetIndex = sampleSetIndex; }
-uint TimingPoint::getVolume() const     { return volume; }
-void TimingPoint::setVolume(uint volume){ this->volume = volume; }
-bool TimingPoint::isKiai() const        { return kiai;}
-void TimingPoint::setIsKiai(bool isKiai){ this->kiai = isKiai; }
-bool TimingPoint::isBpm() const         { return pointType == BPM; }
-void TimingPoint::setIsBpm(bool isBpm)  { pointType = isBpm ? BPM : SV; }
-bool TimingPoint::isSv() const          { return !isBpm(); }
-void TimingPoint::setIsSv(bool isSv)    { pointType = isSv ? SV : BPM;}
+uint TimingPoint::getSampleSetIndex() const                 { return sampleSetIndex; }
+void TimingPoint::setSampleSetIndex(uint sampleSetIndex)    { this->sampleSetIndex = sampleSetIndex; }
+uint TimingPoint::getVolume() const                         { return volume; }
+void TimingPoint::setVolume(uint volume)                    { this->volume = volume; }
+bool TimingPoint::isKiai() const                            { return kiai;}
+void TimingPoint::setIsKiai(bool isKiai)                    { this->kiai = isKiai; }
+bool TimingPoint::isBpm() const                             { return pointType == BPM; }
+void TimingPoint::setIsBpm(bool isBpm)                      { pointType = isBpm ? BPM : SV; }
+bool TimingPoint::isSv() const                              { return !isBpm(); }
+void TimingPoint::setIsSv(bool isSv)                        { pointType = isSv ? SV : BPM;}
 
 double TimingPoint::convertCodeToValue(double code, bool isBpm) {
     if (isBpm) return 60000.0 / code;
     else return -100.0 / code; // Means it's an SV
 }
-
 double TimingPoint::convertCodeToValue(double code, TimingPoint::POINT_TYPE pointType) {
     return convertCodeToValue(code, pointType == BPM);
 }
-
 double TimingPoint::convertValueToCode(double value, bool isBpm) {
     if (isBpm) return 60000.0 / value;
     else return -100.0 / value; // Means it's an SV
 }
-
 double TimingPoint::convertValueToCode(double value, TimingPoint::POINT_TYPE pointType) {
     return convertValueToCode(value, pointType == BPM);
 }
