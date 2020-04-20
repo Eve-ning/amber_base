@@ -18,6 +18,8 @@ public:
 	// Create an object with a designated amount of default constructed hit_objects
     HitObjectV(uint amount);
 
+    explicit HitObjectV(const OsuObjectV<HitObject>& o);
+
     HitObjectV& operator= (const HitObjectV& o);
     HitObjectV& operator= (HitObjectV&& o) noexcept;
     HitObjectV(const HitObjectV& o);

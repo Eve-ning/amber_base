@@ -17,6 +17,8 @@ public:
 	// Create an object with a designated amount of default constructed timing_points 
     TimingPointV(uint amount);
 
+    explicit TimingPointV(const OsuObjectV<TimingPoint>& o);
+
     TimingPointV& operator= (const TimingPointV& o);
     TimingPointV& operator= (TimingPointV&& o) noexcept;
     TimingPointV(const TimingPointV& o);

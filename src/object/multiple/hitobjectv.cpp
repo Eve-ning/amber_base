@@ -8,6 +8,9 @@ HitObjectV::HitObjectV() : OsuObjectV(){}
 HitObjectV::HitObjectV(uint amount) {
     loadDefaults(amount);
 }
+
+HitObjectV::HitObjectV(const OsuObjectV<HitObject> &o) :
+    OsuObjectV<HitObject> (o.getObjectV()) {}
 HitObjectV &HitObjectV::operator=(const HitObjectV &o) {
     if (this == &o) return *this;
     this->objectV = o.objectV;

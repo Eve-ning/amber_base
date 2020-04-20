@@ -10,6 +10,9 @@ TimingPointV::TimingPointV(uint amount) {
     loadDefaults(amount);
 }
 
+TimingPointV::TimingPointV(const OsuObjectV<TimingPoint> &o) :
+    OsuObjectV<TimingPoint>(o.getObjectV()) {}
+
 TimingPointV &TimingPointV::operator=(const TimingPointV &o){
     if (this == &o) return *this;
     this->objectV = o.objectV;
