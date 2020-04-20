@@ -50,8 +50,8 @@ HitObjectV::HitObjectV(QString &&o, HitObject::TYPE type, uint keys) noexcept {
 
 bool HitObjectV::load(const QString & str, uint keys, const QString & delimeter) {
     // Determines if it's editor or raw
-    if      (str.indexOf(',') == -1) return loadEditor(str, keys);
-    else if (str.indexOf('|') == -1) return loadRaw(str, keys, delimeter);
+    if      (str.indexOf('|') != -1) return loadEditor(str, keys);
+    else if (str.indexOf(':') != -1) return loadRaw(str, keys, delimeter);
     else                             return false;
 }
 bool HitObjectV::loadEditor(QString str, uint keys) {
@@ -89,6 +89,7 @@ bool HitObjectV::loadRaw(const QString & str, uint keys, const QString & delimet
 
 bool HitObjectV::loadRaw(const QVector<QString> & strV, uint keys) {
     for (const QString & str : strV) { // For each str in the string vector
+        if (str.trimmed().isEmpty()) continue;
         HitObject ho;
         if (!ho.loadRaw(str, keys)) return false;
         objectV.push_back(ho); // Append to our private hit_object vector

@@ -63,15 +63,12 @@ bool TimingPoint::loadRaw(QString str) {
         return false;
     }
 
-    // We append this so that the while loop continues till the end
-    str += ',';
-
     QVector<QString> timingPointCommaV = {};
 
 	// Split string by comma
     timingPointCommaV = str.split(",", QString::KeepEmptyParts).toVector();
 
-    if (str.length() != 8) {
+    if (timingPointCommaV.length() != 8) {
         qDebug() << "Incorrect amount of tokens.";
         return false;
     }
