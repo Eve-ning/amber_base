@@ -58,7 +58,10 @@ TimingPoint::TimingPoint(QString &&o) noexcept {
 bool TimingPoint::loadRaw(QString str) {
     // Validate the str
     // If either of these characters are not found, it's not valid
-    if (!str.contains(',')) qDebug() << "This is not a valid Editor Hit Object string.";
+    if (!str.contains(',')) {
+        qDebug() << "This is not a valid Timing Point string.";
+        return false;
+    }
 
     // We append this so that the while loop continues till the end
     str += ',';
@@ -68,6 +71,11 @@ bool TimingPoint::loadRaw(QString str) {
 	// Split string by comma
     timingPointCommaV = str.split(",", QString::KeepEmptyParts).toVector();
 
+    if (str.length() != 8) {
+        qDebug() << "Incorrect amount of tokens.";
+        return false;
+    }
+
     offset          = timingPointCommaV[0].toDouble();
     metronome       = timingPointCommaV[2].toUInt();
     sampleSet       = static_cast<SAMPLE_SET>(timingPointCommaV[3].toInt());
@@ -76,7 +84,6 @@ bool TimingPoint::loadRaw(QString str) {
     pointType       = static_cast<POINT_TYPE>(timingPointCommaV[6].toInt());
     kiai            = (timingPointCommaV[7] == "1");
 
-	// Dependent on is_bpm
     value = convertCodeToValue(timingPointCommaV[1].toDouble(), pointType);
 
     return true;

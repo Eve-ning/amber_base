@@ -98,18 +98,24 @@ bool HitObject::loadEditor(QString str,
     QVector<QString> strCommaV = str.split(",", QString::KeepEmptyParts).toVector();
 
 	// Then for each element split by comma
-    for (QString strComma : strCommaV) {
+    for (const QString & strComma : strCommaV) {
 
 		// We split by bar
-        QVector<QString> str_bar_v = strComma.split("|", QString::KeepEmptyParts).toVector();
+        QVector<QString> strBarV = strComma.split("|", QString::KeepEmptyParts).toVector();
+
+        if (strBarV.length() != 2){
+            qDebug() << "Incorrect amount of tokens.";
+            return false;
+        }
 
 		// We push back the data after conversion
 		try {
-            offsetV.push_back(str_bar_v[0].toDouble());
-            columnV.push_back(static_cast<uint>(str_bar_v[1].toInt()));
+            offsetV.push_back(strBarV[0].toDouble());
+            columnV.push_back(static_cast<uint>(strBarV[1].toInt()));
 		}
 		catch (...) {
             qDebug() << ("Editor Hit Object content is corrupt.");
+            return false;
 		}
 	}
 
