@@ -41,8 +41,8 @@ bool TimingPointV::loadRaw(const QString &str, const QString &delimeter) {
     return loadRaw(str.split(delimeter, QString::KeepEmptyParts).toVector());
 }
 
-bool TimingPointV::loadRaw(QVector<QString> str_v) {
-    for (QString str : str_v) {
+bool TimingPointV::loadRaw(QVector<QString> strV) {
+    for (QString str : strV) {
         if (str.trimmed().isEmpty()) continue;
         TimingPoint tp;
         if (!tp.loadRaw(str)) return false; // Load by string
@@ -50,8 +50,6 @@ bool TimingPointV::loadRaw(QVector<QString> str_v) {
     }
     return true;
 }
-
-// Gets sv only in a vector form
 
 TimingPointV TimingPointV::getSvOnly() const {
     TimingPointV output = TimingPointV();
@@ -74,102 +72,102 @@ TimingPointV TimingPointV::getBpmOnly() const {
 // Gets all values
 
 QVector<double> TimingPointV::getValueV() const {
-    QVector<double> value_v = {};
-    for (const auto &tp : objectV) value_v.push_back(tp.getValue());
-	return value_v;
+    QVector<double> valueV = {};
+    for (const auto &tp : objectV) valueV.push_back(tp.getValue());
+    return valueV;
 }
 
 double TimingPointV::getAverageSvValue() const {
-    return get_average_value(false);
+    return getAverageValue(false);
 }
 
 double TimingPointV::getAverageBpmValue() const {
-    return get_average_value(true);
+    return getAverageValue(true);
 }
 
 // Cross multiplies the tp_vs
 void TimingPointV::crossEffectMultiply(TimingPointV eff_tp_v) {
-    cross_effect(eff_tp_v, [](TimingPoint self, TimingPoint eff) {
+    crossEffect(eff_tp_v, [](TimingPoint self, TimingPoint eff) {
 		self.setValue(self.getValue() * eff.getValue());
 		return self;
 	});
 }
 // Cross add the tp_vs
 void TimingPointV::crossEffectAdd(TimingPointV eff_tp_v) {
-    cross_effect(eff_tp_v, [](TimingPoint self, TimingPoint eff) {
+    crossEffect(eff_tp_v, [](TimingPoint self, TimingPoint eff) {
 		self.setValue(self.getValue() + eff.getValue());
 		return self;
 	});
 }
 
 TimingPointV TimingPointV::operator *(double par) {
-    return value_arithmetic(par, [](double value, double parameter) {
+    return valueArithmetic(par, [](double value, double parameter) {
         return value * parameter;
     });
 }
 
 TimingPointV TimingPointV::operator /(double par) {
-    return value_arithmetic(par, [](double value, double parameter) {
+    return valueArithmetic(par, [](double value, double parameter) {
         return value / parameter;
     });
 }
 
 TimingPointV TimingPointV::operator +(double par) {
-    return value_arithmetic(par, [](double value, double parameter) {
+    return valueArithmetic(par, [](double value, double parameter) {
         return value + parameter;
     });
 }
 
 TimingPointV TimingPointV::operator -(double par) {
-    return value_arithmetic(par, [](double value, double parameter) {
+    return valueArithmetic(par, [](double value, double parameter) {
         return value - parameter;
     });
 }
 
 void TimingPointV::operator *=(double par) {
-    objectV = value_arithmetic(par, [](double value, double parameter) {
+    objectV = valueArithmetic(par, [](double value, double parameter) {
         return value * parameter;
     }).getObjectV();
 }
 
 void TimingPointV::operator /=(double par) {
-    objectV = value_arithmetic(par, [](double value, double parameter) {
+    objectV = valueArithmetic(par, [](double value, double parameter) {
         return value / parameter;
     }).getObjectV();
 }
 void TimingPointV::operator +=(double par) {
-    objectV = value_arithmetic(par, [](double value, double parameter) {
+    objectV = valueArithmetic(par, [](double value, double parameter) {
         return value + parameter;
     }).getObjectV();
 }
 
 void TimingPointV::operator -=(double par) {
-    objectV = value_arithmetic(par, [](double value, double parameter) {
+    objectV = valueArithmetic(par, [](double value, double parameter) {
         return value - parameter;
     }).getObjectV();
 }
 
-TimingPointV TimingPointV::value_arithmetic(double parameter, double (*oper)(double, double)) {
+TimingPointV TimingPointV::valueArithmetic(double parameter, double (*oper)(double, double)) {
     auto tp_v = *this;
     for (auto &tp : tp_v) tp.setValue(oper(tp.getValue(), parameter));
     return tp_v;
 }
 
-double TimingPointV::get_average_value(bool is_bpm) const {
+double TimingPointV::getAverageValue(bool is_bpm) const {
 
-    TimingPointV tp_v = is_bpm ? getBpmOnly() : getSvOnly();
-    if      (tp_v.size() <= 0) return 0;
-    else if (tp_v.size() == 1) return tp_v[0].getValue();
+    TimingPointV tpV = is_bpm ? getBpmOnly() : getSvOnly();
+    if      (tpV.size() <= 0) return 0;
+    else if (tpV.size() == 1) return tpV[0].getValue();
 
 	double offset = 0;
 	double distance = 0;
 
-    tp_v.sortByOffset(true);
+    tpV.sortByOffset(true);
 
 	// Loop through all pairs excluding the last invalid pair
-	for (auto tp_it = tp_v.begin(); tp_it != tp_v.end() - 1; tp_it++) {
-        offset += (tp_it + 1)->getOffset() - tp_it->getOffset();
-        distance += ((tp_it + 1)->getOffset() - tp_it->getOffset()) * tp_it->getValue();
+    for (auto tpIt = tpV.begin(); tpIt != tpV.end() - 1; tpIt++) {
+        offset += (tpIt + 1)->getOffset() - tpIt->getOffset();
+        distance += ((tpIt + 1)->getOffset() - tpIt->getOffset()) * tpIt->getValue();
 	}
 	return distance / offset;
 }
