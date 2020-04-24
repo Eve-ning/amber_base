@@ -49,26 +49,26 @@ namespace algorithm
 
     template <typename T>
     inline ObjV<T> copy(T obj,
-                 const QVector<double>& copyToV,
-                 bool sort = true);
+                        const QVector<double>& copyToV,
+                        bool sort = true);
 
     template <typename T>
     inline ObjV<T> copy(QSPtr<ObjV<T>> const objV,
-                 QVector<double> copyToV,
-                 bool anchorFront = true,
-                 bool sort = true);
+                        QVector<double> copyToV,
+                        bool anchorFront = true,
+                        bool sort = true);
 
 	template <typename T>
     inline ObjV<T> copyDelay(QSPtr<ObjV<T>> objV,
-                      QVector<double> offsetV,
-                      bool include);
+                             QVector<double> offsets,
+                             bool include);
 
-    inline QVector<double> copySubdBy(QVector<double> offsetV,
+    inline QVector<double> copySubdBy(QVector<double> offsets,
                        uint subdivisions,
                        bool include);
 
 	template <typename T>
-    inline ObjV<T> copySubdBy(QVector<double> offsetV,
+    inline ObjV<T> copySubdBy(QVector<double> offsets,
                        const T& objDefine,
                        uint subdivisions,
                        bool include);
@@ -78,12 +78,12 @@ namespace algorithm
                        uint subdivisions,
                        bool include);
 
-    inline QVector<double> copySubdTo(QVector<double> offsetV,
+    inline QVector<double> copySubdTo(QVector<double> offsets,
                        uint subdLength,
                        bool include);
 
     template <typename T>
-    inline ObjV<T> copySubdTo(QVector<double> offsetV,
+    inline ObjV<T> copySubdTo(QVector<double> offsets,
                        const T& objDefine,
                        uint subdLength,
                        bool include);
@@ -94,12 +94,12 @@ namespace algorithm
                        bool include);
 
 
-    inline QVector<double> copyRel(QVector<double> offsetV,
+    inline QVector<double> copyRel(QVector<double> offsets,
                     double relativity,
                     bool include);
 
 	template <typename T>
-    inline ObjV<T> copyRel(const QVector<double> offsetV,
+    inline ObjV<T> copyRel(const QVector<double> offsets,
                     const T objDefine,
                     double relativity,
                     bool include);
@@ -110,7 +110,7 @@ namespace algorithm
                     bool include);
 
 
-    inline QVector<double> copyAbs(const QVector<double> offsetV,
+    inline QVector<double> copyAbs(const QVector<double> offsets,
                     double relativity,
                     bool include,
                     bool relativeFromFront = true,
@@ -118,7 +118,7 @@ namespace algorithm
 
 
 	template <typename T>
-    inline ObjV<T> copyAbs(const QVector<double> offsetV,
+    inline ObjV<T> copyAbs(const QVector<double> offsets,
                     const T objDefine,
                     double relativity,
                     bool include,
@@ -139,7 +139,7 @@ namespace algorithm
                            bool include = false);
 
 
-    inline TimingPointV stutter(QVector<double> offsetV,
+    inline TimingPointV stutter(QVector<double> offsets,
                          double initial,
                          double average = 1.0,
                          bool isBpm = false,

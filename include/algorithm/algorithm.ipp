@@ -105,7 +105,7 @@ namespace algorithm
 
     template <typename T>
     ObjV<T> copyDelay(QSPtr<ObjV<T>> const objV,
-                      QVector<double> offsetV,
+                      QVector<double> offsets,
                       bool include) {
         // <0>   <1>   <2> IN
         //  0     2     4
@@ -115,9 +115,9 @@ namespace algorithm
 
         ObjV<T> objVC = ObjV<T>(*objV);
         objVC.sortByOffset();
-        std::sort(offsetV.begin(), offsetV.end());
+        std::sort(offsets.begin(), offsets.end());
 
-        auto offsetVIt = offsetV.begin();
+        auto offsetsIt = offsets.begin();
         auto objVIt = objVC.begin();
 
         ObjV<T> output;
@@ -128,10 +128,10 @@ namespace algorithm
             //              v
             // <0><0><2><2><4>
             // BREAK
-            if (offsetVIt == (offsetV.end() - 1)) {
+            if (offsetsIt == (offsets.end() - 1)) {
                 if (include) {
                     T obj = *(objVIt + 1);
-                    obj.setOffset(*offsetVIt);
+                    obj.setOffset(*offsetsIt);
                     output.pushBack(obj);
                 }
                 break;
@@ -143,7 +143,7 @@ namespace algorithm
             //        v
             // <0>   <1>   <2>
             // MOVE OBJ_IT
-            if (*offsetVIt == (objVIt + 1)->getOffset()) objVIt++;
+            if (*offsetsIt == (objVIt + 1)->getOffset()) objVIt++;
 
             // IF SAME OFFSET, REJECT IF !INCLUDE
             //  v
@@ -155,31 +155,31 @@ namespace algorithm
             //      ==  !=
             //  INC  T   T
             // !INC  F   T
-            if (include || (*offsetVIt != objVIt->getOffset())) {
+            if (include || (*offsetsIt != objVIt->getOffset())) {
                 T obj = *objVIt;
-                obj.setOffset(*offsetVIt);
+                obj.setOffset(*offsetsIt);
                 output.pushBack(obj);
             }
-            offsetVIt++;
+            offsetsIt++;
         }
 
         return output;
     }
 
 
-    QVector<double> copySubdBy(QVector<double> offsetV,
+    QVector<double> copySubdBy(QVector<double> offsets,
                        uint subdivisions,
                        bool include) {
         // [0]   [2]   [4] IN
         // [0][1][2][3][4] OUT
 
-        if (offsetV.size() <= 1) throw ReamberException("offsetV size must be at least 2 for the function to work");
+        if (offsets.size() <= 1) throw ReamberException("offsets size must be at least 2 for the function to work");
 
-        QVector<double> offsetVC = include ? offsetV : QVector<double>();
+        QVector<double> offsetsC = include ? offsets : QVector<double>();
 
         // [0][1][2][3]
         // <------->
-        for (auto start = offsetV.begin(); start != (offsetV.end() - 1); start++) {
+        for (auto start = offsets.begin(); start != (offsets.end() - 1); start++) {
 
             // EG. 3 SUBDIVISIONS
             //     0   1   2   3   E
@@ -194,15 +194,15 @@ namespace algorithm
             //     <---2--->
             //     <-----3----->
             for (uint slice = 1; slice <= subdivisions; slice++)
-                offsetVC.push_back((*start) + sliceDistance * slice);
+                offsetsC.push_back((*start) + sliceDistance * slice);
 
         }
-        return offsetVC;
+        return offsetsC;
     }
 
 
     template <typename T>
-    ObjV<T> copySubdBy(QVector<double> offsetV,
+    ObjV<T> copySubdBy(QVector<double> offsets,
                        const T& objDefine,
                        uint subdivisions,
                        bool include) {
@@ -211,7 +211,7 @@ namespace algorithm
         //  0
         // <0><0><0><0><0> OUT
         //  0  1  2  3  4
-        return copy(objDefine, copySubdBy(offsetV, subdivisions, include));
+        return copy(objDefine, copySubdBy(offsets, subdivisions, include));
     }
 
     template <typename T>
@@ -226,34 +226,34 @@ namespace algorithm
         // <0>   <1>   <2>
         //  0     2     4
         // [0][1][2][3][4]
-        auto offsetV = copySubdBy(objV->getOffsetV(true), subdivisions, true);
+        auto offsets = copySubdBy(objV->getOffsetV(true), subdivisions, true);
 
         // <0>   <2>   <4>
         //  0     2     4
         // [0][1][2][3][4]
         // <0><0><2><2><4>
         //  0  1  2  3  4
-        auto output = copyDelay(objV, offsetV, include);
+        auto output = copyDelay(objV, offsets, include);
 
         return output;
     }
 
 
-    QVector<double> copySubdTo(QVector<double> offsetV,
-                       uint subdLength,
-                       bool include) {
+    QVector<double> copySubdTo(QVector<double> offsets,
+                               uint subdLength,
+                               bool include) {
         // [0]            [5] IN
         // SUBDIV_LEN 2
         // [0]   [2]   [4][5] OUT
 
         // [0] REJECT
-        if (offsetV.size() <= 1) throw ReamberException("offsetV size must be at least 2 for the function to work");
+        if (offsets.size() <= 1) throw ReamberException("offsets size must be at least 2 for the function to work");
 
-        QVector<double> offsetVC = include ? offsetV : QVector<double>();
+        QVector<double> offsetsC = include ? offsets : QVector<double>();
 
         // [0][1][2][3]
         // <------->
-        for (auto start = offsetV.begin(); start != (offsetV.end() - 1); start++) {
+        for (auto start = offsets.begin(); start != (offsets.end() - 1); start++) {
 
             // EG. 2 SUBDIV_LEN
             //     0   1   2   3   4   E
@@ -269,14 +269,14 @@ namespace algorithm
             for (uint slice = 1;
                  ((*start) + subdLength * slice) < *(start + 1);
                  slice++) {
-                offsetVC.push_back((*start) + subdLength * slice);
+                offsetsC.push_back((*start) + subdLength * slice);
             }
         }
-        return offsetVC;
+        return offsetsC;
     }
 
     template <typename T>
-    ObjV<T> copySubdTo(QVector<double> offsetV,
+    ObjV<T> copySubdTo(QVector<double> offsets,
                        const T& objDefine,
                        uint subdLength,
                        bool include) {
@@ -286,7 +286,7 @@ namespace algorithm
         // <0><0><0><0><0> OUT
         //  0  1  2  3  4
 
-        return copy(objDefine, copySubdTo(offsetV, subdLength, include));
+        return copy(objDefine, copySubdTo(offsets, subdLength, include));
     }
 
     template <typename T>
@@ -301,38 +301,38 @@ namespace algorithm
         // <0>   <1>   <2>
         //  0     2     4
         // [0][1][2][3][4]
-        auto offsetV = copySubdTo(objV->getOffsetV(true), subdLength, true);
+        auto offsets = copySubdTo(objV->getOffsetV(true), subdLength, true);
 
         // <0>   <2>   <4>
         //  0     2     4
         // [0][1][2][3][4]
         // <0><0><2><2><4>
         //  0  1  2  3  4
-        auto output = copyDelay(objV, offsetV, include);
+        auto output = copyDelay(objV, offsets, include);
 
         return output;
     }
 
 
-    QVector<double> copyRel(QVector<double> offsetV,
+    QVector<double> copyRel(QVector<double> offsets,
                     double relativity,
                     bool include) {
         // [0]   [2]   [4] IN
         // [0][%][2][%][4] OUT
 
         // [0] REJECT
-        if (offsetV.size() <= 1)
-            throw ReamberException("offsetV size must be at least 2 for the function to work");
+        if (offsets.size() <= 1)
+            throw ReamberException("offsets size must be at least 2 for the function to work");
 
         if (relativity <= 0)
             throw ReamberException("relativity must be non-zero and positive");
 
 
-        QVector<double> offsetVC = include ? offsetV : QVector<double>();
+        QVector<double> offsetsC = include ? offsets : QVector<double>();
 
         //	[0][1][2][3]
         //  <------->
-        for (auto start = offsetV.begin(); start != offsetV.end() - 1; start++) {
+        for (auto start = offsets.begin(); start != offsets.end() - 1; start++) {
             //     v           v
             // [0][1][___|___][2][3]
             //     <----->
@@ -342,13 +342,13 @@ namespace algorithm
             // [0][|][1][___|___][2][3] >> [0][|][1][|][2][|][3]
             //        <----->			>>
             //  <----->     +   		>>
-            offsetVC.push_back(*start + offsetRelativeDelta);
+            offsetsC.push_back(*start + offsetRelativeDelta);
         }
-        return offsetVC;
+        return offsetsC;
     }
 
     template <typename T>
-    ObjV<T> copyRel(const QVector<double> offsetV,
+    ObjV<T> copyRel(const QVector<double> offsets,
                     const T objDefine,
                     double relativity,
                     bool include) {
@@ -358,7 +358,7 @@ namespace algorithm
         // <0><0><2><2><4> OUT
         //  0  %  2  %  4
 
-        auto copies = copyRel(offsetV, relativity, include);
+        auto copies = copyRel(offsets, relativity, include);
         return copy(objDefine, copies);
     }
 
@@ -375,20 +375,20 @@ namespace algorithm
         // <0>   <1>   <2>
         //  0     2     4
         // [0][%][2][%][4]
-        auto offsetV = copyRel(objV->getOffsetV(true), relativity, true);
+        auto offsets = copyRel(objV->getOffsetV(true), relativity, true);
 
         // <0>   <2>   <4>
         //  0     2     4
         // [0][%][2][%][4]
         // <0><0><2><2><4>
         //  0  %  2  %  4
-        auto output = copyDelay(objV, offsetV, include);
+        auto output = copyDelay(objV, offsets, include);
 
         return output;
     }
 
 
-    QVector<double> copyAbs(const QVector<double> offsetV,
+    QVector<double> copyAbs(const QVector<double> offsets,
                     double relativity,
                     bool include,
                     bool relativeFromFront,
@@ -397,16 +397,16 @@ namespace algorithm
         // [0][+][2][+][4] OUT
 
         // [0] REJECT
-        if (offsetV.size() <= 1) throw ReamberException("offsetV size must be at least 2 for the function to work");
+        if (offsets.size() <= 1) throw ReamberException("offsets size must be at least 2 for the function to work");
         if (relativity <= 0) throw ReamberException("relativity must be non-zero and positive");
 
         // <0><0><1><2><2>
         // [0][1][2]
-        QVector<double> offsetVC = include ? offsetV : QVector<double>();
+        QVector<double> offsetsC = include ? offsets : QVector<double>();
 
         // [0][1][2][3]
         //  <----->
-        for (auto start = offsetV.begin(); start + 1 != offsetV.end(); start++) {
+        for (auto start = offsets.begin(); start + 1 != offsets.end(); start++) {
 
             // RELATIVE FROM FRONT
             // [0]___[X]_______[1][...]
@@ -426,16 +426,16 @@ namespace algorithm
                 }
             }
 
-            offsetVC.push_back(offset);
+            offsetsC.push_back(offset);
         }
 
 
-        return offsetVC;
+        return offsetsC;
     }
 
 
     template <typename T>
-    ObjV<T> copyAbs(const QVector<double> offsetV,
+    ObjV<T> copyAbs(const QVector<double> offsets,
                     const T objDefine,
                     double relativity,
                     bool include,
@@ -446,7 +446,7 @@ namespace algorithm
         //  0
         // <0><0><2><2><4> OUT
         //  0  +  2  +  4
-        return copy(objDefine, copyAbs(offsetV, relativity, include, relativeFromFront, excludeOverlap));
+        return copy(objDefine, copyAbs(offsets, relativity, include, relativeFromFront, excludeOverlap));
     }
 
 
@@ -465,14 +465,14 @@ namespace algorithm
         // <0>   <2>   <4>
         //  0     2     4
         // [0][+][2][+][4]
-        auto offsetV = copyAbs(objV->getOffsetV(), relativity, true, relativeFromFront, excludeOverlap);
+        auto offsets = copyAbs(objV->getOffsetV(), relativity, true, relativeFromFront, excludeOverlap);
 
         // <0>   <2>   <4>
         //  0     2     4
         // [0][+][2][+][4]
         // <0><0><2><2><4>
         //  0  +  2  +  4
-        auto output = copyDelay(objV, offsetV, include);
+        auto output = copyDelay(objV, offsets, include);
 
         return output;
     }
@@ -499,7 +499,7 @@ namespace algorithm
     }
 
 
-    TimingPointV stutter(QVector<double> offsetV,
+    TimingPointV stutter(QVector<double> offsets,
                          double initial,
                          double average,
                          bool isBpm,
@@ -509,58 +509,47 @@ namespace algorithm
         // <I><T><I><T><A>
         // I: INITIAL, T: THRESHOLD, A: AVERAGE
 
-        if (offsetV.size() % 2 != 1) {
+        if (offsets.size() % 2 != 1) {
             // only works on odd
             throw ReamberException("stutter can only be done on odd number of offset");
         }
-
-        std::sort(offsetV.begin(), offsetV.end());
+        std::sort(offsets.begin(), offsets.end());
 
         TimingPointV tpV;
-        double gap; // defined as end - front
-        double threshold; // value of the threshold
 
-        auto offsetItBegin = offsetV.begin();
-        auto offsetItThreshold = offsetV.begin() + 1;
-        auto offsetItEnd = offsetV.begin() + 2;
+        auto itBegin     = offsets.begin();
+        auto itThreshold = offsets.begin() + 1;
+        auto itEnd       = offsets.begin() + 2;
 
         //	OFFSET [0][1][2][3][4][5][6]
         //	START  <F  T  E> |	|  |  |
         //          ---> <F  T  E> |  |
         //	END           ---> <F  T  E>
         while (true) {
-            gap = *offsetItEnd - *offsetItBegin;
+            double gap = *itEnd - *itBegin; // defined as end - front
 
+            // value of the threshold
             // thr = (ave * gap - init * init_gap) / thr_gap
-            threshold = ((average * gap) - (initial * ((*offsetItThreshold) - (*offsetItBegin)))) /
-                ((*offsetItEnd) - (*offsetItThreshold));
+            double threshold = (average * gap - (initial * (*itThreshold - *itBegin))) /
+                (*itEnd - *itThreshold);
 
             // threshold cannot be negative or 0
             // we won't restrict it if the user really wants the invalid value
             if (threshold > 0 || !skipOnInvalid) {
-
-                TimingPoint beginTp, thresholdTp;
-
-                beginTp.loadParameters(*offsetItBegin, initial, isBpm);
-                thresholdTp.loadParameters(*offsetItThreshold, threshold, isBpm);
-
-                tpV.pushBack(beginTp);
-                tpV.pushBack(thresholdTp);
+                tpV.pushBack(TimingPoint(*itBegin, initial, isBpm));
+                tpV.pushBack(TimingPoint(*itThreshold, threshold, isBpm));
             }
 
-            if (offsetItEnd == (offsetV.end() - 1)) {
+            if (itEnd == (offsets.end() - 1)) {
                 // indicates it's the last pair
-                TimingPoint endTp;
-                endTp.loadParameters(*offsetItEnd, average, isBpm);
-
-                if (!skipLast) tpV.pushBack(endTp);
+                if (!skipLast) tpV.pushBack(TimingPoint(*itEnd, average, isBpm));
                 break;
             }
 
             // We move through pairs by 2
-            offsetItBegin += 2;
-            offsetItThreshold += 2;
-            offsetItEnd += 2;
+            itBegin     += 2;
+            itThreshold += 2;
+            itEnd       += 2;
         }
 
         tpV.sortByOffset();
@@ -570,9 +559,9 @@ namespace algorithm
 
 
     QVector<double> stutterRelInitLimits(double threshold,
-                                 double average,
-                                 double thresholdMin,
-                                 double thresholdMax) {
+                                         double average,
+                                         double thresholdMin,
+                                         double thresholdMax) {
         // Used to find the limits of create_basic_stutter
         // [0] is min, [1] is max
 
@@ -581,19 +570,11 @@ namespace algorithm
         // init * thr = ave - thr_ + thr * thr_
         // init = thr_ + [( ave - thr_ ) / thr]
 
-        double init_1 = thresholdMin + ((average - thresholdMin) / threshold);
-        double init_2 = thresholdMax + ((average - thresholdMax) / threshold);
+        double init1 = thresholdMin + ((average - thresholdMin) / threshold);
+        double init2 = thresholdMax + ((average - thresholdMax) / threshold);
 
-        QVector<double> output;
-        if (init_1 < init_2) {
-            output.push_back(init_1);
-            output.push_back(init_2);
-        }
-        else {
-            output.push_back(init_2);
-            output.push_back(init_1);
-        }
-        return output;
+        return init1 < init2 ? QVector<double>({init1, init2}):
+                               QVector<double>({init2, init1});
     }
 
 
@@ -608,7 +589,7 @@ namespace algorithm
     }
 
 
-    TimingPointV stutterRel(const QVector<double> &offsetV,
+    TimingPointV stutterRel(const QVector<double> &offsets,
                             double initial,
                             double relativity,
                             double average,
@@ -619,12 +600,12 @@ namespace algorithm
         // Stutter creation will chain on more than 2 offsets
 
         // force inclusion of inits
-        auto offsetVC = copyRel(offsetV, relativity, true);
-        return stutter(offsetVC, initial, average, isBpm, skipOnInvalid, skipLast);
+        return stutter(copyRel(offsets, relativity, true),
+                       initial, average, isBpm, skipOnInvalid, skipLast);
     }
 
 
-    TimingPointV stutterAbs(const QVector<double> &offsetV,
+    TimingPointV stutterAbs(const QVector<double> &offsets,
                             double initial,
                             double relativity,
                             double average,
@@ -636,25 +617,22 @@ namespace algorithm
         // Stutter creation will chain on more than 2 offsets
 
         // force inclusion of inits
-        auto offsetVC = copyAbs(offsetV, relativity, true, relativeFromFront, skipOnInvalid);
-        return stutter(offsetVC, initial, average, isBpm, skipOnInvalid, skipLast);
+        return stutter(copyAbs(offsets, relativity, true, relativeFromFront, skipOnInvalid),
+                       initial, average, isBpm, skipOnInvalid, skipLast);
     }
 
     TimingPointV stutterSwap(TimingPointV tpV) {
         // Basically reverses the stutter
-        if (tpV.size() % 2 != 1) {
+        if (tpV.size() % 2 != 1)
             // only works on odd
             throw ReamberException("stutter can only be done on odd number of offset");
-        }
 
         auto tpV_1 = tpV.begin();
         auto tpV_2 = tpV.begin() + 1;
 
-
         // [0][1][2][3][4][E]
         TimingPointV output;
         while (tpV_2 < tpV.end()) {
-
             //       [0]   [1]           [2]
             // <--C--><--A--><--M--><--A-->
             // <--C--><---------B--------->
@@ -703,7 +681,6 @@ namespace algorithm
                       uint offset) {
 
         if (n <= 0) throw ReamberException("n cannot be less than or equal to 0");
-
 
         ObjV<T> objVC;
 
