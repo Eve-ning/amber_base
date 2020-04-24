@@ -64,7 +64,7 @@ public:
 
 protected:
 
-    TimingPointV value_arithmetic(double parameter,double(*oper)(double value, double parameter));
+    TimingPointV valueArithmetic(double parameter,double(*oper)(double value, double parameter));
 private:
-	double get_average_value(bool is_bpm) const;
+    double getAverageValue(bool is_bpm) const;
 };

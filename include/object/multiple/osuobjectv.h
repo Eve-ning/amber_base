@@ -90,7 +90,7 @@ public:
 
     bool empty() const;
 
-    void cross_effect(OsuObjectV eff_obj_v, objType (*effect)(objType self, objType eff));
+    void crossEffect(OsuObjectV eff_obj_v, objType (*effect)(objType self, objType eff));
 
 	// Direct all iterator functions to the vector
     typename QVector<objType>::iterator begin();

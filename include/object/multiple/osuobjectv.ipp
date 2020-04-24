@@ -211,7 +211,7 @@ template<class objType>
 objType &OsuObjectV<objType>::operator [](unsigned int i) { return getIndex(i); }
 
 template<class objType>
-void OsuObjectV<objType>::cross_effect(OsuObjectV<objType> eff_obj_v, objType (*effect)(objType, objType)) {
+void OsuObjectV<objType>::crossEffect(OsuObjectV<objType> eff_obj_v, objType (*effect)(objType, objType)) {
     if (eff_obj_v.size() == 0 || size() == 0) {
         return; // Do not execute if empty
     }
