@@ -24,6 +24,12 @@ public:
     TimingPoint(const QString& o);
     TimingPoint(QString&& o) noexcept;
 
+    TimingPoint(double offset,
+                double value,
+                bool isBpm,
+                bool isKiai = false,
+                uint metronome = 4);
+
     //// Explicit Loading
 
 	// Loads from data from the .osu file

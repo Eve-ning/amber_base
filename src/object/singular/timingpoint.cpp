@@ -55,6 +55,10 @@ TimingPoint::TimingPoint(QString &&o) noexcept {
     loadRaw(o);
 }
 
+TimingPoint::TimingPoint(double offset, double value, bool isBpm, bool isKiai, uint metronome) : TimingPoint() {
+    loadParameters(offset, value, isBpm, isKiai, metronome);
+}
+
 bool TimingPoint::loadRaw(QString str) {
     // Validate the str
     // If either of these characters are not found, it's not valid
