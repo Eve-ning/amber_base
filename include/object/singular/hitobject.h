@@ -30,6 +30,10 @@ public:
     HitObject(HitObject&& o) noexcept;
     HitObject(const QString& o, TYPE type, uint keys = 0);
     HitObject(QString&& o, TYPE type, uint keys = 0) noexcept;
+    HitObject(uint column,
+              double offset,
+              double lnEnd = 0,
+              uint keys = 0);
 
     //// Explicit Loading
 

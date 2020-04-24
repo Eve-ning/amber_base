@@ -78,6 +78,11 @@ HitObject::HitObject(QString &&o, HitObject::TYPE type, uint keys) noexcept :
     else qDebug() << "Keys required when loading raw";
 }
 
+HitObject::HitObject(uint column, double offset, double lnEnd, uint keys) :
+    HitObject(){
+    loadParameters(column, offset, lnEnd, keys);
+}
+
 bool HitObject::loadEditor(QString str,
                            uint keys,
                            uint index) {
