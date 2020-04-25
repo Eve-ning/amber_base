@@ -25,6 +25,11 @@ HitObjectV::HitObjectV(const HitObjectV &o) {
 }
 HitObjectV::HitObjectV(HitObjectV &&o)noexcept : // TODO: To change with qExchange on Qt 5.14
     OsuObjectV<HitObject>(std::exchange(o.objectV, QVector<HitObject>({}))){}
+
+HitObjectV::HitObjectV(const HitObjectV *&&o) noexcept {
+    if (this == o) return;
+    this->objectV = o->objectV;
+}
 HitObjectV::HitObjectV(const QVector<QString> &o, uint keys) {
     loadRaw(o, keys);
 }
@@ -46,6 +51,10 @@ HitObjectV::HitObjectV(QString &&o, HitObject::TYPE type, uint keys) noexcept {
     if      (type == HitObject::TYPE::EDITOR)  loadEditor(o, keys);
     else if (keys != 0)                        loadRaw(o, keys);
     else    qDebug() << "Keys cannot be 0 when loading raw";
+}
+
+QSharedPointer<HitObjectV> HitObjectV::sptr() const {
+    return QSPtr<HitObjectV>::create(this);
 }
 
 bool HitObjectV::load(const QString & str, uint keys, const QString & delimeter) {

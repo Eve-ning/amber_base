@@ -31,11 +31,20 @@ TimingPointV::TimingPointV(const TimingPointV &o){
 TimingPointV::TimingPointV(TimingPointV &&o) noexcept : // TODO: To change with qExchange on Qt 5.14
     OsuObjectV<TimingPoint>(std::exchange(o.objectV, QVector<TimingPoint>({}))){}
 
+TimingPointV::TimingPointV(const TimingPointV *&&o) noexcept {
+    if (this == o) return;
+    this->objectV = o->objectV;
+}
+
 TimingPointV::TimingPointV(const QVector<QString> &o) { loadRaw(o); }
 TimingPointV::TimingPointV(QVector<QString> &&o) noexcept { loadRaw(o); }
 
 TimingPointV::TimingPointV(const QString &o) { loadRaw(o); }
 TimingPointV::TimingPointV(QString &&o) noexcept { loadRaw(o); }
+
+QSharedPointer<TimingPointV> TimingPointV::sptr() const {
+    return QSPtr<TimingPointV>::create(this);
+}
 
 bool TimingPointV::loadRaw(const QString &str, const QString &delimeter) {
     return loadRaw(str.split(delimeter, QString::KeepEmptyParts).toVector());

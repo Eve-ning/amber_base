@@ -23,10 +23,13 @@ public:
     TimingPointV& operator= (TimingPointV&& o) noexcept;
     TimingPointV(const TimingPointV& o);
     TimingPointV(TimingPointV&& o) noexcept;
+    TimingPointV(const TimingPointV * && o) noexcept;
     TimingPointV(const QVector<QString>& o);
     TimingPointV(QVector<QString>&& o) noexcept;
     TimingPointV(const QString& o);
     TimingPointV(QString&& o) noexcept;
+
+    QSPtr<TimingPointV> sptr() const;
 
 	//// Explicit Loading
 
