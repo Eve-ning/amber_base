@@ -24,12 +24,15 @@ public:
     HitObjectV& operator= (HitObjectV&& o) noexcept;
     HitObjectV(const HitObjectV& o);
     HitObjectV(HitObjectV&& o) noexcept;
+    HitObjectV(const HitObjectV * && o) noexcept;
     HitObjectV(const QVector<QString>& o, uint keys);
     HitObjectV(QVector<QString>&& o, uint keys) noexcept;
     HitObjectV(const QString& o, uint keys = 0);
     HitObjectV(QString&& o, uint keys = 0) noexcept;
     HitObjectV(const QString& o, HitObject::TYPE isEditor, uint keys = 0);
     HitObjectV(QString&& o, HitObject::TYPE isEditor, uint keys = 0) noexcept;
+
+    QSPtr<HitObjectV> sptr() const;
 
 	//// Explicit Loading
     bool load(const QString &str, uint keys = 0, const QString & delimeter = "\n");
